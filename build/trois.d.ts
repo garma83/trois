@@ -9541,11 +9541,9 @@ declare const _default: vue.DefineComponent<{
     };
     color1: {
         type: NumberConstructor;
-        default: number;
     };
     color2: {
         type: NumberConstructor;
-        default: number;
     };
 }, MeshSetupInterface, unknown, {}, {
     initHelper(): void;
@@ -9698,17 +9696,13 @@ declare const _default: vue.DefineComponent<{
     };
     color1: {
         type: NumberConstructor;
-        default: number;
     };
     color2: {
         type: NumberConstructor;
-        default: number;
     };
 }>>, {
     size: number;
     divisions: number;
-    color1: number;
-    color2: number;
 }>;
 
 type OptionSetter = (dst: any, key: string, value: any) => void;

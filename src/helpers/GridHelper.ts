@@ -11,8 +11,8 @@ export interface MeshSetupInterface extends Object3DSetupInterface {
 const props = {
     size: { type: Number, required: true, default: 100 },
     divisions: { type: Number, required: true, default: 10 },
-    color1: { type: Number, default: 0x000000 },
-    color2: { type: Number, default: 0x000000 },
+    color1: { type: Number },
+    color2: { type: Number },
 }
 
 export default defineComponent({
@@ -39,7 +39,6 @@ export default defineComponent({
     },
     methods: {
         initHelper() {
-            console.log(this.size, this.divisions, this.color1, this.color2)
             this.helper = new TGridHelper(this.size, this.divisions, this.color1, this.color2);
 
             bindProp(this, 'castShadow', this.helper)

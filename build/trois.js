@@ -2766,8 +2766,8 @@ var ZoomBlurPass = vue.defineComponent({
 const props = {
   size: { type: Number, required: true, default: 100 },
   divisions: { type: Number, required: true, default: 10 },
-  color1: { type: Number, default: 0 },
-  color2: { type: Number, default: 0 }
+  color1: { type: Number },
+  color2: { type: Number }
 };
 var GridHelper = vue.defineComponent({
   extends: Object3D,
@@ -2791,7 +2791,6 @@ var GridHelper = vue.defineComponent({
   },
   methods: {
     initHelper() {
-      console.log(this.size, this.divisions, this.color1, this.color2);
       this.helper = new three.GridHelper(this.size, this.divisions, this.color1, this.color2);
       bindProp(this, "castShadow", this.helper);
       bindProp(this, "receiveShadow", this.helper);
