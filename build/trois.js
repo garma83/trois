@@ -2773,39 +2773,39 @@ var GridHelper = vue.defineComponent({
   extends: Object3D,
   name: "GridHelper",
   props,
+  setup() {
+    return {};
+  },
   mounted() {
-    if (!this.mesh)
-      this.initMesh();
+    if (!this.helper)
+      this.initHelper();
     const watchProps = ["size", "divisions", "color1", "color2"];
     watchProps.forEach((p) => {
       vue.watch(() => this[p], () => {
-        this.refreshGeometry();
+        this.refreshHelper();
       });
     });
   },
   unmounted() {
-    if (this.mesh)
-      this.removeFromParent(this.mesh);
+    this.destroyHelper();
   },
   methods: {
-    initMesh() {
-      var gridHelper = new three.GridHelper(this.size, this.divisions, this.color1, this.color2);
-      gridHelper.geometry.rotateX(Math.PI / 2);
-      gridHelper.material.clippingPlanes = [
-        new three.Plane(new three.Vector3(1, 0, 0), this.size / 4),
-        new three.Plane(new three.Vector3(-1, 0, 0), this.size / 4),
-        new three.Plane(new three.Vector3(0, 1, 0), this.size / 4),
-        new three.Plane(new three.Vector3(0, -1, 0), this.size / 4)
-      ];
-      bindProp(this, "castShadow", gridHelper);
-      bindProp(this, "receiveShadow", gridHelper);
-      this.mesh = gridHelper;
-      this.initObject3D(gridHelper);
+    initHelper() {
+      this.helper = new three.GridHelper(this.size, this.divisions, this.color1, this.color2);
+      bindProp(this, "castShadow", this.helper);
+      bindProp(this, "receiveShadow", this.helper);
+      this.initObject3D(this.helper);
     },
-    refreshGeometry() {
-      this.getParent().remove(this.mesh);
-      this.mesh.dispose();
-      this.initMesh();
+    destroyHelper() {
+      var _a, _b;
+      if (this.helper)
+        this.removeFromParent(this.helper);
+      (_a = this.getParent()) == null ? void 0 : _a.remove(this.helper);
+      (_b = this.helper) == null ? void 0 : _b.dispose();
+    },
+    refreshHelper() {
+      this.destroyHelper();
+      this.initHelper();
     }
   }
 });

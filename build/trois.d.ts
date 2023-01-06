@@ -1,7 +1,7 @@
 import * as vue from 'vue';
 import { ComponentPublicInstance, InjectionKey, PropType, ComponentPropsOptions, WatchStopHandle, App } from 'vue';
 import * as three from 'three';
-import { Intersection, Vector2, Vector3, Object3D, WebGLRenderer, Camera, Scene, WebGLRendererParameters, OrthographicCamera, PerspectiveCamera, Group, Mesh as Mesh$1, WebGLCubeRenderTarget, CubeCamera, BufferGeometry, Material, Shape, ExtrudeGeometryOptions, Curve, Light, Texture, Color, ShaderMaterial, VideoTexture, MeshBasicMaterial, SpriteMaterial, Sprite, Points, TextureLoader } from 'three';
+import { Intersection, Vector2, Vector3, Object3D, WebGLRenderer, Camera, Scene, WebGLRendererParameters, OrthographicCamera, PerspectiveCamera, Group, Mesh as Mesh$1, WebGLCubeRenderTarget, CubeCamera, BufferGeometry, Material, Shape, ExtrudeGeometryOptions, Curve, Light, Texture, Color, ShaderMaterial, VideoTexture, MeshBasicMaterial, SpriteMaterial, Sprite, Points, GridHelper, TextureLoader } from 'three';
 import { EffectComposer as EffectComposer$1 } from 'three/examples/jsm/postprocessing/EffectComposer';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
@@ -1013,13 +1013,13 @@ declare const _default$12: vue.DefineComponent<{
 }>;
 //# sourceMappingURL=CubeCamera.d.ts.map
 
-interface MeshSetupInterface extends Object3DSetupInterface {
+interface MeshSetupInterface$1 extends Object3DSetupInterface {
     mesh?: Mesh$1;
     geometry?: BufferGeometry;
     material?: Material;
     loading?: boolean;
 }
-interface MeshInterface extends MeshSetupInterface {
+interface MeshInterface extends MeshSetupInterface$1 {
     setGeometry(g: BufferGeometry): void;
     setMaterial(m: Material): void;
 }
@@ -1029,7 +1029,7 @@ declare const MeshInjectionKey: InjectionKey<MeshPublicInterface>;
 declare const Mesh: vue.DefineComponent<{
     castShadow: BooleanConstructor;
     receiveShadow: BooleanConstructor;
-}, MeshSetupInterface, unknown, {}, {
+}, MeshSetupInterface$1, unknown, {}, {
     initMesh(): void;
     createGeometry(): void;
     addGeometryWatchers(props: Readonly<ComponentPropsOptions>): void;
@@ -4731,7 +4731,7 @@ declare const _default$z: vue.DefineComponent<{
 }, vue.ComponentOptionsMixin, vue.DefineComponent<{
     castShadow: BooleanConstructor;
     receiveShadow: BooleanConstructor;
-}, MeshSetupInterface, unknown, {}, {
+}, MeshSetupInterface$1, unknown, {}, {
     initMesh(): void;
     createGeometry(): void;
     addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
@@ -4938,7 +4938,7 @@ declare const _default$y: vue.DefineComponent<{
 }, vue.ComponentOptionsMixin, vue.DefineComponent<{
     castShadow: BooleanConstructor;
     receiveShadow: BooleanConstructor;
-}, MeshSetupInterface, unknown, {}, {
+}, MeshSetupInterface$1, unknown, {}, {
     initMesh(): void;
     createGeometry(): void;
     addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
@@ -5146,7 +5146,7 @@ declare const _default$x: vue.DefineComponent<{
 }, vue.ComponentOptionsMixin, vue.DefineComponent<{
     castShadow: BooleanConstructor;
     receiveShadow: BooleanConstructor;
-}, MeshSetupInterface, unknown, {}, {
+}, MeshSetupInterface$1, unknown, {}, {
     initMesh(): void;
     createGeometry(): void;
     addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
@@ -5373,7 +5373,7 @@ declare const _default$w: vue.DefineComponent<{
 }, vue.ComponentOptionsMixin, vue.DefineComponent<{
     castShadow: BooleanConstructor;
     receiveShadow: BooleanConstructor;
-}, MeshSetupInterface, unknown, {}, {
+}, MeshSetupInterface$1, unknown, {}, {
     initMesh(): void;
     createGeometry(): void;
     addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
@@ -5581,7 +5581,7 @@ declare const _default$v: vue.DefineComponent<{
 }, vue.ComponentOptionsMixin, vue.DefineComponent<{
     castShadow: BooleanConstructor;
     receiveShadow: BooleanConstructor;
-}, MeshSetupInterface, unknown, {}, {
+}, MeshSetupInterface$1, unknown, {}, {
     initMesh(): void;
     createGeometry(): void;
     addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
@@ -5759,7 +5759,7 @@ declare const _default$u: vue.DefineComponent<{
 }, vue.ComponentOptionsMixin, vue.DefineComponent<{
     castShadow: BooleanConstructor;
     receiveShadow: BooleanConstructor;
-}, MeshSetupInterface, unknown, {}, {
+}, MeshSetupInterface$1, unknown, {}, {
     initMesh(): void;
     createGeometry(): void;
     addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
@@ -5942,7 +5942,7 @@ declare const _default$t: vue.DefineComponent<{
 }, vue.ComponentOptionsMixin, vue.DefineComponent<{
     castShadow: BooleanConstructor;
     receiveShadow: BooleanConstructor;
-}, MeshSetupInterface, unknown, {}, {
+}, MeshSetupInterface$1, unknown, {}, {
     initMesh(): void;
     createGeometry(): void;
     addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
@@ -6126,7 +6126,7 @@ declare const _default$s: vue.DefineComponent<{
 }, vue.ComponentOptionsMixin, vue.DefineComponent<{
     castShadow: BooleanConstructor;
     receiveShadow: BooleanConstructor;
-}, MeshSetupInterface, unknown, {}, {
+}, MeshSetupInterface$1, unknown, {}, {
     initMesh(): void;
     createGeometry(): void;
     addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
@@ -6312,7 +6312,7 @@ declare const _default$r: vue.DefineComponent<{
 }, vue.ComponentOptionsMixin, vue.DefineComponent<{
     castShadow: BooleanConstructor;
     receiveShadow: BooleanConstructor;
-}, MeshSetupInterface, unknown, {}, {
+}, MeshSetupInterface$1, unknown, {}, {
     initMesh(): void;
     createGeometry(): void;
     addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
@@ -6502,7 +6502,7 @@ declare const _default$q: vue.DefineComponent<{
 }, vue.ComponentOptionsMixin, vue.DefineComponent<{
     castShadow: BooleanConstructor;
     receiveShadow: BooleanConstructor;
-}, MeshSetupInterface, unknown, {}, {
+}, MeshSetupInterface$1, unknown, {}, {
     initMesh(): void;
     createGeometry(): void;
     addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
@@ -6698,7 +6698,7 @@ declare const _default$p: vue.DefineComponent<{
 }, vue.ComponentOptionsMixin, vue.DefineComponent<{
     castShadow: BooleanConstructor;
     receiveShadow: BooleanConstructor;
-}, MeshSetupInterface, unknown, {}, {
+}, MeshSetupInterface$1, unknown, {}, {
     initMesh(): void;
     createGeometry(): void;
     addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
@@ -6916,7 +6916,7 @@ declare const _default$o: vue.DefineComponent<{
 }, vue.ComponentOptionsMixin, vue.DefineComponent<{
     castShadow: BooleanConstructor;
     receiveShadow: BooleanConstructor;
-}, MeshSetupInterface, unknown, {}, {
+}, MeshSetupInterface$1, unknown, {}, {
     initMesh(): void;
     createGeometry(): void;
     addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
@@ -7119,7 +7119,7 @@ declare const _default$n: vue.DefineComponent<{
 }, vue.ComponentOptionsMixin, vue.DefineComponent<{
     castShadow: BooleanConstructor;
     receiveShadow: BooleanConstructor;
-}, MeshSetupInterface, unknown, {}, {
+}, MeshSetupInterface$1, unknown, {}, {
     initMesh(): void;
     createGeometry(): void;
     addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
@@ -7283,7 +7283,7 @@ declare const _default$n: vue.DefineComponent<{
 }>;
 //# sourceMappingURL=Tetrahedron.d.ts.map
 
-interface TextSetupInterface extends MeshSetupInterface {
+interface TextSetupInterface extends MeshSetupInterface$1 {
     geometry?: TextGeometry;
     font?: Font;
 }
@@ -7342,7 +7342,7 @@ declare const _default$m: vue.DefineComponent<{
 }, vue.ComponentOptionsMixin, vue.DefineComponent<{
     castShadow: BooleanConstructor;
     receiveShadow: BooleanConstructor;
-}, MeshSetupInterface, unknown, {}, {
+}, MeshSetupInterface$1, unknown, {}, {
     initMesh(): void;
     createGeometry(): void;
     addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
@@ -7582,7 +7582,7 @@ declare const _default$l: vue.DefineComponent<{
 }, vue.ComponentOptionsMixin, vue.DefineComponent<{
     castShadow: BooleanConstructor;
     receiveShadow: BooleanConstructor;
-}, MeshSetupInterface, unknown, {}, {
+}, MeshSetupInterface$1, unknown, {}, {
     initMesh(): void;
     createGeometry(): void;
     addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
@@ -7791,7 +7791,7 @@ declare const _default$k: vue.DefineComponent<{
 }, vue.ComponentOptionsMixin, vue.DefineComponent<{
     castShadow: BooleanConstructor;
     receiveShadow: BooleanConstructor;
-}, MeshSetupInterface, unknown, {}, {
+}, MeshSetupInterface$1, unknown, {}, {
     initMesh(): void;
     createGeometry(): void;
     addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
@@ -8000,7 +8000,7 @@ declare const _default$j: vue.DefineComponent<{
 }, vue.ComponentOptionsMixin, vue.DefineComponent<{
     castShadow: BooleanConstructor;
     receiveShadow: BooleanConstructor;
-}, MeshSetupInterface, unknown, {}, {
+}, MeshSetupInterface$1, unknown, {}, {
     initMesh(): void;
     createGeometry(): void;
     addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
@@ -8176,7 +8176,7 @@ declare const _default$j: vue.DefineComponent<{
 }>;
 //# sourceMappingURL=Tube.d.ts.map
 
-interface ImageSetupInterface extends MeshSetupInterface {
+interface ImageSetupInterface extends MeshSetupInterface$1 {
     material?: MeshBasicMaterial;
     texture?: Texture;
 }
@@ -8204,7 +8204,7 @@ declare const _default$i: vue.DefineComponent<{
 }, vue.ComponentOptionsMixin, vue.DefineComponent<{
     castShadow: BooleanConstructor;
     receiveShadow: BooleanConstructor;
-}, MeshSetupInterface, unknown, {}, {
+}, MeshSetupInterface$1, unknown, {}, {
     initMesh(): void;
     createGeometry(): void;
     addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
@@ -8388,7 +8388,7 @@ declare const _default$h: vue.DefineComponent<{
 }, vue.ComponentOptionsMixin, vue.DefineComponent<{
     castShadow: BooleanConstructor;
     receiveShadow: BooleanConstructor;
-}, MeshSetupInterface, unknown, {}, {
+}, MeshSetupInterface$1, unknown, {}, {
     initMesh(): void;
     createGeometry(): void;
     addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
@@ -9525,6 +9525,9 @@ declare const _default$1: vue.DefineComponent<{
 }>;
 //# sourceMappingURL=ZoomBlurPass.d.ts.map
 
+interface MeshSetupInterface extends Object3DSetupInterface {
+    helper?: GridHelper;
+}
 declare const _default: vue.DefineComponent<{
     size: {
         type: NumberConstructor;
@@ -9544,9 +9547,10 @@ declare const _default: vue.DefineComponent<{
         type: NumberConstructor;
         default: number;
     };
-}, unknown, unknown, {}, {
-    initMesh(): void;
-    refreshGeometry(): void;
+}, MeshSetupInterface, unknown, {}, {
+    initHelper(): void;
+    destroyHelper(): void;
+    refreshHelper(): void;
 }, vue.ComponentOptionsMixin, vue.DefineComponent<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
@@ -9706,7 +9710,6 @@ declare const _default: vue.DefineComponent<{
     color1: number;
     color2: number;
 }>;
-//# sourceMappingURL=GridHelper.d.ts.map
 
 type OptionSetter = (dst: any, key: string, value: any) => void;
 declare function applyObjectProps(dst: any, options: Record<string, unknown>, setter?: OptionSetter): void;

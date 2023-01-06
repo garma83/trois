@@ -1,30 +1,12 @@
-// import { meshComponent } from 'troisjs/src/meshes/Mesh'
-// import { props } from 'troisjs/src/geometries/BoxGeometry'
-// import type { SceneInjectionKey } from 'troisjs/src/core/Scene'
-// import { BoxGeometry } from 'three'
-// import type { ComponentPropsOptions, ComponentPublicInstance, InjectionKey, watch } from 'vue'
 import { defineComponent, watch } from 'vue'
-import { Plane, Vector3, Material, Mesh as TMesh, GridHelper as TGridHelper } from 'three'
+import { GridHelper as TGridHelper } from 'three'
 import Object3D from '../core/Object3D'
-import Mesh from '../meshes/Mesh'
-// import type { Object3DSetupInterface } from 'troisjs/src/core/Object3D'
+import type { Object3DSetupInterface } from '../core/Object3D'
 import { bindProp } from '../tools'
 
-// export interface MeshSetupInterface extends Object3DSetupInterface {
-//     mesh?: TMesh
-//     geometry?: BufferGeometry
-//     material?: Material
-//     loading?: boolean
-// }
-
-// export interface MeshInterface extends MeshSetupInterface {
-//     setGeometry(g: BufferGeometry): void
-//     setMaterial(m: Material): void
-// }
-
-// export interface MeshPublicInterface extends ComponentPublicInstance, MeshInterface { }
-
-// export const MeshInjectionKey: InjectionKey<MeshPublicInterface> = Symbol('Mesh')
+export interface MeshSetupInterface extends Object3DSetupInterface {
+    helper?: TGridHelper
+}
 
 const props = {
     size: { type: Number, required: true, default: 100 },
@@ -37,61 +19,43 @@ export default defineComponent({
     extends: Object3D,
     name: "GridHelper",
     props,
+    setup(): MeshSetupInterface {
+        return {}
+    },
     mounted() {
-        // @ts-ignore
-        if(!this.mesh) this.initMesh()
+        if (!this.helper) this.initHelper()
 
         // add watchers
         const watchProps = ['size', 'divisions', 'color1', 'color2']
         watchProps.forEach(p => {
             // @ts-ignore
             watch(() => this[p], () => {
-                this.refreshGeometry()
+                this.refreshHelper()
             })
         })
     },
     unmounted() {
-        // @ts-ignore
-        if(this.mesh) this.removeFromParent(this.mesh)
+        this.destroyHelper();
     },
     methods: {
-        initMesh() {
-            var gridHelper = new TGridHelper(this.size, this.divisions, this.color1, this.color2);
-            gridHelper.geometry.rotateX(Math.PI / 2);
-            (gridHelper.material as Material).clippingPlanes = [
-                new Plane(new Vector3(1, 0, 0), this.size / 4),
-                new Plane(new Vector3(-1, 0, 0), this.size / 4),
-                new Plane(new Vector3(0, 1, 0), this.size / 4),
-                new Plane(new Vector3(0, -1, 0), this.size / 4),
-            ]
-            // console.log(gridHelper.material.clippingPlanes)
+        initHelper() {
+            this.helper = new TGridHelper(this.size, this.divisions, this.color1, this.color2);
 
-            bindProp(this, 'castShadow', gridHelper)
-            bindProp(this, 'receiveShadow', gridHelper)
+            bindProp(this, 'castShadow', this.helper)
+            bindProp(this, 'receiveShadow', this.helper)
 
-            // console.log(gridHelper, this.size, this.divisions, this.color1, this.color2)
-            // @ts-ignore
-            this.mesh = gridHelper
-            this.initObject3D(gridHelper)
+            this.initObject3D(this.helper)
         },
-        refreshGeometry() {
+        destroyHelper() {
+            if (this.helper) this.removeFromParent(this.helper)
             // @ts-ignore
-            this.getParent().remove(this.mesh)
-            // this.mesh.traverse(el => {
-
-            //     if (el.geometry) {
-            //         el.geometry.dispose();
-            //     }
-            // })
+            this.getParent()?.remove(this.helper)
             // @ts-ignore
-            this.mesh.dispose();
-            // this.mesh.geometry.dispose();
-            // this.mesh.material.dispose();
-            this.initMesh();
-            // const oldGeo = this.geometry
-            // this.createGeometry()
-            // if (this.mesh && this.geometry) this.mesh.geometry = this.geometry
-            // oldGeo?.dispose()
+            this.helper?.dispose();
+        },
+        refreshHelper() {
+            this.destroyHelper();
+            this.initHelper();
         },
     }
 })
