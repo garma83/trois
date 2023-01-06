@@ -152,7 +152,7 @@ interface RendererInterface extends RendererSetupInterface {
 interface RendererPublicInterface extends ComponentPublicInstance, RendererInterface {
 }
 declare const RendererInjectionKey: InjectionKey<RendererPublicInterface>;
-declare const _default$18: vue.DefineComponent<{
+declare const _default$19: vue.DefineComponent<{
     params: {
         type: PropType<WebGLRendererParameters>;
         default: () => {};
@@ -284,7 +284,7 @@ interface Vector3PropInterface extends Vector2PropInterface {
 interface EulerPropInterface extends Vector3PropInterface {
     order?: 'XYZ' | 'YZX' | 'ZXY' | 'XZY' | 'YXZ' | 'ZYX';
 }
-declare const _default$17: vue.DefineComponent<{
+declare const _default$18: vue.DefineComponent<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
     onPointerMove: FunctionConstructor;
@@ -420,7 +420,7 @@ declare const _default$17: vue.DefineComponent<{
     disableRemove: boolean;
 }>;
 
-declare const _default$16: vue.DefineComponent<{
+declare const _default$17: vue.DefineComponent<{
     left: {
         type: NumberConstructor;
         default: number;
@@ -521,7 +521,7 @@ declare const _default$16: vue.DefineComponent<{
 }>;
 //# sourceMappingURL=OrthographicCamera.d.ts.map
 
-declare const _default$15: vue.DefineComponent<{
+declare const _default$16: vue.DefineComponent<{
     aspect: {
         type: NumberConstructor;
         default: number;
@@ -604,7 +604,7 @@ declare const _default$15: vue.DefineComponent<{
 }>;
 //# sourceMappingURL=PerspectiveCamera.d.ts.map
 
-declare const _default$14: vue.DefineComponent<{}, {
+declare const _default$15: vue.DefineComponent<{}, {
     group: Group;
 }, {}, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<{
     onPointerEnter: FunctionConstructor;
@@ -744,7 +744,7 @@ declare const _default$14: vue.DefineComponent<{}, {
 //# sourceMappingURL=Group.d.ts.map
 
 declare const SceneInjectionKey: InjectionKey<Scene>;
-declare const _default$13: vue.DefineComponent<{
+declare const _default$14: vue.DefineComponent<{
     background: (ObjectConstructor | StringConstructor | NumberConstructor)[];
 }, {
     scene: Scene;
@@ -758,7 +758,7 @@ interface RaycasterSetupInterface {
     renderer?: RendererInterface;
     pointer?: PointerInterface;
 }
-declare const _default$12: vue.DefineComponent<{
+declare const _default$13: vue.DefineComponent<{
     onPointerEnter: {
         type: PropType<PointerIntersectCallbackType>;
         default: PointerIntersectCallbackType;
@@ -834,7 +834,7 @@ interface CubeCameraSetupInterface {
         (): void;
     };
 }
-declare const _default$11: vue.DefineComponent<{
+declare const _default$12: vue.DefineComponent<{
     cubeRTSize: {
         type: NumberConstructor;
         default: number;
@@ -1215,7 +1215,7 @@ declare const Geometry: vue.DefineComponent<{
     attributes: GeometryAttributeInterface[];
 }>;
 
-declare const _default$10: vue.DefineComponent<{
+declare const _default$11: vue.DefineComponent<{
     readonly size: NumberConstructor;
     readonly width: {
         readonly type: NumberConstructor;
@@ -1302,7 +1302,7 @@ declare const _default$10: vue.DefineComponent<{
     readonly depthSegments: number;
 }>;
 
-declare const _default$$: vue.DefineComponent<{
+declare const _default$10: vue.DefineComponent<{
     readonly radius: {
         readonly type: NumberConstructor;
         readonly default: 1;
@@ -1369,7 +1369,7 @@ declare const _default$$: vue.DefineComponent<{
     readonly thetaLength: number;
 }>;
 
-declare const _default$_: vue.DefineComponent<{
+declare const _default$$: vue.DefineComponent<{
     readonly radius: {
         readonly type: NumberConstructor;
         readonly default: 1;
@@ -1463,7 +1463,7 @@ declare const _default$_: vue.DefineComponent<{
     readonly openEnded: boolean;
 }>;
 
-declare const _default$Z: vue.DefineComponent<{
+declare const _default$_: vue.DefineComponent<{
     readonly radiusTop: {
         readonly type: NumberConstructor;
         readonly default: 1;
@@ -1566,7 +1566,7 @@ declare const _default$Z: vue.DefineComponent<{
     readonly radiusBottom: number;
 }>;
 
-declare const _default$Y: vue.DefineComponent<{
+declare const _default$Z: vue.DefineComponent<{
     readonly radius: {
         readonly type: NumberConstructor;
         readonly default: 1;
@@ -1615,7 +1615,7 @@ declare const _default$Y: vue.DefineComponent<{
     readonly radius: number;
 }>;
 
-declare const _default$X: vue.DefineComponent<{
+declare const _default$Y: vue.DefineComponent<{
     readonly shapes: {
         readonly type: PropType<Shape | Shape[]>;
     };
@@ -1657,7 +1657,7 @@ declare const _default$X: vue.DefineComponent<{
     };
 }>>, {}>;
 
-declare const _default$W: vue.DefineComponent<{
+declare const _default$X: vue.DefineComponent<{
     readonly radius: {
         readonly type: NumberConstructor;
         readonly default: 1;
@@ -1706,7 +1706,7 @@ declare const _default$W: vue.DefineComponent<{
     readonly radius: number;
 }>;
 
-declare const _default$V: vue.DefineComponent<{
+declare const _default$W: vue.DefineComponent<{
     readonly points: ArrayConstructor;
     readonly segments: {
         readonly type: NumberConstructor;
@@ -1766,7 +1766,7 @@ declare const _default$V: vue.DefineComponent<{
     readonly phiLength: number;
 }>;
 
-declare const _default$U: vue.DefineComponent<{
+declare const _default$V: vue.DefineComponent<{
     readonly radius: {
         readonly type: NumberConstructor;
         readonly default: 1;
@@ -1815,7 +1815,7 @@ declare const _default$U: vue.DefineComponent<{
     readonly radius: number;
 }>;
 
-declare const _default$T: vue.DefineComponent<{
+declare const _default$U: vue.DefineComponent<{
     readonly width: {
         readonly type: NumberConstructor;
         readonly default: 1;
@@ -1882,7 +1882,7 @@ declare const _default$T: vue.DefineComponent<{
     readonly heightSegments: number;
 }>;
 
-declare const _default$S: vue.DefineComponent<{
+declare const _default$T: vue.DefineComponent<{
     readonly vertices: ArrayConstructor;
     readonly indices: ArrayConstructor;
     readonly radius: {
@@ -1935,7 +1935,7 @@ declare const _default$S: vue.DefineComponent<{
     readonly radius: number;
 }>;
 
-declare const _default$R: vue.DefineComponent<{
+declare const _default$S: vue.DefineComponent<{
     readonly innerRadius: {
         readonly type: NumberConstructor;
         readonly default: 0.5;
@@ -2020,7 +2020,7 @@ declare const _default$R: vue.DefineComponent<{
     readonly phiSegments: number;
 }>;
 
-declare const _default$Q: vue.DefineComponent<{
+declare const _default$R: vue.DefineComponent<{
     readonly radius: {
         readonly type: NumberConstructor;
         readonly default: 1;
@@ -2114,7 +2114,7 @@ declare const _default$Q: vue.DefineComponent<{
     readonly phiLength: number;
 }>;
 
-declare const _default$P: vue.DefineComponent<{
+declare const _default$Q: vue.DefineComponent<{
     readonly shapes: {
         readonly type: PropType<Shape | Shape[]>;
     };
@@ -2156,7 +2156,7 @@ declare const _default$P: vue.DefineComponent<{
     };
 }>>, {}>;
 
-declare const _default$O: vue.DefineComponent<{
+declare const _default$P: vue.DefineComponent<{
     readonly radius: {
         readonly type: NumberConstructor;
         readonly default: 1;
@@ -2205,7 +2205,7 @@ declare const _default$O: vue.DefineComponent<{
     readonly radius: number;
 }>;
 
-declare const _default$N: vue.DefineComponent<{
+declare const _default$O: vue.DefineComponent<{
     readonly radius: {
         readonly type: NumberConstructor;
         readonly default: 1;
@@ -2281,7 +2281,7 @@ declare const _default$N: vue.DefineComponent<{
     readonly arc: number;
 }>;
 
-declare const _default$M: vue.DefineComponent<{
+declare const _default$N: vue.DefineComponent<{
     readonly radius: {
         readonly type: NumberConstructor;
         readonly default: 1;
@@ -2366,7 +2366,7 @@ declare const _default$M: vue.DefineComponent<{
     readonly tubularSegments: number;
 }>;
 
-declare const _default$L: vue.DefineComponent<{
+declare const _default$M: vue.DefineComponent<{
     readonly points: ArrayConstructor;
     readonly path: typeof Curve;
     readonly tubularSegments: {
@@ -2442,7 +2442,7 @@ interface LightSetupInterface {
     light?: Light;
 }
 
-declare const _default$K: vue.DefineComponent<{}, {}, {}, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<{
+declare const _default$L: vue.DefineComponent<{}, {}, {}, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<{
     color: {
         type: StringConstructor;
         default: string;
@@ -2635,7 +2635,7 @@ declare const _default$K: vue.DefineComponent<{}, {}, {}, {}, {}, vue.ComponentO
 }>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{}>>, {}>;
 //# sourceMappingURL=AmbientLight.d.ts.map
 
-declare const _default$J: vue.DefineComponent<{
+declare const _default$K: vue.DefineComponent<{
     target: {
         type: PropType<Vector3PropInterface>;
         default: () => {
@@ -2848,7 +2848,7 @@ declare const _default$J: vue.DefineComponent<{
 }>;
 //# sourceMappingURL=DirectionalLight.d.ts.map
 
-declare const _default$I: vue.DefineComponent<{
+declare const _default$J: vue.DefineComponent<{
     groundColor: {
         type: StringConstructor;
         default: string;
@@ -3053,7 +3053,7 @@ declare const _default$I: vue.DefineComponent<{
 }>;
 //# sourceMappingURL=HemisphereLight.d.ts.map
 
-declare const _default$H: vue.DefineComponent<{
+declare const _default$I: vue.DefineComponent<{
     distance: {
         type: NumberConstructor;
         default: number;
@@ -3267,7 +3267,7 @@ declare const _default$H: vue.DefineComponent<{
 }>;
 //# sourceMappingURL=PointLight.d.ts.map
 
-declare const _default$G: vue.DefineComponent<{
+declare const _default$H: vue.DefineComponent<{
     width: {
         type: NumberConstructor;
         default: number;
@@ -3484,7 +3484,7 @@ declare const _default$G: vue.DefineComponent<{
 }>;
 //# sourceMappingURL=RectAreaLight.d.ts.map
 
-declare const _default$F: vue.DefineComponent<{
+declare const _default$G: vue.DefineComponent<{
     angle: {
         type: NumberConstructor;
         default: number;
@@ -4316,7 +4316,7 @@ declare const ToonMaterial: vue.DefineComponent<{
     props: ToonMaterialPropsInterface;
 }>;
 
-declare const _default$E: vue.DefineComponent<{
+declare const _default$F: vue.DefineComponent<{
     src: StringConstructor;
     name: {
         type: StringConstructor;
@@ -4376,7 +4376,7 @@ declare const _default$E: vue.DefineComponent<{
 }>;
 //# sourceMappingURL=MatcapMaterial.d.ts.map
 
-declare const _default$D: vue.DefineComponent<{
+declare const _default$E: vue.DefineComponent<{
     props: {
         type: ObjectConstructor;
         default: () => {
@@ -4451,7 +4451,7 @@ interface SubSurfaceMaterialUniformsInterface {
     thicknessPower?: number;
     thicknessScale?: number;
 }
-declare const _default$C: vue.DefineComponent<{
+declare const _default$D: vue.DefineComponent<{
     uniforms: {
         type: PropType<SubSurfaceMaterialUniformsInterface>;
         default: () => {
@@ -4528,7 +4528,7 @@ interface TexureInterface {
     material?: MaterialInterface;
     texture?: Texture;
 }
-declare const _default$B: vue.DefineComponent<{
+declare const _default$C: vue.DefineComponent<{
     name: {
         type: StringConstructor;
         default: string;
@@ -4566,7 +4566,7 @@ declare const _default$B: vue.DefineComponent<{
     props: Record<string, any>;
 }>;
 
-declare const _default$A: vue.DefineComponent<{
+declare const _default$B: vue.DefineComponent<{
     name: {
         type: StringConstructor;
         default: string;
@@ -4649,7 +4649,7 @@ declare const _default$A: vue.DefineComponent<{
 }>;
 //# sourceMappingURL=CubeTexture.d.ts.map
 
-declare const _default$z: vue.DefineComponent<{
+declare const _default$A: vue.DefineComponent<{
     videoId: {
         type: StringConstructor;
         required: true;
@@ -4700,7 +4700,7 @@ declare const _default$z: vue.DefineComponent<{
 }>>, {}>;
 //# sourceMappingURL=VideoTexture.d.ts.map
 
-declare const _default$y: vue.DefineComponent<{
+declare const _default$z: vue.DefineComponent<{
     readonly size: NumberConstructor;
     readonly width: {
         readonly type: NumberConstructor;
@@ -4916,7 +4916,7 @@ declare const _default$y: vue.DefineComponent<{
 }>;
 //# sourceMappingURL=Box.d.ts.map
 
-declare const _default$x: vue.DefineComponent<{
+declare const _default$y: vue.DefineComponent<{
     readonly radius: {
         readonly type: NumberConstructor;
         readonly default: 1;
@@ -5112,7 +5112,7 @@ declare const _default$x: vue.DefineComponent<{
 }>;
 //# sourceMappingURL=Circle.d.ts.map
 
-declare const _default$w: vue.DefineComponent<{
+declare const _default$x: vue.DefineComponent<{
     readonly radius: {
         readonly type: NumberConstructor;
         readonly default: 1;
@@ -5335,7 +5335,7 @@ declare const _default$w: vue.DefineComponent<{
 }>;
 //# sourceMappingURL=Cone.d.ts.map
 
-declare const _default$v: vue.DefineComponent<{
+declare const _default$w: vue.DefineComponent<{
     readonly radiusTop: {
         readonly type: NumberConstructor;
         readonly default: 1;
@@ -5567,7 +5567,7 @@ declare const _default$v: vue.DefineComponent<{
 }>;
 //# sourceMappingURL=Cylinder.d.ts.map
 
-declare const _default$u: vue.DefineComponent<{
+declare const _default$v: vue.DefineComponent<{
     readonly radius: {
         readonly type: NumberConstructor;
         readonly default: 1;
@@ -5745,7 +5745,7 @@ declare const _default$u: vue.DefineComponent<{
 }>;
 //# sourceMappingURL=Dodecahedron.d.ts.map
 
-declare const _default$t: vue.DefineComponent<{
+declare const _default$u: vue.DefineComponent<{
     readonly radius: {
         readonly type: NumberConstructor;
         readonly default: 1;
@@ -5923,7 +5923,7 @@ declare const _default$t: vue.DefineComponent<{
 }>;
 //# sourceMappingURL=Icosahedron.d.ts.map
 
-declare const _default$s: vue.DefineComponent<{
+declare const _default$t: vue.DefineComponent<{
     readonly points: ArrayConstructor;
     readonly segments: {
         readonly type: NumberConstructor;
@@ -6112,7 +6112,7 @@ declare const _default$s: vue.DefineComponent<{
 }>;
 //# sourceMappingURL=Lathe.d.ts.map
 
-declare const _default$r: vue.DefineComponent<{
+declare const _default$s: vue.DefineComponent<{
     readonly radius: {
         readonly type: NumberConstructor;
         readonly default: 1;
@@ -6290,7 +6290,7 @@ declare const _default$r: vue.DefineComponent<{
 }>;
 //# sourceMappingURL=Octahedron.d.ts.map
 
-declare const _default$q: vue.DefineComponent<{
+declare const _default$r: vue.DefineComponent<{
     readonly width: {
         readonly type: NumberConstructor;
         readonly default: 1;
@@ -6486,7 +6486,7 @@ declare const _default$q: vue.DefineComponent<{
 }>;
 //# sourceMappingURL=Plane.d.ts.map
 
-declare const _default$p: vue.DefineComponent<{
+declare const _default$q: vue.DefineComponent<{
     readonly vertices: ArrayConstructor;
     readonly indices: ArrayConstructor;
     readonly radius: {
@@ -6668,7 +6668,7 @@ declare const _default$p: vue.DefineComponent<{
 }>;
 //# sourceMappingURL=Polyhedron.d.ts.map
 
-declare const _default$o: vue.DefineComponent<{
+declare const _default$p: vue.DefineComponent<{
     readonly innerRadius: {
         readonly type: NumberConstructor;
         readonly default: 0.5;
@@ -6882,7 +6882,7 @@ declare const _default$o: vue.DefineComponent<{
 }>;
 //# sourceMappingURL=Ring.d.ts.map
 
-declare const _default$n: vue.DefineComponent<{
+declare const _default$o: vue.DefineComponent<{
     readonly radius: {
         readonly type: NumberConstructor;
         readonly default: 1;
@@ -7105,7 +7105,7 @@ declare const _default$n: vue.DefineComponent<{
 }>;
 //# sourceMappingURL=Sphere.d.ts.map
 
-declare const _default$m: vue.DefineComponent<{
+declare const _default$n: vue.DefineComponent<{
     readonly radius: {
         readonly type: NumberConstructor;
         readonly default: 1;
@@ -7287,7 +7287,7 @@ interface TextSetupInterface extends MeshSetupInterface {
     geometry?: TextGeometry;
     font?: Font;
 }
-declare const _default$l: vue.DefineComponent<{
+declare const _default$m: vue.DefineComponent<{
     readonly text: {
         readonly type: StringConstructor;
         readonly required: true;
@@ -7556,7 +7556,7 @@ declare const _default$l: vue.DefineComponent<{
 }>;
 //# sourceMappingURL=Text.d.ts.map
 
-declare const _default$k: vue.DefineComponent<{
+declare const _default$l: vue.DefineComponent<{
     readonly radius: {
         readonly type: NumberConstructor;
         readonly default: 1;
@@ -7761,7 +7761,7 @@ declare const _default$k: vue.DefineComponent<{
 }>;
 //# sourceMappingURL=Torus.d.ts.map
 
-declare const _default$j: vue.DefineComponent<{
+declare const _default$k: vue.DefineComponent<{
     readonly radius: {
         readonly type: NumberConstructor;
         readonly default: 1;
@@ -7975,7 +7975,7 @@ declare const _default$j: vue.DefineComponent<{
 }>;
 //# sourceMappingURL=TorusKnot.d.ts.map
 
-declare const _default$i: vue.DefineComponent<{
+declare const _default$j: vue.DefineComponent<{
     readonly points: ArrayConstructor;
     readonly path: typeof three.Curve;
     readonly tubularSegments: {
@@ -8180,7 +8180,7 @@ interface ImageSetupInterface extends MeshSetupInterface {
     material?: MeshBasicMaterial;
     texture?: Texture;
 }
-declare const _default$h: vue.DefineComponent<{
+declare const _default$i: vue.DefineComponent<{
     src: {
         type: StringConstructor;
         required: true;
@@ -8378,7 +8378,7 @@ declare const _default$h: vue.DefineComponent<{
 }>;
 //# sourceMappingURL=Image.d.ts.map
 
-declare const _default$g: vue.DefineComponent<{
+declare const _default$h: vue.DefineComponent<{
     count: {
         type: NumberConstructor;
         required: true;
@@ -8550,7 +8550,7 @@ interface SpriteSetupInterface extends Object3DSetupInterface {
     material?: SpriteMaterial;
     sprite?: Sprite;
 }
-declare const _default$f: vue.DefineComponent<{
+declare const _default$g: vue.DefineComponent<{
     src: {
         type: StringConstructor;
         required: true;
@@ -8708,7 +8708,7 @@ interface PointsSetupInterface extends Object3DSetupInterface {
     geometry?: BufferGeometry;
     material?: Material;
 }
-declare const _default$e: vue.DefineComponent<{}, PointsSetupInterface, {}, {}, {
+declare const _default$f: vue.DefineComponent<{}, PointsSetupInterface, {}, {}, {
     setGeometry(geometry: BufferGeometry): void;
     setMaterial(material: Material): void;
 }, vue.ComponentOptionsMixin, vue.DefineComponent<{
@@ -8847,7 +8847,7 @@ declare const _default$e: vue.DefineComponent<{}, PointsSetupInterface, {}, {}, 
     disableRemove: boolean;
 }>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{}>>, {}>;
 
-declare const _default$d: vue.DefineComponent<{}, {}, {}, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<{
+declare const _default$e: vue.DefineComponent<{}, {}, {}, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<{
     src: {
         type: StringConstructor;
         required: true;
@@ -9005,7 +9005,7 @@ declare const _default$d: vue.DefineComponent<{}, {}, {}, {}, {}, vue.ComponentO
 }, {}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{}>>, {}>;
 //# sourceMappingURL=GLTF.d.ts.map
 
-declare const _default$c: vue.DefineComponent<{}, {}, {}, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<{
+declare const _default$d: vue.DefineComponent<{}, {}, {}, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<{
     src: {
         type: StringConstructor;
         required: true;
@@ -9172,7 +9172,7 @@ interface EffectComposerInterface extends EffectComposerSetupInterface {
     removePass(pass: Pass): void;
 }
 declare const ComposerInjectionKey: InjectionKey<EffectComposerInterface>;
-declare const _default$b: vue.DefineComponent<{}, EffectComposerSetupInterface, {}, {}, {
+declare const _default$c: vue.DefineComponent<{}, EffectComposerSetupInterface, {}, {}, {
     addPass(pass: Pass): void;
     removePass(pass: Pass): void;
     resize(): void;
@@ -9183,20 +9183,20 @@ interface EffectSetupInterface {
     composer?: EffectComposerInterface;
     pass?: Pass;
 }
-declare const _default$a: vue.DefineComponent<{}, EffectSetupInterface, {}, {}, {
+declare const _default$b: vue.DefineComponent<{}, EffectSetupInterface, {}, {}, {
     initEffectPass(pass: Pass): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "ready"[], "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{}>> & {
     onReady?: ((...args: any[]) => any) | undefined;
 }, {}>;
 
-declare const _default$9: vue.DefineComponent<{}, {}, {}, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<{}, EffectSetupInterface, {}, {}, {
+declare const _default$a: vue.DefineComponent<{}, {}, {}, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<{}, EffectSetupInterface, {}, {}, {
     initEffectPass(pass: three_examples_jsm_postprocessing_Pass.Pass): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "ready"[], "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{}>> & {
     onReady?: ((...args: any[]) => any) | undefined;
 }, {}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{}>>, {}>;
 //# sourceMappingURL=RenderPass.d.ts.map
 
-declare const _default$8: vue.DefineComponent<{
+declare const _default$9: vue.DefineComponent<{
     readonly focus: {
         readonly type: NumberConstructor;
         readonly default: 1;
@@ -9233,7 +9233,7 @@ declare const _default$8: vue.DefineComponent<{
 }>;
 //# sourceMappingURL=BokehPass.d.ts.map
 
-declare const _default$7: vue.DefineComponent<{
+declare const _default$8: vue.DefineComponent<{
     readonly noiseIntensity: {
         readonly type: NumberConstructor;
         readonly default: 0.5;
@@ -9279,7 +9279,7 @@ declare const _default$7: vue.DefineComponent<{
 }>;
 //# sourceMappingURL=FilmPass.d.ts.map
 
-declare const _default$6: vue.DefineComponent<{}, {}, {}, {}, {
+declare const _default$7: vue.DefineComponent<{}, {}, {}, {}, {
     resize({ size }: {
         size: SizeInterface;
     }): void;
@@ -9290,7 +9290,7 @@ declare const _default$6: vue.DefineComponent<{}, {}, {}, {}, {
 }, {}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{}>>, {}>;
 //# sourceMappingURL=FXAAPass.d.ts.map
 
-declare const _default$5: vue.DefineComponent<{
+declare const _default$6: vue.DefineComponent<{
     readonly shape: {
         readonly type: NumberConstructor;
         readonly default: 1;
@@ -9354,14 +9354,14 @@ declare const _default$5: vue.DefineComponent<{
 }>;
 //# sourceMappingURL=HalftonePass.d.ts.map
 
-declare const _default$4: vue.DefineComponent<{}, {}, {}, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<{}, EffectSetupInterface, {}, {}, {
+declare const _default$5: vue.DefineComponent<{}, {}, {}, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<{}, EffectSetupInterface, {}, {}, {
     initEffectPass(pass: three_examples_jsm_postprocessing_Pass.Pass): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "ready"[], "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{}>> & {
     onReady?: ((...args: any[]) => any) | undefined;
 }, {}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{}>>, {}>;
 //# sourceMappingURL=SMAAPass.d.ts.map
 
-declare const _default$3: vue.DefineComponent<{
+declare const _default$4: vue.DefineComponent<{
     options: {
         type: ObjectConstructor;
         default: () => {};
@@ -9394,7 +9394,7 @@ interface TiltShiftPassSetupInterface {
     pass1?: ShaderPass;
     pass2?: ShaderPass;
 }
-declare const _default$2: vue.DefineComponent<{
+declare const _default$3: vue.DefineComponent<{
     readonly blurRadius: {
         readonly type: NumberConstructor;
         readonly default: 10;
@@ -9454,7 +9454,7 @@ declare const _default$2: vue.DefineComponent<{
 }>;
 //# sourceMappingURL=TiltShiftPass.d.ts.map
 
-declare const _default$1: vue.DefineComponent<{
+declare const _default$2: vue.DefineComponent<{
     readonly strength: {
         readonly type: NumberConstructor;
         readonly default: 1.5;
@@ -9491,7 +9491,7 @@ declare const _default$1: vue.DefineComponent<{
 }>;
 //# sourceMappingURL=UnrealBloomPass.d.ts.map
 
-declare const _default: vue.DefineComponent<{
+declare const _default$1: vue.DefineComponent<{
     center: {
         type: PropType<Vector2PropInterface>;
         default: () => {
@@ -9525,6 +9525,189 @@ declare const _default: vue.DefineComponent<{
 }>;
 //# sourceMappingURL=ZoomBlurPass.d.ts.map
 
+declare const _default: vue.DefineComponent<{
+    size: {
+        type: NumberConstructor;
+        required: boolean;
+        default: number;
+    };
+    divisions: {
+        type: NumberConstructor;
+        required: boolean;
+        default: number;
+    };
+    color1: {
+        type: NumberConstructor;
+        default: number;
+    };
+    color2: {
+        type: NumberConstructor;
+        default: number;
+    };
+}, unknown, unknown, {}, {
+    initMesh(): void;
+    refreshGeometry(): void;
+}, vue.ComponentOptionsMixin, vue.DefineComponent<{
+    onPointerEnter: FunctionConstructor;
+    onPointerOver: FunctionConstructor;
+    onPointerMove: FunctionConstructor;
+    onPointerLeave: FunctionConstructor;
+    onPointerDown: FunctionConstructor;
+    onPointerUp: FunctionConstructor;
+    onClick: FunctionConstructor;
+    position: {
+        type: vue.PropType<Vector3PropInterface>;
+        default: () => {
+            x: number;
+            y: number;
+            z: number;
+        };
+    };
+    rotation: {
+        type: vue.PropType<EulerPropInterface>;
+        default: () => {
+            x: number;
+            y: number;
+            z: number;
+        };
+    };
+    scale: {
+        type: vue.PropType<Vector3PropInterface>;
+        default: () => {
+            x: number;
+            y: number;
+            z: number;
+            order: string;
+        };
+    };
+    lookAt: {
+        type: vue.PropType<Vector3PropInterface>;
+        default: null;
+    };
+    userData: {
+        type: ObjectConstructor;
+        default: () => {};
+    };
+    visible: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    props: {
+        type: ObjectConstructor;
+        default: () => {};
+    };
+    disableAdd: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    disableRemove: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+}, Object3DSetupInterface, unknown, {}, {
+    initObject3D(o3d: three.Object3D<three.Event>): void;
+    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string>, {}> | undefined;
+    addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
+    removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
+    add(o: three.Object3D<three.Event>): void;
+    remove(o: three.Object3D<three.Event>): void;
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+    onPointerEnter: FunctionConstructor;
+    onPointerOver: FunctionConstructor;
+    onPointerMove: FunctionConstructor;
+    onPointerLeave: FunctionConstructor;
+    onPointerDown: FunctionConstructor;
+    onPointerUp: FunctionConstructor;
+    onClick: FunctionConstructor;
+    position: {
+        type: vue.PropType<Vector3PropInterface>;
+        default: () => {
+            x: number;
+            y: number;
+            z: number;
+        };
+    };
+    rotation: {
+        type: vue.PropType<EulerPropInterface>;
+        default: () => {
+            x: number;
+            y: number;
+            z: number;
+        };
+    };
+    scale: {
+        type: vue.PropType<Vector3PropInterface>;
+        default: () => {
+            x: number;
+            y: number;
+            z: number;
+            order: string;
+        };
+    };
+    lookAt: {
+        type: vue.PropType<Vector3PropInterface>;
+        default: null;
+    };
+    userData: {
+        type: ObjectConstructor;
+        default: () => {};
+    };
+    visible: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    props: {
+        type: ObjectConstructor;
+        default: () => {};
+    };
+    disableAdd: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    disableRemove: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+}>> & {
+    onReady?: ((...args: any[]) => any) | undefined;
+    onCreated?: ((...args: any[]) => any) | undefined;
+}, {
+    position: Vector3PropInterface;
+    scale: Vector3PropInterface;
+    visible: boolean;
+    rotation: EulerPropInterface;
+    props: Record<string, any>;
+    lookAt: Vector3PropInterface;
+    userData: Record<string, any>;
+    disableAdd: boolean;
+    disableRemove: boolean;
+}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+    size: {
+        type: NumberConstructor;
+        required: boolean;
+        default: number;
+    };
+    divisions: {
+        type: NumberConstructor;
+        required: boolean;
+        default: number;
+    };
+    color1: {
+        type: NumberConstructor;
+        default: number;
+    };
+    color2: {
+        type: NumberConstructor;
+        default: number;
+    };
+}>>, {
+    size: number;
+    divisions: number;
+    color1: number;
+    color2: number;
+}>;
+//# sourceMappingURL=GridHelper.d.ts.map
+
 type OptionSetter = (dst: any, key: string, value: any) => void;
 declare function applyObjectProps(dst: any, options: Record<string, unknown>, setter?: OptionSetter): void;
 declare function bindObjectProp(src: any, prop: string, dst: any, apply?: boolean, setter?: OptionSetter): WatchStopHandle;
@@ -9557,4 +9740,4 @@ interface TexturesInterface {
 }
 declare function useTextures(): TexturesInterface;
 
-export { _default$K as AmbientLight, BasicMaterial, _default$8 as BokehPass, _default$y as Box, _default$10 as BoxGeometry, Geometry as BufferGeometry, _default$15 as Camera, _default$x as Circle, _default$$ as CircleGeometry, ComposerInjectionKey, _default$w as Cone, _default$_ as ConeGeometry, _default$11 as CubeCamera, _default$A as CubeTexture, _default$v as Cylinder, _default$Z as CylinderGeometry, _default$J as DirectionalLight, _default$u as Dodecahedron, _default$Y as DodecahedronGeometry, _default$b as EffectComposer, _default$a as EffectPass, _default$X as ExtrudeGeometry, _default$6 as FXAAPass, _default$c as FbxModel, _default$7 as FilmPass, _default$d as GltfModel, _default$14 as Group, _default$5 as HalftonePass, _default$I as HemisphereLight, _default$t as Icosahedron, _default$W as IcosahedronGeometry, _default$h as Image, _default$g as InstancedMesh, LambertMaterial, _default$s as Lathe, _default$V as LatheGeometry, _default$E as MatcapMaterial, BaseMaterial as Material, MaterialInjectionKey, MaterialPublicInterface, Mesh, MeshInjectionKey, MeshPublicInterface, _default$17 as Object3D, Object3DPublicInterface, _default$r as Octahedron, _default$U as OctahedronGeometry, _default$16 as OrthographicCamera, _default$15 as PerspectiveCamera, PhongMaterial, PhysicalMaterial, _default$q as Plane, _default$T as PlaneGeometry, _default$H as PointLight, _default$e as Points, PointsMaterial, _default$p as Polyhedron, _default$S as PolyhedronGeometry, _default$12 as Raycaster, _default$G as RectAreaLight, _default$9 as RenderPass, _default$18 as Renderer, RendererInjectionKey, RendererPublicInterface, _default$o as Ring, _default$R as RingGeometry, _default$4 as SMAAPass, _default$3 as SSAOPass, _default$13 as Scene, SceneInjectionKey, _default$D as ShaderMaterial, ShadowMaterial, _default$P as ShapeGeometry, _default$n as Sphere, _default$Q as SphereGeometry, _default$F as SpotLight, _default$f as Sprite, StandardMaterial, _default$C as SubSurfaceMaterial, _default$m as Tetrahedron, _default$O as TetrahedronGeometry, _default$l as Text, _default$B as Texture, _default$2 as TiltShiftPass, ToonMaterial, _default$k as Torus, _default$N as TorusGeometry, _default$j as TorusKnot, _default$M as TorusKnotGeometry, TroisJSVuePlugin, _default$i as Tube, _default$L as TubeGeometry, _default$1 as UnrealBloomPass, _default$z as VideoTexture, _default as ZoomBlurPass, applyObjectProps, bindObjectProp, bindObjectProps, bindProp, bindProps, createApp, getMatcapUrl, lerp, limit, propsValues, setFromProp, useTextures };
+export { _default$L as AmbientLight, BasicMaterial, _default$9 as BokehPass, _default$z as Box, _default$11 as BoxGeometry, Geometry as BufferGeometry, _default$16 as Camera, _default$y as Circle, _default$10 as CircleGeometry, ComposerInjectionKey, _default$x as Cone, _default$$ as ConeGeometry, _default$12 as CubeCamera, _default$B as CubeTexture, _default$w as Cylinder, _default$_ as CylinderGeometry, _default$K as DirectionalLight, _default$v as Dodecahedron, _default$Z as DodecahedronGeometry, _default$c as EffectComposer, _default$b as EffectPass, _default$Y as ExtrudeGeometry, _default$7 as FXAAPass, _default$d as FbxModel, _default$8 as FilmPass, _default$e as GltfModel, _default as GridHelper, _default$15 as Group, _default$6 as HalftonePass, _default$J as HemisphereLight, _default$u as Icosahedron, _default$X as IcosahedronGeometry, _default$i as Image, _default$h as InstancedMesh, LambertMaterial, _default$t as Lathe, _default$W as LatheGeometry, _default$F as MatcapMaterial, BaseMaterial as Material, MaterialInjectionKey, MaterialPublicInterface, Mesh, MeshInjectionKey, MeshPublicInterface, _default$18 as Object3D, Object3DPublicInterface, _default$s as Octahedron, _default$V as OctahedronGeometry, _default$17 as OrthographicCamera, _default$16 as PerspectiveCamera, PhongMaterial, PhysicalMaterial, _default$r as Plane, _default$U as PlaneGeometry, _default$I as PointLight, _default$f as Points, PointsMaterial, _default$q as Polyhedron, _default$T as PolyhedronGeometry, _default$13 as Raycaster, _default$H as RectAreaLight, _default$a as RenderPass, _default$19 as Renderer, RendererInjectionKey, RendererPublicInterface, _default$p as Ring, _default$S as RingGeometry, _default$5 as SMAAPass, _default$4 as SSAOPass, _default$14 as Scene, SceneInjectionKey, _default$E as ShaderMaterial, ShadowMaterial, _default$Q as ShapeGeometry, _default$o as Sphere, _default$R as SphereGeometry, _default$G as SpotLight, _default$g as Sprite, StandardMaterial, _default$D as SubSurfaceMaterial, _default$n as Tetrahedron, _default$P as TetrahedronGeometry, _default$m as Text, _default$C as Texture, _default$3 as TiltShiftPass, ToonMaterial, _default$l as Torus, _default$O as TorusGeometry, _default$k as TorusKnot, _default$N as TorusKnotGeometry, TroisJSVuePlugin, _default$j as Tube, _default$M as TubeGeometry, _default$2 as UnrealBloomPass, _default$A as VideoTexture, _default$1 as ZoomBlurPass, applyObjectProps, bindObjectProp, bindObjectProps, bindProp, bindProps, createApp, getMatcapUrl, lerp, limit, propsValues, setFromProp, useTextures };

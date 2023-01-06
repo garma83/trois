@@ -1,5 +1,5 @@
 // export { default as Mesh, MeshInjectionKey } from './Mesh'
 
-export { default as Grid } from './Grid'
+export { default as GridHelper } from './GridHelper'
 
 // export type { MeshPublicInterface } from './Mesh'

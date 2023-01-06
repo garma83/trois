@@ -35,13 +35,8 @@ const props = {
 
 export default defineComponent({
     extends: Object3D,
-    name: "Grid",
+    name: "GridHelper",
     props,
-    provide() {
-        return {
-            // [MeshInjectionKey as symbol]: this,
-        }
-    },
     mounted() {
         // @ts-ignore
         if(!this.mesh) this.initMesh()
