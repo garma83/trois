@@ -11,8 +11,8 @@ export interface MeshSetupInterface extends Object3DSetupInterface {
 const props = {
     size: { type: Number, required: true, default: 100 },
     divisions: { type: Number, required: true, default: 10 },
-    color1: { type: Number, default: 2 },
-    color2: { type: Number, default: 2 },
+    color1: { type: Number, default: 0x000000 },
+    color2: { type: Number, default: 0x000000 },
 }
 
 export default defineComponent({
