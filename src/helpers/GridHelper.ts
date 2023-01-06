@@ -39,6 +39,7 @@ export default defineComponent({
     },
     methods: {
         initHelper() {
+            console.log(this.size, this.divisions, this.color1, this.color2)
             this.helper = new TGridHelper(this.size, this.divisions, this.color1, this.color2);
 
             bindProp(this, 'castShadow', this.helper)
