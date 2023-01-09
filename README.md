@@ -108,3 +108,10 @@ TroisJS is really simple and easy to use :
 ```
 
 Read more on https://troisjs.github.io/guide/
+
+## Usage (CDN)
+
+Extensions by garma83 :
+
+- Added GridHelper support
+- Added support for ExtrudeGeometry to accept option arrays which triggers mergeBufferGeometry

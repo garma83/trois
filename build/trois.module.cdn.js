@@ -1,6 +1,7 @@
 import { toRef, watch, ref, defineComponent, watchEffect, inject, provide, getCurrentInstance, onUnmounted, createApp as createApp$1 } from 'https://unpkg.com/vue@3.2.20/dist/vue.esm-browser.prod.js';
 import { Vector3, Raycaster as Raycaster$1, Plane as Plane$1, Vector2, InstancedMesh as InstancedMesh$1, WebGLRenderer, OrthographicCamera as OrthographicCamera$1, PerspectiveCamera as PerspectiveCamera$1, Scene as Scene$1, Color, Texture as Texture$1, Group as Group$1, WebGLCubeRenderTarget, RGBAFormat, LinearMipmapLinearFilter, CubeCamera as CubeCamera$1, Mesh as Mesh$1, BufferGeometry, BufferAttribute, BoxGeometry as BoxGeometry$1, CircleGeometry as CircleGeometry$1, ConeGeometry as ConeGeometry$1, CylinderGeometry as CylinderGeometry$1, DodecahedronGeometry as DodecahedronGeometry$1, ExtrudeGeometry as ExtrudeGeometry$1, IcosahedronGeometry as IcosahedronGeometry$1, LatheGeometry as LatheGeometry$1, OctahedronGeometry as OctahedronGeometry$1, PlaneGeometry as PlaneGeometry$1, PolyhedronGeometry as PolyhedronGeometry$1, RingGeometry as RingGeometry$1, SphereGeometry as SphereGeometry$1, ShapeGeometry as ShapeGeometry$1, TetrahedronGeometry as TetrahedronGeometry$1, TorusGeometry as TorusGeometry$1, TorusKnotGeometry as TorusKnotGeometry$1, CatmullRomCurve3, Curve, TubeGeometry as TubeGeometry$1, SpotLight as SpotLight$1, DirectionalLight as DirectionalLight$1, AmbientLight as AmbientLight$1, HemisphereLight as HemisphereLight$1, PointLight as PointLight$1, RectAreaLight as RectAreaLight$1, MeshBasicMaterial, MeshLambertMaterial, MeshPhongMaterial, MeshPhysicalMaterial, PointsMaterial as PointsMaterial$1, ShadowMaterial as ShadowMaterial$1, MeshStandardMaterial, MeshToonMaterial, TextureLoader, MeshMatcapMaterial, ShaderMaterial as ShaderMaterial$1, ShaderChunk, UniformsUtils, ShaderLib, CubeReflectionMapping, CubeTextureLoader, VideoTexture as VideoTexture$1, DoubleSide, SpriteMaterial, Sprite as Sprite$1, Points as Points$1, GridHelper as GridHelper$1 } from 'https://cdn.skypack.dev/three@0.136.0/build/three.module.js';
 import { OrbitControls } from 'https://cdn.skypack.dev/three@0.136.0/examples/jsm/controls/OrbitControls.js';
+import { mergeBufferGeometries } from 'https://cdn.skypack.dev/three@0.136.0/examples/jsm/utils/BufferGeometryUtils';
 import { RectAreaLightUniformsLib } from 'https://cdn.skypack.dev/three@0.136.0/examples/jsm/lights/RectAreaLightUniformsLib.js';
 import { RectAreaLightHelper } from 'https://cdn.skypack.dev/three@0.136.0/examples/jsm/helpers/RectAreaLightHelper.js';
 import { TextGeometry } from 'https://cdn.skypack.dev/three@0.136.0/examples/jsm/geometries/TextGeometry.js';
@@ -1290,7 +1291,14 @@ const props$j = {
   options: { type: Object }
 };
 function createGeometry$c(comp) {
-  return new ExtrudeGeometry$1(comp.shapes, comp.options);
+  if (Array.isArray(comp.options) && Array.isArray(comp.shapes)) {
+    const geometries = props$j.shapes.map((shape, index) => {
+      return new ExtrudeGeometry$1(shape, comp.options[index]);
+    });
+    return mergeBufferGeometries(geometries);
+  } else {
+    return new ExtrudeGeometry$1(comp.shapes, comp.options);
+  }
 }
 var ExtrudeGeometry = geometryComponent("ExtrudeGeometry", props$j, createGeometry$c);
 

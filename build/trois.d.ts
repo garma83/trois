@@ -1620,7 +1620,7 @@ declare const _default$Y: vue.DefineComponent<{
         readonly type: PropType<Shape | Shape[]>;
     };
     readonly options: {
-        readonly type: PropType<ExtrudeGeometryOptions>;
+        readonly type: PropType<ExtrudeGeometryOptions | ExtrudeGeometryOptions[]>;
     };
 }, unknown, unknown, {}, {
     createGeometry(): void;
@@ -1653,7 +1653,7 @@ declare const _default$Y: vue.DefineComponent<{
         readonly type: PropType<Shape | Shape[]>;
     };
     readonly options: {
-        readonly type: PropType<ExtrudeGeometryOptions>;
+        readonly type: PropType<ExtrudeGeometryOptions | ExtrudeGeometryOptions[]>;
     };
 }>>, {}>;
 

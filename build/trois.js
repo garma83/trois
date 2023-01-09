@@ -5,6 +5,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 var vue = require('vue');
 var three = require('three');
 var OrbitControls_js = require('three/examples/jsm/controls/OrbitControls.js');
+var BufferGeometryUtils = require('three/examples/jsm/utils/BufferGeometryUtils');
 var RectAreaLightUniformsLib_js = require('three/examples/jsm/lights/RectAreaLightUniformsLib.js');
 var RectAreaLightHelper_js = require('three/examples/jsm/helpers/RectAreaLightHelper.js');
 var TextGeometry_js = require('three/examples/jsm/geometries/TextGeometry.js');
@@ -1294,7 +1295,14 @@ const props$j = {
   options: { type: Object }
 };
 function createGeometry$c(comp) {
-  return new three.ExtrudeGeometry(comp.shapes, comp.options);
+  if (Array.isArray(comp.options) && Array.isArray(comp.shapes)) {
+    const geometries = props$j.shapes.map((shape, index) => {
+      return new three.ExtrudeGeometry(shape, comp.options[index]);
+    });
+    return BufferGeometryUtils.mergeBufferGeometries(geometries);
+  } else {
+    return new three.ExtrudeGeometry(comp.shapes, comp.options);
+  }
 }
 var ExtrudeGeometry = geometryComponent("ExtrudeGeometry", props$j, createGeometry$c);
 
