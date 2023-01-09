@@ -11,8 +11,7 @@ export const props = {
 export function createGeometry(comp: any): ExtrudeGeometry | BufferGeometry {
     if (Array.isArray(comp.options) && Array.isArray(comp.shapes)) {
 
-        // @ts-ignore
-        const geometries = props.shapes.map((shape: Shape | Shape[], index: number) => {
+        const geometries = comp.shapes.map((shape: Shape | Shape[], index: number) => {
             return new ExtrudeGeometry(shape, comp.options[index])
         });
 

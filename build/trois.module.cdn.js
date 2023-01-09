@@ -1292,7 +1292,7 @@ const props$j = {
 };
 function createGeometry$c(comp) {
   if (Array.isArray(comp.options) && Array.isArray(comp.shapes)) {
-    const geometries = props$j.shapes.map((shape, index) => {
+    const geometries = comp.shapes.map((shape, index) => {
       return new ExtrudeGeometry$1(shape, comp.options[index]);
     });
     return mergeBufferGeometries(geometries);
