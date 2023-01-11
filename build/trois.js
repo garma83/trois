@@ -1292,12 +1292,17 @@ var DodecahedronGeometry = geometryComponent("DodecahedronGeometry", props$k, cr
 
 const props$j = {
   shapes: { type: [Object, Array] },
-  options: { type: Object }
+  options: { type: Object },
+  positions: { type: Array, default: null }
 };
 function createGeometry$c(comp) {
   if (Array.isArray(comp.options) && Array.isArray(comp.shapes)) {
     const geometries = comp.shapes.map((shape, index) => {
-      return new three.ExtrudeGeometry(shape, comp.options[index]);
+      const geometry = new three.ExtrudeGeometry(shape, comp.options[index]);
+      if (comp.positions) {
+        geometry.translate(comp.positions[index][0], comp.positions[index][1], comp.positions[index][2]);
+      }
+      return geometry;
     });
     return BufferGeometryUtils.mergeBufferGeometries(geometries);
   } else {

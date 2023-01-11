@@ -1622,6 +1622,10 @@ declare const _default$Y: vue.DefineComponent<{
     readonly options: {
         readonly type: PropType<ExtrudeGeometryOptions | ExtrudeGeometryOptions[]>;
     };
+    readonly positions: {
+        readonly type: PropType<Vector3[] | null>;
+        readonly default: null;
+    };
 }, unknown, unknown, {}, {
     createGeometry(): void;
 }, vue.ComponentOptionsMixin, vue.DefineComponent<{
@@ -1655,7 +1659,13 @@ declare const _default$Y: vue.DefineComponent<{
     readonly options: {
         readonly type: PropType<ExtrudeGeometryOptions | ExtrudeGeometryOptions[]>;
     };
-}>>, {}>;
+    readonly positions: {
+        readonly type: PropType<Vector3[] | null>;
+        readonly default: null;
+    };
+}>>, {
+    readonly positions: Vector3[] | null;
+}>;
 
 declare const _default$X: vue.DefineComponent<{
     readonly radius: {
