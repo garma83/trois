@@ -1300,7 +1300,7 @@ function createGeometry$c(comp) {
     const geometries = comp.shapes.map((shape, index) => {
       const geometry = new three.ExtrudeGeometry(shape, comp.options[index]);
       if (comp.positions) {
-        geometry.translate(comp.positions[index][0], comp.positions[index][1], comp.positions[index][2]);
+        geometry.translate(comp.positions[index].x, comp.positions[index].y, comp.positions[index].z);
       }
       return geometry;
     });

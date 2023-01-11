@@ -15,7 +15,7 @@ export function createGeometry(comp: any): ExtrudeGeometry | BufferGeometry {
         const geometries = comp.shapes.map((shape: Shape | Shape[], index: number) => {
             const geometry = new ExtrudeGeometry(shape, comp.options[index])
             if (comp.positions) {
-                geometry.translate(comp.positions[index][0], comp.positions[index][1], comp.positions[index][2])
+                geometry.translate(comp.positions[index].x, comp.positions[index].y, comp.positions[index].z)
             }
             return geometry;
         });
