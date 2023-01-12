@@ -200,7 +200,7 @@ export default function usePointer(options: PointerConfigInterface): PointerInte
 
         const event: PointerIntersectEventInterface = { type: 'pointerdown', component, intersect }
         onIntersectDown(event)
-        component?.onDown?.(event)
+        component?.onPointerDown?.(event)
       })
     }
     onDown({ type: 'pointerdown', position, positionN, positionV3 })
@@ -223,7 +223,7 @@ export default function usePointer(options: PointerConfigInterface): PointerInte
 
         const event: PointerIntersectEventInterface = { type: 'pointerup', component, intersect }
         onIntersectUp(event)
-        component?.onUp?.(event)
+        component?.onPointerUp?.(event)
       })
     }
     onUp({ type: 'pointerup', position, positionN, positionV3 })

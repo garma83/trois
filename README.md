@@ -115,3 +115,5 @@ Extensions by garma83 :
 
 - Added GridHelper support
 - Added support for ExtrudeGeometry to accept option arrays which triggers mergeBufferGeometry
+- Added support for mouseUp and mouseDown
+- Added examples directory
