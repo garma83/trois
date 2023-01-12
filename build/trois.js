@@ -308,13 +308,19 @@ function usePointer(options) {
     onUp({ type: "pointerup", position, positionN, positionV3 });
   }
   function pointerClick(event) {
+    var _a;
     updatePosition(event);
     const _intersectObjects = getIntersectObjects();
     if (_intersectObjects.length) {
       const intersects = raycaster.intersect(positionN, _intersectObjects, intersectRecursive);
       const iMeshes = [];
-      intersects.forEach((intersect2) => {
-        var _a;
+      let closest_distance = Infinity;
+      let intersect2 = null;
+      for (let i of intersects) {
+        if (i.distance < closest_distance)
+          intersect2 = i;
+      }
+      if (intersect2) {
         const { object } = intersect2;
         const component = getComponent(object);
         if (object instanceof three.InstancedMesh) {
@@ -325,7 +331,7 @@ function usePointer(options) {
         const event2 = { type: "click", component, intersect: intersect2 };
         onIntersectClick(event2);
         (_a = component == null ? void 0 : component.onClick) == null ? void 0 : _a.call(component, event2);
-      });
+      }
     }
     onClick({ type: "click", position, positionN, positionV3 });
   }

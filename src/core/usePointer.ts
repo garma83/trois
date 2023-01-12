@@ -235,7 +235,16 @@ export default function usePointer(options: PointerConfigInterface): PointerInte
     if (_intersectObjects.length) {
       const intersects = raycaster.intersect(positionN, _intersectObjects, intersectRecursive)
       const iMeshes: InstancedMesh[] = []
-      intersects.forEach(intersect => {
+
+      // only fire events for the intersection closest to the camera
+      let closest_distance = Infinity
+      let intersect = null
+      for(let i of intersects){
+        if(i.distance < closest_distance) intersect = i;
+      }
+
+      if(intersect){
+    //   intersects.forEach(intersect => {
         const { object } = intersect
         const component = getComponent(object)
 
@@ -248,7 +257,8 @@ export default function usePointer(options: PointerConfigInterface): PointerInte
         const event: PointerIntersectEventInterface = { type: 'click', component, intersect }
         onIntersectClick(event)
         component?.onClick?.(event)
-      })
+      }
+    //   })
     }
     onClick({ type: 'click', position, positionN, positionV3 })
   }
