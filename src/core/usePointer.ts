@@ -237,14 +237,14 @@ export default function usePointer(options: PointerConfigInterface): PointerInte
       const iMeshes: InstancedMesh[] = []
 
       // only fire events for the intersection closest to the camera
-      let closest_distance = Infinity
-      let intersect = null
-      for(let i of intersects){
-        if(i.distance < closest_distance) intersect = i;
-      }
+    //   let closest_distance = Infinity
+    //   let intersect = null
+    //   for(let i of intersects){
+    //     if(i.distance < closest_distance) intersect = i;
+    //   }
 
-      if(intersect){
-    //   intersects.forEach(intersect => {
+    //   if(intersect){
+      intersects.forEach(intersect => {
         const { object } = intersect
         const component = getComponent(object)
 
@@ -257,8 +257,8 @@ export default function usePointer(options: PointerConfigInterface): PointerInte
         const event: PointerIntersectEventInterface = { type: 'click', component, intersect }
         onIntersectClick(event)
         component?.onClick?.(event)
-      }
-    //   })
+    //   }
+      })
     }
     onClick({ type: 'click', position, positionN, positionV3 })
   }
