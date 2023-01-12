@@ -12,13 +12,13 @@ import { Pass } from 'three/examples/jsm/postprocessing/Pass';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
 
 interface PointerEventInterface {
-    type: 'pointerenter' | 'pointermove' | 'pointerleave' | 'click';
+    type: 'pointerenter' | 'pointermove' | 'pointerleave' | 'click' | 'pointerdown' | 'pointerup';
     position?: Vector2;
     positionN?: Vector2;
     positionV3?: Vector3;
 }
 interface PointerIntersectEventInterface {
-    type: 'pointerenter' | 'pointerover' | 'pointermove' | 'pointerleave' | 'click';
+    type: 'pointerenter' | 'pointerover' | 'pointermove' | 'pointerleave' | 'click' | 'pointerdown' | 'pointerup';
     component: any;
     over?: boolean;
     intersect?: Intersection;
@@ -32,12 +32,16 @@ interface PointerPublicConfigInterface {
     resetOnEnd?: boolean;
     onEnter?: PointerCallbackType;
     onMove?: PointerCallbackType;
+    onUp?: PointerCallbackType;
+    onDown?: PointerCallbackType;
     onLeave?: PointerCallbackType;
     onClick?: PointerCallbackType;
     onIntersectEnter?: PointerIntersectCallbackType;
     onIntersectOver?: PointerIntersectCallbackType;
     onIntersectMove?: PointerIntersectCallbackType;
     onIntersectLeave?: PointerIntersectCallbackType;
+    onIntersectUp?: PointerIntersectCallbackType;
+    onIntersectDown?: PointerIntersectCallbackType;
     onIntersectClick?: PointerIntersectCallbackType;
 }
 interface PointerInterface {
@@ -775,6 +779,14 @@ declare const _default$13: vue.DefineComponent<{
         type: PropType<PointerIntersectCallbackType>;
         default: PointerIntersectCallbackType;
     };
+    onPointerUp: {
+        type: PropType<PointerIntersectCallbackType>;
+        default: PointerIntersectCallbackType;
+    };
+    onPointerDown: {
+        type: PropType<PointerIntersectCallbackType>;
+        default: PointerIntersectCallbackType;
+    };
     onClick: {
         type: PropType<PointerIntersectCallbackType>;
         default: PointerIntersectCallbackType;
@@ -804,6 +816,14 @@ declare const _default$13: vue.DefineComponent<{
         type: PropType<PointerIntersectCallbackType>;
         default: PointerIntersectCallbackType;
     };
+    onPointerUp: {
+        type: PropType<PointerIntersectCallbackType>;
+        default: PointerIntersectCallbackType;
+    };
+    onPointerDown: {
+        type: PropType<PointerIntersectCallbackType>;
+        default: PointerIntersectCallbackType;
+    };
     onClick: {
         type: PropType<PointerIntersectCallbackType>;
         default: PointerIntersectCallbackType;
@@ -823,6 +843,8 @@ declare const _default$13: vue.DefineComponent<{
     onPointerOver: PointerIntersectCallbackType;
     onPointerMove: PointerIntersectCallbackType;
     onPointerLeave: PointerIntersectCallbackType;
+    onPointerDown: PointerIntersectCallbackType;
+    onPointerUp: PointerIntersectCallbackType;
     intersectMode: string;
 }>;
 //# sourceMappingURL=Raycaster.d.ts.map

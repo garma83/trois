@@ -151,6 +151,10 @@ function usePointer(options) {
     },
     onMove = () => {
     },
+    onDown = () => {
+    },
+    onUp = () => {
+    },
     onLeave = () => {
     },
     onClick = () => {
@@ -162,6 +166,10 @@ function usePointer(options) {
     onIntersectMove = () => {
     },
     onIntersectLeave = () => {
+    },
+    onIntersectUp = () => {
+    },
+    onIntersectDown = () => {
     },
     onIntersectClick = () => {
     }
@@ -255,6 +263,16 @@ function usePointer(options) {
     onMove({ type: "pointermove", position, positionN, positionV3 });
     intersect();
   }
+  function pointerDown(event) {
+    updatePosition(event);
+    onDown({ type: "pointerdown", position, positionN, positionV3 });
+    intersect();
+  }
+  function pointerUp(event) {
+    updatePosition(event);
+    onUp({ type: "pointerup", position, positionN, positionV3 });
+    intersect();
+  }
   function pointerClick(event) {
     updatePosition(event);
     const _intersectObjects = getIntersectObjects();
@@ -304,6 +322,8 @@ function usePointer(options) {
     domElement.addEventListener("mouseenter", pointerEnter);
     domElement.addEventListener("mousemove", pointerMove);
     domElement.addEventListener("mouseleave", pointerLeave);
+    domElement.addEventListener("pointerdown", pointerDown);
+    domElement.addEventListener("pointerup", pointerUp);
     domElement.addEventListener("click", pointerClick);
     if (touch) {
       domElement.addEventListener("touchstart", pointerEnter);
@@ -316,6 +336,8 @@ function usePointer(options) {
     domElement.removeEventListener("mouseenter", pointerEnter);
     domElement.removeEventListener("mousemove", pointerMove);
     domElement.removeEventListener("mouseleave", pointerLeave);
+    domElement.removeEventListener("pointerdown", pointerDown);
+    domElement.removeEventListener("pointerup", pointerUp);
     domElement.removeEventListener("click", pointerClick);
     domElement.removeEventListener("touchstart", pointerEnter);
     domElement.removeEventListener("touchmove", pointerMove);
@@ -965,6 +987,8 @@ var Raycaster = vue.defineComponent({
     onPointerOver: { type: Function, default: emptyCallBack },
     onPointerMove: { type: Function, default: emptyCallBack },
     onPointerLeave: { type: Function, default: emptyCallBack },
+    onPointerUp: { type: Function, default: emptyCallBack },
+    onPointerDown: { type: Function, default: emptyCallBack },
     onClick: { type: Function, default: emptyCallBack },
     intersectMode: { type: String, default: "move" },
     intersectRecursive: { type: Boolean, default: false }
@@ -991,6 +1015,8 @@ var Raycaster = vue.defineComponent({
         onIntersectOver: this.onPointerOver,
         onIntersectMove: this.onPointerMove,
         onIntersectLeave: this.onPointerLeave,
+        onIntersectUp: this.onPointerUp,
+        onIntersectDown: this.onPointerDown,
         onIntersectClick: this.onClick
       });
       this.pointer.addListeners();

@@ -3,14 +3,14 @@ import { Camera, InstancedMesh, Intersection, Object3D, Vector2, Vector3 } from 
 import useRaycaster from './useRaycaster'
 
 export interface PointerEventInterface {
-  type: 'pointerenter' | 'pointermove' | 'pointerleave' | 'click'
+  type: 'pointerenter' | 'pointermove' | 'pointerleave' | 'click' | 'pointerdown' | 'pointerup'
   position?: Vector2
   positionN?: Vector2
   positionV3?: Vector3
 }
 
 export interface PointerIntersectEventInterface {
-  type: 'pointerenter' | 'pointerover' | 'pointermove' | 'pointerleave' | 'click'
+  type: 'pointerenter' | 'pointerover' | 'pointermove' | 'pointerleave' | 'click' | 'pointerdown' | 'pointerup'
   component: any
   over?: boolean
   intersect?: Intersection
@@ -26,12 +26,16 @@ export interface PointerPublicConfigInterface {
   resetOnEnd?: boolean
   onEnter?: PointerCallbackType
   onMove?: PointerCallbackType
+  onUp?: PointerCallbackType
+  onDown?: PointerCallbackType
   onLeave?: PointerCallbackType
   onClick?: PointerCallbackType
   onIntersectEnter?: PointerIntersectCallbackType
   onIntersectOver?: PointerIntersectCallbackType
   onIntersectMove?: PointerIntersectCallbackType
   onIntersectLeave?: PointerIntersectCallbackType
+  onIntersectUp?: PointerIntersectCallbackType
+  onIntersectDown?: PointerIntersectCallbackType
   onIntersectClick?: PointerIntersectCallbackType
 }
 
@@ -62,12 +66,16 @@ export default function usePointer(options: PointerConfigInterface): PointerInte
     resetOnEnd = false,
     onEnter = () => {},
     onMove = () => {},
+    onDown = () => {},
+    onUp = () => {},
     onLeave = () => {},
     onClick = () => {},
     onIntersectEnter = () => {},
     onIntersectOver = () => {},
     onIntersectMove = () => {},
     onIntersectLeave = () => {},
+    onIntersectUp = () => {},
+    onIntersectDown = () => {},
     onIntersectClick = () => {},
   } = options
 
@@ -174,6 +182,16 @@ export default function usePointer(options: PointerConfigInterface): PointerInte
     onMove({ type: 'pointermove', position, positionN, positionV3 })
     intersect()
   }
+  function pointerDown(event: TouchEvent | MouseEvent) {
+    updatePosition(event)
+    onDown({ type: 'pointerdown', position, positionN, positionV3 })
+    intersect()
+  }
+  function pointerUp(event: TouchEvent | MouseEvent) {
+    updatePosition(event)
+    onUp({ type: 'pointerup', position, positionN, positionV3 })
+    intersect()
+  }
 
   function pointerClick(event: TouchEvent | MouseEvent) {
     updatePosition(event)
@@ -228,6 +246,8 @@ export default function usePointer(options: PointerConfigInterface): PointerInte
     domElement.addEventListener('mouseenter', pointerEnter)
     domElement.addEventListener('mousemove', pointerMove)
     domElement.addEventListener('mouseleave', pointerLeave)
+    domElement.addEventListener('pointerdown', pointerDown)
+    domElement.addEventListener('pointerup', pointerUp)
     domElement.addEventListener('click', pointerClick)
     if (touch) {
       domElement.addEventListener('touchstart', pointerEnter)
@@ -241,6 +261,8 @@ export default function usePointer(options: PointerConfigInterface): PointerInte
     domElement.removeEventListener('mouseenter', pointerEnter)
     domElement.removeEventListener('mousemove', pointerMove)
     domElement.removeEventListener('mouseleave', pointerLeave)
+    domElement.removeEventListener('pointerdown', pointerDown)
+    domElement.removeEventListener('pointerup', pointerUp)
     domElement.removeEventListener('click', pointerClick)
 
     domElement.removeEventListener('touchstart', pointerEnter)

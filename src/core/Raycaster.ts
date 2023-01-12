@@ -17,6 +17,8 @@ export default defineComponent({
     onPointerOver: { type: Function as PropType<PointerIntersectCallbackType>, default: emptyCallBack },
     onPointerMove: { type: Function as PropType<PointerIntersectCallbackType>, default: emptyCallBack },
     onPointerLeave: { type: Function as PropType<PointerIntersectCallbackType>, default: emptyCallBack },
+    onPointerUp: { type: Function as PropType<PointerIntersectCallbackType>, default: emptyCallBack },
+    onPointerDown: { type: Function as PropType<PointerIntersectCallbackType>, default: emptyCallBack },
     onClick: { type: Function as PropType<PointerIntersectCallbackType>, default: emptyCallBack },
     intersectMode: { type: String, default: 'move' },
     intersectRecursive: { type: Boolean, default: false },
@@ -44,6 +46,8 @@ export default defineComponent({
         onIntersectOver: this.onPointerOver,
         onIntersectMove: this.onPointerMove,
         onIntersectLeave: this.onPointerLeave,
+        onIntersectUp: this.onPointerUp,
+        onIntersectDown: this.onPointerDown,
         onIntersectClick: this.onClick,
       })
       this.pointer.addListeners()
