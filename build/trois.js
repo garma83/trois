@@ -280,7 +280,7 @@ function usePointer(options) {
         }
         const event2 = { type: "pointerdown", component, intersect: intersect2 };
         onIntersectDown(event2);
-        (_a = component == null ? void 0 : component.onDown) == null ? void 0 : _a.call(component, event2);
+        (_a = component == null ? void 0 : component.onPointerDown) == null ? void 0 : _a.call(component, event2);
       });
     }
     onDown({ type: "pointerdown", position, positionN, positionV3 });
@@ -302,7 +302,7 @@ function usePointer(options) {
         }
         const event2 = { type: "pointerup", component, intersect: intersect2 };
         onIntersectUp(event2);
-        (_a = component == null ? void 0 : component.onUp) == null ? void 0 : _a.call(component, event2);
+        (_a = component == null ? void 0 : component.onPointerUp) == null ? void 0 : _a.call(component, event2);
       });
     }
     onUp({ type: "pointerup", position, positionN, positionV3 });
