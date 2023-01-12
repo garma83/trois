@@ -184,13 +184,49 @@ export default function usePointer(options: PointerConfigInterface): PointerInte
   }
   function pointerDown(event: TouchEvent | MouseEvent) {
     updatePosition(event)
+    const _intersectObjects = getIntersectObjects()
+    if (_intersectObjects.length) {
+      const intersects = raycaster.intersect(positionN, _intersectObjects, intersectRecursive)
+      const iMeshes: InstancedMesh[] = []
+      intersects.forEach(intersect => {
+        const { object } = intersect
+        const component = getComponent(object)
+
+        // only once for InstancedMesh
+        if (object instanceof InstancedMesh) {
+          if (iMeshes.indexOf(object) !== -1) return
+          iMeshes.push(object)
+        }
+
+        const event: PointerIntersectEventInterface = { type: 'pointerdown', component, intersect }
+        onIntersectDown(event)
+        component?.onDown?.(event)
+      })
+    }
     onDown({ type: 'pointerdown', position, positionN, positionV3 })
-    intersect()
   }
   function pointerUp(event: TouchEvent | MouseEvent) {
     updatePosition(event)
+    const _intersectObjects = getIntersectObjects()
+    if (_intersectObjects.length) {
+      const intersects = raycaster.intersect(positionN, _intersectObjects, intersectRecursive)
+      const iMeshes: InstancedMesh[] = []
+      intersects.forEach(intersect => {
+        const { object } = intersect
+        const component = getComponent(object)
+
+        // only once for InstancedMesh
+        if (object instanceof InstancedMesh) {
+          if (iMeshes.indexOf(object) !== -1) return
+          iMeshes.push(object)
+        }
+
+        const event: PointerIntersectEventInterface = { type: 'pointerup', component, intersect }
+        onIntersectUp(event)
+        component?.onUp?.(event)
+      })
+    }
     onUp({ type: 'pointerup', position, positionN, positionV3 })
-    intersect()
   }
 
   function pointerClick(event: TouchEvent | MouseEvent) {

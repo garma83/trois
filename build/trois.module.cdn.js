@@ -261,13 +261,47 @@ function usePointer(options) {
   }
   function pointerDown(event) {
     updatePosition(event);
+    const _intersectObjects = getIntersectObjects();
+    if (_intersectObjects.length) {
+      const intersects = raycaster.intersect(positionN, _intersectObjects, intersectRecursive);
+      const iMeshes = [];
+      intersects.forEach((intersect2) => {
+        var _a;
+        const { object } = intersect2;
+        const component = getComponent(object);
+        if (object instanceof InstancedMesh$1) {
+          if (iMeshes.indexOf(object) !== -1)
+            return;
+          iMeshes.push(object);
+        }
+        const event2 = { type: "pointerdown", component, intersect: intersect2 };
+        onIntersectDown(event2);
+        (_a = component == null ? void 0 : component.onDown) == null ? void 0 : _a.call(component, event2);
+      });
+    }
     onDown({ type: "pointerdown", position, positionN, positionV3 });
-    intersect();
   }
   function pointerUp(event) {
     updatePosition(event);
+    const _intersectObjects = getIntersectObjects();
+    if (_intersectObjects.length) {
+      const intersects = raycaster.intersect(positionN, _intersectObjects, intersectRecursive);
+      const iMeshes = [];
+      intersects.forEach((intersect2) => {
+        var _a;
+        const { object } = intersect2;
+        const component = getComponent(object);
+        if (object instanceof InstancedMesh$1) {
+          if (iMeshes.indexOf(object) !== -1)
+            return;
+          iMeshes.push(object);
+        }
+        const event2 = { type: "pointerup", component, intersect: intersect2 };
+        onIntersectUp(event2);
+        (_a = component == null ? void 0 : component.onUp) == null ? void 0 : _a.call(component, event2);
+      });
+    }
     onUp({ type: "pointerup", position, positionN, positionV3 });
-    intersect();
   }
   function pointerClick(event) {
     updatePosition(event);
