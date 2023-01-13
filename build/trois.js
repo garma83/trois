@@ -1360,9 +1360,6 @@ function createGeometry$c(comp) {
   if (Array.isArray(comp.options) && Array.isArray(comp.shapes)) {
     const geometries = comp.shapes.map((shape, index) => {
       const geometry = new three.ExtrudeGeometry(shape, comp.options[index]);
-      if (comp.positions) {
-        geometry.translate(comp.positions[index].x, comp.positions[index].y, comp.positions[index].z);
-      }
       if (comp.rotations) {
         if (comp.rotations[index].x != 0)
           geometry.rotateX(comp.rotations[index].x);
@@ -1370,6 +1367,9 @@ function createGeometry$c(comp) {
           geometry.rotateY(comp.rotations[index].y);
         if (comp.rotations[index].z != 0)
           geometry.rotateZ(comp.rotations[index].z);
+      }
+      if (comp.positions) {
+        geometry.translate(comp.positions[index].x, comp.positions[index].y, comp.positions[index].z);
       }
       return geometry;
     });

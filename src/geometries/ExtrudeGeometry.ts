@@ -15,13 +15,13 @@ export function createGeometry(comp: any): ExtrudeGeometry | BufferGeometry {
 
         const geometries = comp.shapes.map((shape: Shape | Shape[], index: number) => {
             const geometry = new ExtrudeGeometry(shape, comp.options[index])
-            if (comp.positions) {
-                geometry.translate(comp.positions[index].x, comp.positions[index].y, comp.positions[index].z)
-            }
             if (comp.rotations) {
                 if(comp.rotations[index].x != 0) geometry.rotateX(comp.rotations[index].x)
                 if(comp.rotations[index].y != 0) geometry.rotateY(comp.rotations[index].y)
                 if(comp.rotations[index].z != 0) geometry.rotateZ(comp.rotations[index].z)
+            }
+            if (comp.positions) {
+                geometry.translate(comp.positions[index].x, comp.positions[index].y, comp.positions[index].z)
             }
             return geometry;
         });
