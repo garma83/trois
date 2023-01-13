@@ -1649,6 +1649,10 @@ declare const _default$Y: vue.DefineComponent<{
         readonly type: PropType<Vector3[] | null>;
         readonly default: null;
     };
+    readonly rotations: {
+        readonly type: PropType<Vector3[] | null>;
+        readonly default: null;
+    };
 }, unknown, unknown, {}, {
     createGeometry(): void;
 }, vue.ComponentOptionsMixin, vue.DefineComponent<{
@@ -1686,8 +1690,13 @@ declare const _default$Y: vue.DefineComponent<{
         readonly type: PropType<Vector3[] | null>;
         readonly default: null;
     };
+    readonly rotations: {
+        readonly type: PropType<Vector3[] | null>;
+        readonly default: null;
+    };
 }>>, {
     readonly positions: Vector3[] | null;
+    readonly rotations: Vector3[] | null;
 }>;
 
 declare const _default$X: vue.DefineComponent<{

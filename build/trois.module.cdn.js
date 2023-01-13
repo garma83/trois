@@ -1349,7 +1349,8 @@ var DodecahedronGeometry = geometryComponent("DodecahedronGeometry", props$k, cr
 const props$j = {
   shapes: { type: [Object, Array] },
   options: { type: Object },
-  positions: { type: Array, default: null }
+  positions: { type: Array, default: null },
+  rotations: { type: Array, default: null }
 };
 function createGeometry$c(comp) {
   if (Array.isArray(comp.options) && Array.isArray(comp.shapes)) {
@@ -1357,6 +1358,14 @@ function createGeometry$c(comp) {
       const geometry = new ExtrudeGeometry$1(shape, comp.options[index]);
       if (comp.positions) {
         geometry.translate(comp.positions[index].x, comp.positions[index].y, comp.positions[index].z);
+      }
+      if (comp.rotations) {
+        if (comp.rotations[index].x != 0)
+          geometry.rotateX(comp.rotations[index].x);
+        if (comp.rotations[index].y != 0)
+          geometry.rotateY(comp.rotations[index].y);
+        if (comp.rotations[index].z != 0)
+          geometry.rotateZ(comp.rotations[index].z);
       }
       return geometry;
     });
