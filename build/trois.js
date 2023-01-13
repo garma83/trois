@@ -227,7 +227,7 @@ function usePointer(options) {
         }
         if (!object.userData.over) {
           object.userData.over = true;
-          const overEvent = { type: "pointerover", over: true, component, intersect: intersect2 };
+          const overEvent = { type: "pointerover", over: true, component, intersect: intersect2, intersects };
           const enterEvent = { ...overEvent, type: "pointerenter" };
           onIntersectOver(overEvent);
           onIntersectEnter(enterEvent);
@@ -278,7 +278,7 @@ function usePointer(options) {
             return;
           iMeshes.push(object);
         }
-        const event2 = { type: "pointerdown", component, intersect: intersect2 };
+        const event2 = { type: "pointerdown", component, intersect: intersect2, intersects };
         onIntersectDown(event2);
         (_a = component == null ? void 0 : component.onPointerDown) == null ? void 0 : _a.call(component, event2);
       });
@@ -300,7 +300,7 @@ function usePointer(options) {
             return;
           iMeshes.push(object);
         }
-        const event2 = { type: "pointerup", component, intersect: intersect2 };
+        const event2 = { type: "pointerup", component, intersect: intersect2, intersects };
         onIntersectUp(event2);
         (_a = component == null ? void 0 : component.onPointerUp) == null ? void 0 : _a.call(component, event2);
       });
@@ -322,7 +322,7 @@ function usePointer(options) {
             return;
           iMeshes.push(object);
         }
-        const event2 = { type: "click", component, intersect: intersect2 };
+        const event2 = { type: "click", component, intersect: intersect2, intersects };
         onIntersectClick(event2);
         (_a = component == null ? void 0 : component.onClick) == null ? void 0 : _a.call(component, event2);
       });

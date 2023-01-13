@@ -13,7 +13,8 @@ export interface PointerIntersectEventInterface {
   type: 'pointerenter' | 'pointerover' | 'pointermove' | 'pointerleave' | 'click' | 'pointerdown' | 'pointerup'
   component: any
   over?: boolean
-  intersect?: Intersection
+  intersect?: Intersection,
+  intersects?: Intersection[]
 }
 
 export type PointerCallbackType = (e: PointerEventInterface) => void
@@ -142,7 +143,7 @@ export default function usePointer(options: PointerConfigInterface): PointerInte
 
         if (!object.userData.over) {
           object.userData.over = true
-          const overEvent: PointerIntersectEventInterface = { type: 'pointerover', over: true, component, intersect }
+          const overEvent: PointerIntersectEventInterface = { type: 'pointerover', over: true, component, intersect, intersects }
           const enterEvent: PointerIntersectEventInterface = { ...overEvent, type: 'pointerenter' }
           onIntersectOver(overEvent)
           onIntersectEnter(enterEvent)
@@ -198,7 +199,7 @@ export default function usePointer(options: PointerConfigInterface): PointerInte
           iMeshes.push(object)
         }
 
-        const event: PointerIntersectEventInterface = { type: 'pointerdown', component, intersect }
+        const event: PointerIntersectEventInterface = { type: 'pointerdown', component, intersect, intersects }
         onIntersectDown(event)
         component?.onPointerDown?.(event)
       })
@@ -221,7 +222,7 @@ export default function usePointer(options: PointerConfigInterface): PointerInte
           iMeshes.push(object)
         }
 
-        const event: PointerIntersectEventInterface = { type: 'pointerup', component, intersect }
+        const event: PointerIntersectEventInterface = { type: 'pointerup', component, intersect, intersects }
         onIntersectUp(event)
         component?.onPointerUp?.(event)
       })
@@ -254,7 +255,7 @@ export default function usePointer(options: PointerConfigInterface): PointerInte
           iMeshes.push(object)
         }
 
-        const event: PointerIntersectEventInterface = { type: 'click', component, intersect }
+        const event: PointerIntersectEventInterface = { type: 'click', component, intersect, intersects }
         onIntersectClick(event)
         component?.onClick?.(event)
     //   }

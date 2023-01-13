@@ -22,6 +22,7 @@ interface PointerIntersectEventInterface {
     component: any;
     over?: boolean;
     intersect?: Intersection;
+    intersects?: Intersection[];
 }
 type PointerCallbackType = (e: PointerEventInterface) => void;
 type PointerIntersectCallbackType = (e: PointerIntersectEventInterface) => void;
