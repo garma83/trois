@@ -117,4 +117,4 @@ Extensions by garma83 :
 - Added support for ExtrudeGeometry to accept option arrays which triggers mergeBufferGeometry
 - Added support for mouseUp and mouseDown
 - Added examples directory
-- made sure onClick only fires for the closest hit. Especially important for Raytracer.vue
+- Added intersections in pointer event to help determine order
