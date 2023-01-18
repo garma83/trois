@@ -1354,7 +1354,7 @@ const props$j = {
 };
 function createGeometry$c(comp) {
   if (Array.isArray(comp.options) && Array.isArray(comp.shapes)) {
-    if (comp.shapes.length == 0) {
+    if (comp.shapes.length > 0) {
       const geometries = comp.shapes.map((shape, index) => {
         const geometry = new ExtrudeGeometry$1(shape, comp.options[index]);
         if (comp.rotations) {
