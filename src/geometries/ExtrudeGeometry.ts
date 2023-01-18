@@ -1,6 +1,6 @@
 import { PropType } from 'vue'
 import { geometryComponent } from './Geometry'
-import { ExtrudeGeometry, ExtrudeGeometryOptions, Shape, BufferGeometry, Vector3 } from 'three'
+import { ExtrudeGeometry, ExtrudeGeometryOptions, Shape, BufferGeometry, Vector3, BoxGeometry } from 'three'
 import { mergeBufferGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils'
 
 export const props = {
@@ -13,20 +13,28 @@ export const props = {
 export function createGeometry(comp: any): ExtrudeGeometry | BufferGeometry {
     if (Array.isArray(comp.options) && Array.isArray(comp.shapes)) {
 
-        const geometries = comp.shapes.map((shape: Shape | Shape[], index: number) => {
-            const geometry = new ExtrudeGeometry(shape, comp.options[index])
-            if (comp.rotations) {
-                if(comp.rotations[index].x != 0) geometry.rotateX(comp.rotations[index].x)
-                if(comp.rotations[index].y != 0) geometry.rotateY(comp.rotations[index].y)
-                if(comp.rotations[index].z != 0) geometry.rotateZ(comp.rotations[index].z)
-            }
-            if (comp.positions) {
-                geometry.translate(comp.positions[index].x, comp.positions[index].y, comp.positions[index].z)
-            }
-            return geometry;
-        });
+        if (comp.shapes.length == 0) {
+            const geometries = comp.shapes.map((shape: Shape | Shape[], index: number) => {
+                const geometry = new ExtrudeGeometry(shape, comp.options[index])
+                if (comp.rotations) {
+                    if (comp.rotations[index].x != 0) geometry.rotateX(comp.rotations[index].x)
+                    if (comp.rotations[index].y != 0) geometry.rotateY(comp.rotations[index].y)
+                    if (comp.rotations[index].z != 0) geometry.rotateZ(comp.rotations[index].z)
+                }
+                if (comp.positions) {
+                    geometry.translate(comp.positions[index].x, comp.positions[index].y, comp.positions[index].z)
+                }
+                return geometry;
+            });
 
-        return mergeBufferGeometries(geometries);
+            return mergeBufferGeometries(geometries);
+        } else {
+            // this ensures mergeBufferGeometries wont fail, and the algorithm can still continue
+            console.warn("Empty shape array found in ExtrudeGeometry")
+            const geometry =  new BoxGeometry(0.001, 0.001, 0.001);
+            geometry.translate(-1000,-1000,-1000)
+            return geometry
+        }
     } else {
         return new ExtrudeGeometry(comp.shapes, comp.options)
     }

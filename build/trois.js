@@ -1358,22 +1358,29 @@ const props$j = {
 };
 function createGeometry$c(comp) {
   if (Array.isArray(comp.options) && Array.isArray(comp.shapes)) {
-    const geometries = comp.shapes.map((shape, index) => {
-      const geometry = new three.ExtrudeGeometry(shape, comp.options[index]);
-      if (comp.rotations) {
-        if (comp.rotations[index].x != 0)
-          geometry.rotateX(comp.rotations[index].x);
-        if (comp.rotations[index].y != 0)
-          geometry.rotateY(comp.rotations[index].y);
-        if (comp.rotations[index].z != 0)
-          geometry.rotateZ(comp.rotations[index].z);
-      }
-      if (comp.positions) {
-        geometry.translate(comp.positions[index].x, comp.positions[index].y, comp.positions[index].z);
-      }
+    if (comp.shapes.length == 0) {
+      const geometries = comp.shapes.map((shape, index) => {
+        const geometry = new three.ExtrudeGeometry(shape, comp.options[index]);
+        if (comp.rotations) {
+          if (comp.rotations[index].x != 0)
+            geometry.rotateX(comp.rotations[index].x);
+          if (comp.rotations[index].y != 0)
+            geometry.rotateY(comp.rotations[index].y);
+          if (comp.rotations[index].z != 0)
+            geometry.rotateZ(comp.rotations[index].z);
+        }
+        if (comp.positions) {
+          geometry.translate(comp.positions[index].x, comp.positions[index].y, comp.positions[index].z);
+        }
+        return geometry;
+      });
+      return BufferGeometryUtils.mergeBufferGeometries(geometries);
+    } else {
+      console.warn("Empty shape array found in ExtrudeGeometry");
+      const geometry = new three.BoxGeometry(1e-3, 1e-3, 1e-3);
+      geometry.translate(-1e3, -1e3, -1e3);
       return geometry;
-    });
-    return BufferGeometryUtils.mergeBufferGeometries(geometries);
+    }
   } else {
     return new three.ExtrudeGeometry(comp.shapes, comp.options);
   }
