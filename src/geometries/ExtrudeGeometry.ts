@@ -13,7 +13,7 @@ export const props = {
 export function createGeometry(comp: any): ExtrudeGeometry | BufferGeometry {
     if (Array.isArray(comp.options) && Array.isArray(comp.shapes)) {
 
-        if (comp.shapes.length == 0) {
+        if (comp.shapes.length > 0) {
             const geometries = comp.shapes.map((shape: Shape | Shape[], index: number) => {
                 const geometry = new ExtrudeGeometry(shape, comp.options[index])
                 if (comp.rotations) {
