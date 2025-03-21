@@ -88,17 +88,21 @@ export function meshComponent<P extends Readonly<ComponentPropsOptions>>(
   props: P,
   createGeometry: {(c: any): BufferGeometry}
 ) {
+  // @ts-ignore
   return defineComponent({
     name,
     extends: Mesh,
     props,
     created() {
-      this.createGeometry()
-      this.addGeometryWatchers(props)
+  // @ts-ignore
+  this.createGeometry()
+  // @ts-ignore
+  this.addGeometryWatchers(props)
     },
     methods: {
       createGeometry() {
-        this.geometry = createGeometry(this)
+  // @ts-ignore
+  this.geometry = createGeometry(this)
       },
     },
   })

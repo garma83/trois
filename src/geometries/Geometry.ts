@@ -94,15 +94,19 @@ export function geometryComponent<P extends Readonly<ComponentPropsOptions>>(
   props: P,
   createGeometry: {(c: any): BufferGeometry}
 ) {
+  // @ts-ignore
   return defineComponent({
     name,
     extends: Geometry,
     props,
     methods: {
       createGeometry() {
-        this.geometry = createGeometry(this)
-        this.geometry.userData.component = this
-        this.$emit('created', this.geometry)
+  // @ts-ignore
+  this.geometry = createGeometry(this)
+  // @ts-ignore
+  this.geometry.userData.component = this
+  // @ts-ignore
+  this.$emit('created', this.geometry)
       },
     },
   })

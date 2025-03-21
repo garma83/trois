@@ -9,6 +9,7 @@
     // "esModuleInterop": true,
     // "lib": ["esnext", "dom"],
     // "types": ["vite/client"],
+    "skipLibCheck": true,
 
     "sourceMap": true,
     "declaration": true,

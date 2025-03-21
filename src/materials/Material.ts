@@ -81,13 +81,16 @@ export function materialComponent<P extends Readonly<ComponentPropsOptions>>(
   props: P,
   createMaterial: {(opts: any): Material}
 ) {
+  // @ts-ignore
   return defineComponent({
     name,
     extends: BaseMaterial,
     props,
     methods: {
-      createMaterial() {
-        return createMaterial(this.getMaterialParams())
+  // @ts-ignore
+  createMaterial() {
+  // @ts-ignore
+  return createMaterial(this.getMaterialParams())
       },
     },
   })
