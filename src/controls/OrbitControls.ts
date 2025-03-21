@@ -720,7 +720,6 @@ class OrbitControls extends Controls {
 
 		if ( this.enableDamping === true ) {
 
-			console.log(this._sphericalDelta.theta, this.autoRotateThresholdTrigger, this.autoRotateThreshold)
             if (Math.abs(this._sphericalDelta.theta) > this.autoRotateThresholdTrigger){
 
                 this.autoRotateThresholdTriggered = true

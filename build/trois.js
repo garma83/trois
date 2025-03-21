@@ -397,7 +397,6 @@ class OrbitControls extends Controls {
     position.copy(this.target).add(_v);
     this.object.lookAt(this.target);
     if (this.enableDamping === true) {
-      console.log(this._sphericalDelta.theta, this.autoRotateThresholdTrigger, this.autoRotateThreshold);
       if (Math.abs(this._sphericalDelta.theta) > this.autoRotateThresholdTrigger) {
         this.autoRotateThresholdTriggered = true;
       }
