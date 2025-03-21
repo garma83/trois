@@ -1,7 +1,7 @@
 import { Camera, Object3D, OrthographicCamera, PerspectiveCamera, Scene, WebGLRenderer, WebGLRendererParameters } from 'three'
 // import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
   // @ts-ignore
-  import { OrbitControls } from './../controls/OrbitControls.js'
+  import { OrbitControls } from '../controls/OrbitControls'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
 import usePointer, { PointerConfigInterface, PointerPublicConfigInterface, PointerInterface } from './usePointer'
 
@@ -129,6 +129,7 @@ export default function useThree(params: ThreeConfigInterface): ThreeInterface {
     initPointer()
 
     if (config.orbitCtrl) {
+      // @ts-ignore
       const cameraCtrl = new OrbitControls(obj.camera, obj.renderer.domElement)
       if (config.orbitCtrl instanceof Object) {
         Object.entries(config.orbitCtrl).forEach(([key, value]) => {

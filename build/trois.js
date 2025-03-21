@@ -4,7 +4,6 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 var vue = require('vue');
 var three = require('three');
-var OrbitControls_js = require('three/examples/jsm/controls/OrbitControls.js');
 var BufferGeometryUtils = require('three/examples/jsm/utils/BufferGeometryUtils');
 var RectAreaLightUniformsLib_js = require('three/examples/jsm/lights/RectAreaLightUniformsLib.js');
 var RectAreaLightHelper_js = require('three/examples/jsm/helpers/RectAreaLightHelper.js');
@@ -26,24 +25,20 @@ var UnrealBloomPass_js = require('three/examples/jsm/postprocessing/UnrealBloomP
 function applyObjectProps(dst, options, setter) {
   if (options instanceof Object) {
     Object.entries(options).forEach(([key, value]) => {
-      if (setter)
-        setter(dst, key, value);
-      else
-        dst[key] = value;
+      if (setter) setter(dst, key, value);
+      else dst[key] = value;
     });
   }
 }
 function bindObjectProp(src, prop, dst, apply = true, setter) {
-  if (apply)
-    applyObjectProps(dst, src[prop], setter);
+  if (apply) applyObjectProps(dst, src[prop], setter);
   const r = vue.toRef(src, prop);
   return vue.watch(r, (value) => {
     applyObjectProps(dst, value, setter);
   });
 }
 function bindObjectProps(src, dst, apply = true, setter) {
-  if (apply)
-    applyObjectProps(dst, src, setter);
+  if (apply) applyObjectProps(dst, src, setter);
   const r = vue.ref(src);
   return vue.watch(r, (value) => {
     applyObjectProps(dst, value, setter);
@@ -70,8 +65,7 @@ function bindProp(src, srcProp, dst, dstProp) {
       setFromProp(dst[_dstProp], value);
     }, { deep: true });
   } else {
-    if (ref2.value !== void 0)
-      dst[_dstProp] = src[srcProp];
+    if (ref2.value !== void 0) dst[_dstProp] = src[srcProp];
     vue.watch(ref2, (value) => {
       dst[_dstProp] = value;
     });
@@ -112,6 +106,899 @@ function getMatcapFormatString(format) {
       return "-512px";
     default:
       return "";
+  }
+}
+
+class Controls extends three.EventDispatcher {
+  /**
+   * Constructs a new controls instance.
+   *
+   * @param {Object3D} object - The object that is managed by the controls.
+   * @param {?HTMLDOMElement} domElement - The HTML element used for event listeners.
+   */
+  constructor(object, domElement = null) {
+    super();
+    this.object = object;
+    this.domElement = domElement;
+    this.enabled = true;
+    this.state = -1;
+    this.keys = {};
+    this.mouseButtons = { LEFT: null, MIDDLE: null, RIGHT: null };
+    this.touches = { ONE: null, TWO: null };
+  }
+  /**
+   * Connects the controls to the DOM. This method has so called "side effects" since
+   * it adds the module's event listeners to the DOM.
+   */
+  connect() {
+  }
+  /**
+   * Disconnects the controls from the DOM.
+   */
+  disconnect() {
+  }
+  /**
+   * Call this method if you no longer want use to the controls. It frees all internal
+   * resources and removes all event listeners.
+   */
+  dispose() {
+  }
+  /**
+   * Controls should implement this method if they have to update their internal state
+   * per simulation step.
+   *
+   * @param {number} [delta] - The time delta in seconds.
+   */
+  update() {
+  }
+}
+
+const _changeEvent = { type: "change" };
+const _startEvent = { type: "start" };
+const _endEvent = { type: "end" };
+const _ray = new three.Ray();
+const _plane = new three.Plane();
+const _TILT_LIMIT = Math.cos(70 * three.MathUtils.DEG2RAD);
+const _v = new three.Vector3();
+const _twoPI = 2 * Math.PI;
+const _STATE = {
+  NONE: -1,
+  ROTATE: 0,
+  DOLLY: 1,
+  PAN: 2,
+  TOUCH_ROTATE: 3,
+  TOUCH_PAN: 4,
+  TOUCH_DOLLY_PAN: 5,
+  TOUCH_DOLLY_ROTATE: 6
+};
+const _EPS = 1e-6;
+class OrbitControls extends Controls {
+  /**
+   * Constructs a new controls instance.
+   *
+   * @param {Object3D} object - The object that is managed by the controls.
+   * @param {?HTMLDOMElement} domElement - The HTML element used for event listeners.
+   */
+  constructor(object, domElement = null) {
+    super(object, domElement);
+    this.state = _STATE.NONE;
+    this.target = new three.Vector3();
+    this.cursor = new three.Vector3();
+    this.minDistance = 0;
+    this.maxDistance = Infinity;
+    this.minZoom = 0;
+    this.maxZoom = Infinity;
+    this.minTargetRadius = 0;
+    this.maxTargetRadius = Infinity;
+    this.minPolarAngle = 0;
+    this.maxPolarAngle = Math.PI;
+    this.minAzimuthAngle = -Infinity;
+    this.maxAzimuthAngle = Infinity;
+    this.enableDamping = false;
+    this.dampingFactor = 0.05;
+    this.enableZoom = true;
+    this.zoomSpeed = 1;
+    this.enableRotate = true;
+    this.rotateSpeed = 1;
+    this.keyRotateSpeed = 1;
+    this.enablePan = true;
+    this.panSpeed = 1;
+    this.screenSpacePanning = true;
+    this.keyPanSpeed = 7;
+    this.zoomToCursor = false;
+    this.autoRotate = false;
+    this.autoRotateThreshold = 0;
+    this.autoRotateThresholdTrigger = 2;
+    this.autoRotateSpeed = 2;
+    this.keys = { LEFT: "ArrowLeft", UP: "ArrowUp", RIGHT: "ArrowRight", BOTTOM: "ArrowDown" };
+    this.mouseButtons = { LEFT: three.MOUSE.ROTATE, MIDDLE: three.MOUSE.DOLLY, RIGHT: three.MOUSE.PAN };
+    this.touches = { ONE: three.TOUCH.ROTATE, TWO: three.TOUCH.DOLLY_PAN };
+    this.target0 = this.target.clone();
+    this.position0 = this.object.position.clone();
+    this.zoom0 = this.object.zoom;
+    this._domElementKeyEvents = null;
+    this._lastPosition = new three.Vector3();
+    this._lastQuaternion = new three.Quaternion();
+    this._lastTargetPosition = new three.Vector3();
+    this._quat = new three.Quaternion().setFromUnitVectors(object.up, new three.Vector3(0, 1, 0));
+    this._quatInverse = this._quat.clone().invert();
+    this._spherical = new three.Spherical();
+    this._sphericalDelta = new three.Spherical();
+    this._scale = 1;
+    this._panOffset = new three.Vector3();
+    this._rotateStart = new three.Vector2();
+    this._rotateEnd = new three.Vector2();
+    this._rotateDelta = new three.Vector2();
+    this._panStart = new three.Vector2();
+    this._panEnd = new three.Vector2();
+    this._panDelta = new three.Vector2();
+    this._dollyStart = new three.Vector2();
+    this._dollyEnd = new three.Vector2();
+    this._dollyDelta = new three.Vector2();
+    this._dollyDirection = new three.Vector3();
+    this._mouse = new three.Vector2();
+    this._performCursorZoom = false;
+    this._pointers = [];
+    this._pointerPositions = {};
+    this._controlActive = false;
+    this._onPointerMove = onPointerMove.bind(this);
+    this._onPointerDown = onPointerDown.bind(this);
+    this._onPointerUp = onPointerUp.bind(this);
+    this._onContextMenu = onContextMenu.bind(this);
+    this._onMouseWheel = onMouseWheel.bind(this);
+    this._onKeyDown = onKeyDown.bind(this);
+    this._onTouchStart = onTouchStart.bind(this);
+    this._onTouchMove = onTouchMove.bind(this);
+    this._onMouseDown = onMouseDown.bind(this);
+    this._onMouseMove = onMouseMove.bind(this);
+    this._interceptControlDown = interceptControlDown.bind(this);
+    this._interceptControlUp = interceptControlUp.bind(this);
+    if (this.domElement !== null) {
+      this.connect();
+    }
+    this.update();
+  }
+  connect() {
+    this.domElement.addEventListener("pointerdown", this._onPointerDown);
+    this.domElement.addEventListener("pointercancel", this._onPointerUp);
+    this.domElement.addEventListener("contextmenu", this._onContextMenu);
+    this.domElement.addEventListener("wheel", this._onMouseWheel, { passive: false });
+    const document = this.domElement.getRootNode();
+    document.addEventListener("keydown", this._interceptControlDown, { passive: true, capture: true });
+    this.domElement.style.touchAction = "none";
+  }
+  disconnect() {
+    this.domElement.removeEventListener("pointerdown", this._onPointerDown);
+    this.domElement.removeEventListener("pointermove", this._onPointerMove);
+    this.domElement.removeEventListener("pointerup", this._onPointerUp);
+    this.domElement.removeEventListener("pointercancel", this._onPointerUp);
+    this.domElement.removeEventListener("wheel", this._onMouseWheel);
+    this.domElement.removeEventListener("contextmenu", this._onContextMenu);
+    this.stopListenToKeyEvents();
+    const document = this.domElement.getRootNode();
+    document.removeEventListener("keydown", this._interceptControlDown, { capture: true });
+    this.domElement.style.touchAction = "auto";
+  }
+  dispose() {
+    this.disconnect();
+  }
+  /**
+   * Get the current vertical rotation, in radians.
+   *
+   * @return {number} The current vertical rotation, in radians.
+   */
+  getPolarAngle() {
+    return this._spherical.phi;
+  }
+  /**
+   * Get the current horizontal rotation, in radians.
+   *
+   * @return {number} The current horizontal rotation, in radians.
+   */
+  getAzimuthalAngle() {
+    return this._spherical.theta;
+  }
+  /**
+   * Returns the distance from the camera to the target.
+   *
+   * @return {number} The distance from the camera to the target.
+   */
+  getDistance() {
+    return this.object.position.distanceTo(this.target);
+  }
+  /**
+   * Adds key event listeners to the given DOM element.
+   * `window` is a recommended argument for using this method.
+   *
+   * @param {HTMLDOMElement} domElement - The DOM element
+   */
+  listenToKeyEvents(domElement) {
+    domElement.addEventListener("keydown", this._onKeyDown);
+    this._domElementKeyEvents = domElement;
+  }
+  /**
+   * Removes the key event listener previously defined with `listenToKeyEvents()`.
+   */
+  stopListenToKeyEvents() {
+    if (this._domElementKeyEvents !== null) {
+      this._domElementKeyEvents.removeEventListener("keydown", this._onKeyDown);
+      this._domElementKeyEvents = null;
+    }
+  }
+  /**
+   * Save the current state of the controls. This can later be recovered with `reset()`.
+   */
+  saveState() {
+    this.target0.copy(this.target);
+    this.position0.copy(this.object.position);
+    this.zoom0 = this.object.zoom;
+  }
+  /**
+   * Reset the controls to their state from either the last time the `saveState()`
+   * was called, or the initial state.
+   */
+  reset() {
+    this.target.copy(this.target0);
+    this.object.position.copy(this.position0);
+    this.object.zoom = this.zoom0;
+    this.object.updateProjectionMatrix();
+    this.dispatchEvent(_changeEvent);
+    this.update();
+    this.state = _STATE.NONE;
+  }
+  update(deltaTime = null) {
+    const position = this.object.position;
+    _v.copy(position).sub(this.target);
+    _v.applyQuaternion(this._quat);
+    this._spherical.setFromVector3(_v);
+    if (this.autoRotate && this.state === _STATE.NONE) {
+      this._rotateLeft(this._getAutoRotationAngle(deltaTime));
+    }
+    if (this.enableDamping) {
+      this._spherical.theta += this._sphericalDelta.theta * this.dampingFactor;
+      this._spherical.phi += this._sphericalDelta.phi * this.dampingFactor;
+    } else {
+      this._spherical.theta += this._sphericalDelta.theta;
+      this._spherical.phi += this._sphericalDelta.phi;
+    }
+    let min = this.minAzimuthAngle;
+    let max = this.maxAzimuthAngle;
+    if (isFinite(min) && isFinite(max)) {
+      if (min < -Math.PI) min += _twoPI;
+      else if (min > Math.PI) min -= _twoPI;
+      if (max < -Math.PI) max += _twoPI;
+      else if (max > Math.PI) max -= _twoPI;
+      if (min <= max) {
+        this._spherical.theta = Math.max(min, Math.min(max, this._spherical.theta));
+      } else {
+        this._spherical.theta = this._spherical.theta > (min + max) / 2 ? Math.max(min, this._spherical.theta) : Math.min(max, this._spherical.theta);
+      }
+    }
+    this._spherical.phi = Math.max(this.minPolarAngle, Math.min(this.maxPolarAngle, this._spherical.phi));
+    this._spherical.makeSafe();
+    if (this.enableDamping === true) {
+      this.target.addScaledVector(this._panOffset, this.dampingFactor);
+    } else {
+      this.target.add(this._panOffset);
+    }
+    this.target.sub(this.cursor);
+    this.target.clampLength(this.minTargetRadius, this.maxTargetRadius);
+    this.target.add(this.cursor);
+    let zoomChanged = false;
+    if (this.zoomToCursor && this._performCursorZoom || this.object.isOrthographicCamera) {
+      this._spherical.radius = this._clampDistance(this._spherical.radius);
+    } else {
+      const prevRadius = this._spherical.radius;
+      this._spherical.radius = this._clampDistance(this._spherical.radius * this._scale);
+      zoomChanged = prevRadius != this._spherical.radius;
+    }
+    _v.setFromSpherical(this._spherical);
+    _v.applyQuaternion(this._quatInverse);
+    position.copy(this.target).add(_v);
+    this.object.lookAt(this.target);
+    if (this.enableDamping === true) {
+      console.log(this._sphericalDelta.theta, this.autoRotateThresholdTrigger, this.autoRotateThreshold);
+      if (Math.abs(this._sphericalDelta.theta) > this.autoRotateThresholdTrigger) {
+        this.autoRotateThresholdTriggered = true;
+      }
+      if (Math.abs(this._sphericalDelta.theta) < this.autoRotateThreshold - 0.01) {
+        this.autoRotateThresholdTriggered = false;
+      }
+      if (!this.autoRotateThresholdTriggered || Math.abs(this._sphericalDelta.theta) > this.autoRotateThreshold) {
+        this._sphericalDelta.theta *= 1 - this.dampingFactor;
+      }
+      this._sphericalDelta.phi *= 1 - this.dampingFactor;
+      this._panOffset.multiplyScalar(1 - this.dampingFactor);
+    } else {
+      this._sphericalDelta.set(0, 0, 0);
+      this._panOffset.set(0, 0, 0);
+    }
+    if (this.zoomToCursor && this._performCursorZoom) {
+      let newRadius = null;
+      if (this.object.isPerspectiveCamera) {
+        const prevRadius = _v.length();
+        newRadius = this._clampDistance(prevRadius * this._scale);
+        const radiusDelta = prevRadius - newRadius;
+        this.object.position.addScaledVector(this._dollyDirection, radiusDelta);
+        this.object.updateMatrixWorld();
+        zoomChanged = !!radiusDelta;
+      } else if (this.object.isOrthographicCamera) {
+        const mouseBefore = new three.Vector3(this._mouse.x, this._mouse.y, 0);
+        mouseBefore.unproject(this.object);
+        const prevZoom = this.object.zoom;
+        this.object.zoom = Math.max(this.minZoom, Math.min(this.maxZoom, this.object.zoom / this._scale));
+        this.object.updateProjectionMatrix();
+        zoomChanged = prevZoom !== this.object.zoom;
+        const mouseAfter = new three.Vector3(this._mouse.x, this._mouse.y, 0);
+        mouseAfter.unproject(this.object);
+        this.object.position.sub(mouseAfter).add(mouseBefore);
+        this.object.updateMatrixWorld();
+        newRadius = _v.length();
+      } else {
+        console.warn("WARNING: OrbitControls.js encountered an unknown camera type - zoom to cursor disabled.");
+        this.zoomToCursor = false;
+      }
+      if (newRadius !== null) {
+        if (this.screenSpacePanning) {
+          this.target.set(0, 0, -1).transformDirection(this.object.matrix).multiplyScalar(newRadius).add(this.object.position);
+        } else {
+          _ray.origin.copy(this.object.position);
+          _ray.direction.set(0, 0, -1).transformDirection(this.object.matrix);
+          if (Math.abs(this.object.up.dot(_ray.direction)) < _TILT_LIMIT) {
+            this.object.lookAt(this.target);
+          } else {
+            _plane.setFromNormalAndCoplanarPoint(this.object.up, this.target);
+            _ray.intersectPlane(_plane, this.target);
+          }
+        }
+      }
+    } else if (this.object.isOrthographicCamera) {
+      const prevZoom = this.object.zoom;
+      this.object.zoom = Math.max(this.minZoom, Math.min(this.maxZoom, this.object.zoom / this._scale));
+      if (prevZoom !== this.object.zoom) {
+        this.object.updateProjectionMatrix();
+        zoomChanged = true;
+      }
+    }
+    this._scale = 1;
+    this._performCursorZoom = false;
+    if (zoomChanged || this._lastPosition.distanceToSquared(this.object.position) > _EPS || 8 * (1 - this._lastQuaternion.dot(this.object.quaternion)) > _EPS || this._lastTargetPosition.distanceToSquared(this.target) > _EPS) {
+      this.dispatchEvent(_changeEvent);
+      this._lastPosition.copy(this.object.position);
+      this._lastQuaternion.copy(this.object.quaternion);
+      this._lastTargetPosition.copy(this.target);
+      return true;
+    }
+    return false;
+  }
+  _getAutoRotationAngle(deltaTime) {
+    if (deltaTime !== null) {
+      return _twoPI / 60 * this.autoRotateSpeed * deltaTime;
+    } else {
+      return _twoPI / 60 / 60 * this.autoRotateSpeed;
+    }
+  }
+  _getZoomScale(delta) {
+    const normalizedDelta = Math.abs(delta * 0.01);
+    return Math.pow(0.95, this.zoomSpeed * normalizedDelta);
+  }
+  _rotateLeft(angle) {
+    this._sphericalDelta.theta -= angle;
+  }
+  _rotateUp(angle) {
+    this._sphericalDelta.phi -= angle;
+  }
+  _panLeft(distance, objectMatrix) {
+    _v.setFromMatrixColumn(objectMatrix, 0);
+    _v.multiplyScalar(-distance);
+    this._panOffset.add(_v);
+  }
+  _panUp(distance, objectMatrix) {
+    if (this.screenSpacePanning === true) {
+      _v.setFromMatrixColumn(objectMatrix, 1);
+    } else {
+      _v.setFromMatrixColumn(objectMatrix, 0);
+      _v.crossVectors(this.object.up, _v);
+    }
+    _v.multiplyScalar(distance);
+    this._panOffset.add(_v);
+  }
+  // deltaX and deltaY are in pixels; right and down are positive
+  _pan(deltaX, deltaY) {
+    const element = this.domElement;
+    if (this.object.isPerspectiveCamera) {
+      const position = this.object.position;
+      _v.copy(position).sub(this.target);
+      let targetDistance = _v.length();
+      targetDistance *= Math.tan(this.object.fov / 2 * Math.PI / 180);
+      this._panLeft(2 * deltaX * targetDistance / element.clientHeight, this.object.matrix);
+      this._panUp(2 * deltaY * targetDistance / element.clientHeight, this.object.matrix);
+    } else if (this.object.isOrthographicCamera) {
+      this._panLeft(deltaX * (this.object.right - this.object.left) / this.object.zoom / element.clientWidth, this.object.matrix);
+      this._panUp(deltaY * (this.object.top - this.object.bottom) / this.object.zoom / element.clientHeight, this.object.matrix);
+    } else {
+      console.warn("WARNING: OrbitControls.js encountered an unknown camera type - pan disabled.");
+      this.enablePan = false;
+    }
+  }
+  _dollyOut(dollyScale) {
+    if (this.object.isPerspectiveCamera || this.object.isOrthographicCamera) {
+      this._scale /= dollyScale;
+    } else {
+      console.warn("WARNING: OrbitControls.js encountered an unknown camera type - dolly/zoom disabled.");
+      this.enableZoom = false;
+    }
+  }
+  _dollyIn(dollyScale) {
+    if (this.object.isPerspectiveCamera || this.object.isOrthographicCamera) {
+      this._scale *= dollyScale;
+    } else {
+      console.warn("WARNING: OrbitControls.js encountered an unknown camera type - dolly/zoom disabled.");
+      this.enableZoom = false;
+    }
+  }
+  _updateZoomParameters(x, y) {
+    if (!this.zoomToCursor) {
+      return;
+    }
+    this._performCursorZoom = true;
+    const rect = this.domElement.getBoundingClientRect();
+    const dx = x - rect.left;
+    const dy = y - rect.top;
+    const w = rect.width;
+    const h = rect.height;
+    this._mouse.x = dx / w * 2 - 1;
+    this._mouse.y = -(dy / h) * 2 + 1;
+    this._dollyDirection.set(this._mouse.x, this._mouse.y, 1).unproject(this.object).sub(this.object.position).normalize();
+  }
+  _clampDistance(dist) {
+    return Math.max(this.minDistance, Math.min(this.maxDistance, dist));
+  }
+  //
+  // event callbacks - update the object state
+  //
+  _handleMouseDownRotate(event) {
+    this._rotateStart.set(event.clientX, event.clientY);
+  }
+  _handleMouseDownDolly(event) {
+    this._updateZoomParameters(event.clientX, event.clientX);
+    this._dollyStart.set(event.clientX, event.clientY);
+  }
+  _handleMouseDownPan(event) {
+    this._panStart.set(event.clientX, event.clientY);
+  }
+  _handleMouseMoveRotate(event) {
+    this._rotateEnd.set(event.clientX, event.clientY);
+    this._rotateDelta.subVectors(this._rotateEnd, this._rotateStart).multiplyScalar(this.rotateSpeed);
+    const element = this.domElement;
+    this._rotateLeft(_twoPI * this._rotateDelta.x / element.clientHeight);
+    this._rotateUp(_twoPI * this._rotateDelta.y / element.clientHeight);
+    this._rotateStart.copy(this._rotateEnd);
+    this.update();
+  }
+  _handleMouseMoveDolly(event) {
+    this._dollyEnd.set(event.clientX, event.clientY);
+    this._dollyDelta.subVectors(this._dollyEnd, this._dollyStart);
+    if (this._dollyDelta.y > 0) {
+      this._dollyOut(this._getZoomScale(this._dollyDelta.y));
+    } else if (this._dollyDelta.y < 0) {
+      this._dollyIn(this._getZoomScale(this._dollyDelta.y));
+    }
+    this._dollyStart.copy(this._dollyEnd);
+    this.update();
+  }
+  _handleMouseMovePan(event) {
+    this._panEnd.set(event.clientX, event.clientY);
+    this._panDelta.subVectors(this._panEnd, this._panStart).multiplyScalar(this.panSpeed);
+    this._pan(this._panDelta.x, this._panDelta.y);
+    this._panStart.copy(this._panEnd);
+    this.update();
+  }
+  _handleMouseWheel(event) {
+    this._updateZoomParameters(event.clientX, event.clientY);
+    if (event.deltaY < 0) {
+      this._dollyIn(this._getZoomScale(event.deltaY));
+    } else if (event.deltaY > 0) {
+      this._dollyOut(this._getZoomScale(event.deltaY));
+    }
+    this.update();
+  }
+  _handleKeyDown(event) {
+    let needsUpdate = false;
+    switch (event.code) {
+      case this.keys.UP:
+        if (event.ctrlKey || event.metaKey || event.shiftKey) {
+          if (this.enableRotate) {
+            this._rotateUp(_twoPI * this.keyRotateSpeed / this.domElement.clientHeight);
+          }
+        } else {
+          if (this.enablePan) {
+            this._pan(0, this.keyPanSpeed);
+          }
+        }
+        needsUpdate = true;
+        break;
+      case this.keys.BOTTOM:
+        if (event.ctrlKey || event.metaKey || event.shiftKey) {
+          if (this.enableRotate) {
+            this._rotateUp(-_twoPI * this.keyRotateSpeed / this.domElement.clientHeight);
+          }
+        } else {
+          if (this.enablePan) {
+            this._pan(0, -this.keyPanSpeed);
+          }
+        }
+        needsUpdate = true;
+        break;
+      case this.keys.LEFT:
+        if (event.ctrlKey || event.metaKey || event.shiftKey) {
+          if (this.enableRotate) {
+            this._rotateLeft(_twoPI * this.keyRotateSpeed / this.domElement.clientHeight);
+          }
+        } else {
+          if (this.enablePan) {
+            this._pan(this.keyPanSpeed, 0);
+          }
+        }
+        needsUpdate = true;
+        break;
+      case this.keys.RIGHT:
+        if (event.ctrlKey || event.metaKey || event.shiftKey) {
+          if (this.enableRotate) {
+            this._rotateLeft(-_twoPI * this.keyRotateSpeed / this.domElement.clientHeight);
+          }
+        } else {
+          if (this.enablePan) {
+            this._pan(-this.keyPanSpeed, 0);
+          }
+        }
+        needsUpdate = true;
+        break;
+    }
+    if (needsUpdate) {
+      event.preventDefault();
+      this.update();
+    }
+  }
+  _handleTouchStartRotate(event) {
+    if (this._pointers.length === 1) {
+      this._rotateStart.set(event.pageX, event.pageY);
+    } else {
+      const position = this._getSecondPointerPosition(event);
+      const x = 0.5 * (event.pageX + position.x);
+      const y = 0.5 * (event.pageY + position.y);
+      this._rotateStart.set(x, y);
+    }
+  }
+  _handleTouchStartPan(event) {
+    if (this._pointers.length === 1) {
+      this._panStart.set(event.pageX, event.pageY);
+    } else {
+      const position = this._getSecondPointerPosition(event);
+      const x = 0.5 * (event.pageX + position.x);
+      const y = 0.5 * (event.pageY + position.y);
+      this._panStart.set(x, y);
+    }
+  }
+  _handleTouchStartDolly(event) {
+    const position = this._getSecondPointerPosition(event);
+    const dx = event.pageX - position.x;
+    const dy = event.pageY - position.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    this._dollyStart.set(0, distance);
+  }
+  _handleTouchStartDollyPan(event) {
+    if (this.enableZoom) this._handleTouchStartDolly(event);
+    if (this.enablePan) this._handleTouchStartPan(event);
+  }
+  _handleTouchStartDollyRotate(event) {
+    if (this.enableZoom) this._handleTouchStartDolly(event);
+    if (this.enableRotate) this._handleTouchStartRotate(event);
+  }
+  _handleTouchMoveRotate(event) {
+    if (this._pointers.length == 1) {
+      this._rotateEnd.set(event.pageX, event.pageY);
+    } else {
+      const position = this._getSecondPointerPosition(event);
+      const x = 0.5 * (event.pageX + position.x);
+      const y = 0.5 * (event.pageY + position.y);
+      this._rotateEnd.set(x, y);
+    }
+    this._rotateDelta.subVectors(this._rotateEnd, this._rotateStart).multiplyScalar(this.rotateSpeed);
+    const element = this.domElement;
+    this._rotateLeft(_twoPI * this._rotateDelta.x / element.clientHeight);
+    this._rotateUp(_twoPI * this._rotateDelta.y / element.clientHeight);
+    this._rotateStart.copy(this._rotateEnd);
+  }
+  _handleTouchMovePan(event) {
+    if (this._pointers.length === 1) {
+      this._panEnd.set(event.pageX, event.pageY);
+    } else {
+      const position = this._getSecondPointerPosition(event);
+      const x = 0.5 * (event.pageX + position.x);
+      const y = 0.5 * (event.pageY + position.y);
+      this._panEnd.set(x, y);
+    }
+    this._panDelta.subVectors(this._panEnd, this._panStart).multiplyScalar(this.panSpeed);
+    this._pan(this._panDelta.x, this._panDelta.y);
+    this._panStart.copy(this._panEnd);
+  }
+  _handleTouchMoveDolly(event) {
+    const position = this._getSecondPointerPosition(event);
+    const dx = event.pageX - position.x;
+    const dy = event.pageY - position.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    this._dollyEnd.set(0, distance);
+    this._dollyDelta.set(0, Math.pow(this._dollyEnd.y / this._dollyStart.y, this.zoomSpeed));
+    this._dollyOut(this._dollyDelta.y);
+    this._dollyStart.copy(this._dollyEnd);
+    const centerX = (event.pageX + position.x) * 0.5;
+    const centerY = (event.pageY + position.y) * 0.5;
+    this._updateZoomParameters(centerX, centerY);
+  }
+  _handleTouchMoveDollyPan(event) {
+    if (this.enableZoom) this._handleTouchMoveDolly(event);
+    if (this.enablePan) this._handleTouchMovePan(event);
+  }
+  _handleTouchMoveDollyRotate(event) {
+    if (this.enableZoom) this._handleTouchMoveDolly(event);
+    if (this.enableRotate) this._handleTouchMoveRotate(event);
+  }
+  // pointers
+  _addPointer(event) {
+    this._pointers.push(event.pointerId);
+  }
+  _removePointer(event) {
+    delete this._pointerPositions[event.pointerId];
+    for (let i = 0; i < this._pointers.length; i++) {
+      if (this._pointers[i] == event.pointerId) {
+        this._pointers.splice(i, 1);
+        return;
+      }
+    }
+  }
+  _isTrackingPointer(event) {
+    for (let i = 0; i < this._pointers.length; i++) {
+      if (this._pointers[i] == event.pointerId) return true;
+    }
+    return false;
+  }
+  _trackPointer(event) {
+    let position = this._pointerPositions[event.pointerId];
+    if (position === void 0) {
+      position = new three.Vector2();
+      this._pointerPositions[event.pointerId] = position;
+    }
+    position.set(event.pageX, event.pageY);
+  }
+  _getSecondPointerPosition(event) {
+    const pointerId = event.pointerId === this._pointers[0] ? this._pointers[1] : this._pointers[0];
+    return this._pointerPositions[pointerId];
+  }
+  //
+  _customWheelEvent(event) {
+    const mode = event.deltaMode;
+    const newEvent = {
+      clientX: event.clientX,
+      clientY: event.clientY,
+      deltaY: event.deltaY
+    };
+    switch (mode) {
+      case 1:
+        newEvent.deltaY *= 16;
+        break;
+      case 2:
+        newEvent.deltaY *= 100;
+        break;
+    }
+    if (event.ctrlKey && !this._controlActive) {
+      newEvent.deltaY *= 10;
+    }
+    return newEvent;
+  }
+}
+function onPointerDown(event) {
+  if (this.enabled === false) return;
+  if (this._pointers.length === 0) {
+    this.domElement.setPointerCapture(event.pointerId);
+    this.domElement.addEventListener("pointermove", this._onPointerMove);
+    this.domElement.addEventListener("pointerup", this._onPointerUp);
+  }
+  if (this._isTrackingPointer(event)) return;
+  this._addPointer(event);
+  if (event.pointerType === "touch") {
+    this._onTouchStart(event);
+  } else {
+    this._onMouseDown(event);
+  }
+}
+function onPointerMove(event) {
+  if (this.enabled === false) return;
+  if (event.pointerType === "touch") {
+    this._onTouchMove(event);
+  } else {
+    this._onMouseMove(event);
+  }
+}
+function onPointerUp(event) {
+  this._removePointer(event);
+  switch (this._pointers.length) {
+    case 0:
+      this.domElement.releasePointerCapture(event.pointerId);
+      this.domElement.removeEventListener("pointermove", this._onPointerMove);
+      this.domElement.removeEventListener("pointerup", this._onPointerUp);
+      this.dispatchEvent(_endEvent);
+      this.state = _STATE.NONE;
+      break;
+    case 1:
+      const pointerId = this._pointers[0];
+      const position = this._pointerPositions[pointerId];
+      this._onTouchStart({ pointerId, pageX: position.x, pageY: position.y });
+      break;
+  }
+}
+function onMouseDown(event) {
+  let mouseAction;
+  switch (event.button) {
+    case 0:
+      mouseAction = this.mouseButtons.LEFT;
+      break;
+    case 1:
+      mouseAction = this.mouseButtons.MIDDLE;
+      break;
+    case 2:
+      mouseAction = this.mouseButtons.RIGHT;
+      break;
+    default:
+      mouseAction = -1;
+  }
+  switch (mouseAction) {
+    case three.MOUSE.DOLLY:
+      if (this.enableZoom === false) return;
+      this._handleMouseDownDolly(event);
+      this.state = _STATE.DOLLY;
+      break;
+    case three.MOUSE.ROTATE:
+      if (event.ctrlKey || event.metaKey || event.shiftKey) {
+        if (this.enablePan === false) return;
+        this._handleMouseDownPan(event);
+        this.state = _STATE.PAN;
+      } else {
+        if (this.enableRotate === false) return;
+        this._handleMouseDownRotate(event);
+        this.state = _STATE.ROTATE;
+      }
+      break;
+    case three.MOUSE.PAN:
+      if (event.ctrlKey || event.metaKey || event.shiftKey) {
+        if (this.enableRotate === false) return;
+        this._handleMouseDownRotate(event);
+        this.state = _STATE.ROTATE;
+      } else {
+        if (this.enablePan === false) return;
+        this._handleMouseDownPan(event);
+        this.state = _STATE.PAN;
+      }
+      break;
+    default:
+      this.state = _STATE.NONE;
+  }
+  if (this.state !== _STATE.NONE) {
+    this.dispatchEvent(_startEvent);
+  }
+}
+function onMouseMove(event) {
+  switch (this.state) {
+    case _STATE.ROTATE:
+      if (this.enableRotate === false) return;
+      this._handleMouseMoveRotate(event);
+      break;
+    case _STATE.DOLLY:
+      if (this.enableZoom === false) return;
+      this._handleMouseMoveDolly(event);
+      break;
+    case _STATE.PAN:
+      if (this.enablePan === false) return;
+      this._handleMouseMovePan(event);
+      break;
+  }
+}
+function onMouseWheel(event) {
+  if (this.enabled === false || this.enableZoom === false || this.state !== _STATE.NONE) return;
+  event.preventDefault();
+  this.dispatchEvent(_startEvent);
+  this._handleMouseWheel(this._customWheelEvent(event));
+  this.dispatchEvent(_endEvent);
+}
+function onKeyDown(event) {
+  if (this.enabled === false) return;
+  this._handleKeyDown(event);
+}
+function onTouchStart(event) {
+  this._trackPointer(event);
+  switch (this._pointers.length) {
+    case 1:
+      switch (this.touches.ONE) {
+        case three.TOUCH.ROTATE:
+          if (this.enableRotate === false) return;
+          this._handleTouchStartRotate(event);
+          this.state = _STATE.TOUCH_ROTATE;
+          break;
+        case three.TOUCH.PAN:
+          if (this.enablePan === false) return;
+          this._handleTouchStartPan(event);
+          this.state = _STATE.TOUCH_PAN;
+          break;
+        default:
+          this.state = _STATE.NONE;
+      }
+      break;
+    case 2:
+      switch (this.touches.TWO) {
+        case three.TOUCH.DOLLY_PAN:
+          if (this.enableZoom === false && this.enablePan === false) return;
+          this._handleTouchStartDollyPan(event);
+          this.state = _STATE.TOUCH_DOLLY_PAN;
+          break;
+        case three.TOUCH.DOLLY_ROTATE:
+          if (this.enableZoom === false && this.enableRotate === false) return;
+          this._handleTouchStartDollyRotate(event);
+          this.state = _STATE.TOUCH_DOLLY_ROTATE;
+          break;
+        default:
+          this.state = _STATE.NONE;
+      }
+      break;
+    default:
+      this.state = _STATE.NONE;
+  }
+  if (this.state !== _STATE.NONE) {
+    this.dispatchEvent(_startEvent);
+  }
+}
+function onTouchMove(event) {
+  this._trackPointer(event);
+  switch (this.state) {
+    case _STATE.TOUCH_ROTATE:
+      if (this.enableRotate === false) return;
+      this._handleTouchMoveRotate(event);
+      this.update();
+      break;
+    case _STATE.TOUCH_PAN:
+      if (this.enablePan === false) return;
+      this._handleTouchMovePan(event);
+      this.update();
+      break;
+    case _STATE.TOUCH_DOLLY_PAN:
+      if (this.enableZoom === false && this.enablePan === false) return;
+      this._handleTouchMoveDollyPan(event);
+      this.update();
+      break;
+    case _STATE.TOUCH_DOLLY_ROTATE:
+      if (this.enableZoom === false && this.enableRotate === false) return;
+      this._handleTouchMoveDollyRotate(event);
+      this.update();
+      break;
+    default:
+      this.state = _STATE.NONE;
+  }
+}
+function onContextMenu(event) {
+  if (this.enabled === false) return;
+  event.preventDefault();
+}
+function interceptControlDown(event) {
+  if (event.key === "Control") {
+    this._controlActive = true;
+    const document = this.domElement.getRootNode();
+    document.addEventListener("keyup", this._interceptControlUp, { passive: true, capture: true });
+  }
+}
+function interceptControlUp(event) {
+  if (event.key === "Control") {
+    this._controlActive = false;
+    const document = this.domElement.getRootNode();
+    document.removeEventListener("keyup", this._interceptControlUp, { passive: true, capture: true });
   }
 }
 
@@ -221,8 +1108,7 @@ function usePointer(options) {
         const { object } = intersect2;
         const component = getComponent(object);
         if (object instanceof three.InstancedMesh) {
-          if (iMeshes.indexOf(object) !== -1)
-            return;
+          if (iMeshes.indexOf(object) !== -1) return;
           iMeshes.push(object);
         }
         if (!object.userData.over) {
@@ -274,8 +1160,7 @@ function usePointer(options) {
         const { object } = intersect2;
         const component = getComponent(object);
         if (object instanceof three.InstancedMesh) {
-          if (iMeshes.indexOf(object) !== -1)
-            return;
+          if (iMeshes.indexOf(object) !== -1) return;
           iMeshes.push(object);
         }
         const event2 = { type: "pointerdown", component, intersect: intersect2, intersects };
@@ -296,8 +1181,7 @@ function usePointer(options) {
         const { object } = intersect2;
         const component = getComponent(object);
         if (object instanceof three.InstancedMesh) {
-          if (iMeshes.indexOf(object) !== -1)
-            return;
+          if (iMeshes.indexOf(object) !== -1) return;
           iMeshes.push(object);
         }
         const event2 = { type: "pointerup", component, intersect: intersect2, intersects };
@@ -318,8 +1202,7 @@ function usePointer(options) {
         const { object } = intersect2;
         const component = getComponent(object);
         if (object instanceof three.InstancedMesh) {
-          if (iMeshes.indexOf(object) !== -1)
-            return;
+          if (iMeshes.indexOf(object) !== -1) return;
           iMeshes.push(object);
         }
         const event2 = { type: "click", component, intersect: intersect2, intersects };
@@ -330,13 +1213,11 @@ function usePointer(options) {
     onClick({ type: "click", position, positionN, positionV3 });
   }
   function pointerLeave() {
-    if (resetOnEnd)
-      reset();
+    if (resetOnEnd) reset();
     onLeave({ type: "pointerleave" });
   }
   function getComponent(object) {
-    if (object.userData.component)
-      return object.userData.component;
+    if (object.userData.component) return object.userData.component;
     let parent = object.parent;
     while (parent) {
       if (parent.userData.component) {
@@ -349,8 +1230,7 @@ function usePointer(options) {
   function getIntersectObjects() {
     if (typeof intersectObjects === "function") {
       return intersectObjects();
-    } else
-      return intersectObjects;
+    } else return intersectObjects;
   }
   function addListeners() {
     domElement.addEventListener("mouseenter", pointerEnter);
@@ -441,7 +1321,7 @@ function useThree(params) {
     }
     initPointer();
     if (config.orbitCtrl) {
-      const cameraCtrl = new OrbitControls_js.OrbitControls(obj.camera, obj.renderer.domElement);
+      const cameraCtrl = new OrbitControls(obj.camera, obj.renderer.domElement);
       if (config.orbitCtrl instanceof Object) {
         Object.entries(config.orbitCtrl).forEach(([key, value]) => {
           cameraCtrl[key] = value;
@@ -501,12 +1381,9 @@ function useThree(params) {
   }
   function dispose() {
     window.removeEventListener("resize", onResize);
-    if (obj.pointer)
-      obj.pointer.removeListeners();
-    if (obj.cameraCtrl)
-      obj.cameraCtrl.dispose();
-    if (obj.renderer)
-      obj.renderer.dispose();
+    if (obj.pointer) obj.pointer.removeListeners();
+    if (obj.cameraCtrl) obj.cameraCtrl.dispose();
+    if (obj.renderer) obj.renderer.dispose();
   }
   function onResize() {
     var _a;
@@ -514,8 +1391,7 @@ function useThree(params) {
       setSize(window.innerWidth, window.innerHeight);
     } else {
       const elt = obj.renderer.domElement.parentNode;
-      if (elt)
-        setSize(elt.clientWidth, elt.clientHeight);
+      if (elt) setSize(elt.clientWidth, elt.clientHeight);
     }
     (_a = config.onResize) == null ? void 0 : _a.call(config, size);
   }
@@ -594,15 +1470,12 @@ var Renderer = vue.defineComponent({
       pointer: props.pointer,
       resize: props.resize
     };
-    if (props.width)
-      config.width = parseInt(props.width);
-    if (props.height)
-      config.height = parseInt(props.height);
+    if (props.width) config.width = parseInt(props.width);
+    if (props.height) config.height = parseInt(props.height);
     const three = useThree(config);
     bindObjectProp(props, "props", three.renderer);
     vue.watchEffect(() => {
-      if (props.pixelRatio)
-        three.renderer.setPixelRatio(props.pixelRatio);
+      if (props.pixelRatio) three.renderer.setPixelRatio(props.pixelRatio);
     });
     const renderFn = () => {
     };
@@ -715,8 +1588,7 @@ var Renderer = vue.defineComponent({
     removeListener(type, cb) {
       const callbacks = this.getCallbacks(type);
       const index = callbacks.indexOf(cb);
-      if (index !== -1)
-        callbacks.splice(index, 1);
+      if (index !== -1) callbacks.splice(index, 1);
     },
     getCallbacks(type) {
       if (type === "init") {
@@ -737,8 +1609,7 @@ var Renderer = vue.defineComponent({
       this.afterRenderCallbacks.forEach((e) => e({ type: "afterrender", renderer: this, time }));
     },
     renderLoop(time) {
-      if (this.raf)
-        requestAnimationFrame(this.renderLoop);
+      if (this.raf) requestAnimationFrame(this.renderLoop);
       this.render(time);
     }
   },
@@ -749,17 +1620,22 @@ var Renderer = vue.defineComponent({
 });
 
 var Camera = vue.defineComponent({
+  // TODO: eventually extend Object3D
+  // extends: Object3D,
   props: {
     props: { type: Object, default: () => ({}) }
   },
+  // inject: { renderer: RendererInjectionKey as symbol },
+  // setup(): CameraSetupInterface {
+  //   return {}
+  // },
   render() {
     return this.$slots.default ? this.$slots.default() : [];
   }
 });
 function cameraSetProp(camera, key, value, updateProjectionMatrix = true) {
   camera[key] = value;
-  if (updateProjectionMatrix)
-    camera.updateProjectionMatrix();
+  if (updateProjectionMatrix) camera.updateProjectionMatrix();
 }
 
 var OrthographicCamera = vue.defineComponent({
@@ -816,8 +1692,7 @@ var PerspectiveCamera = vue.defineComponent({
     const camera = new three.PerspectiveCamera(props.fov, props.aspect, props.near, props.far);
     renderer.camera = camera;
     bindProp(props, "position", camera);
-    if (props.lookAt)
-      camera.lookAt((_a = props.lookAt.x) != null ? _a : 0, props.lookAt.y, props.lookAt.z);
+    if (props.lookAt) camera.lookAt((_a = props.lookAt.x) != null ? _a : 0, props.lookAt.y, props.lookAt.z);
     vue.watch(() => props.lookAt, (v) => {
       var _a2;
       camera.lookAt((_a2 = v.x) != null ? _a2 : 0, v.y, v.z);
@@ -849,13 +1724,10 @@ var Scene = vue.defineComponent({
     renderer.scene = scene;
     vue.provide(SceneInjectionKey, scene);
     const setBackground = (value) => {
-      if (!value)
-        return;
+      if (!value) return;
       if (typeof value === "string" || typeof value === "number") {
-        if (scene.background instanceof three.Color)
-          scene.background.set(value);
-        else
-          scene.background = new three.Color(value);
+        if (scene.background instanceof three.Color) scene.background.set(value);
+        else scene.background = new three.Color(value);
       } else if (value instanceof three.Texture) {
         scene.background = value;
       }
@@ -887,6 +1759,7 @@ const pointerProps = {
 };
 var Object3D = vue.defineComponent({
   name: "Object3D",
+  // inject for sub components
   inject: {
     renderer: RendererInjectionKey,
     scene: SceneInjectionKey
@@ -916,11 +1789,9 @@ var Object3D = vue.defineComponent({
     }
   },
   unmounted() {
-    if (!this.disableRemove)
-      this.removeFromParent();
+    if (!this.disableRemove) this.removeFromParent();
     if (this.o3d) {
-      if (this.renderer)
-        this.renderer.three.removeIntersectObject(this.o3d);
+      if (this.renderer) this.renderer.three.removeIntersectObject(this.o3d);
     }
   },
   methods: {
@@ -929,8 +1800,7 @@ var Object3D = vue.defineComponent({
       this.o3d = o3d;
       o3d.userData.component = this;
       if (this.onPointerEnter || this.onPointerOver || this.onPointerMove || this.onPointerLeave || this.onPointerDown || this.onPointerUp || this.onClick) {
-        if (this.renderer)
-          this.renderer.three.addIntersectObject(o3d);
+        if (this.renderer) this.renderer.three.addIntersectObject(o3d);
       }
       bindProp(this, "position", o3d);
       bindProp(this, "rotation", o3d);
@@ -939,30 +1809,25 @@ var Object3D = vue.defineComponent({
       bindProp(this, "visible", o3d);
       bindObjectProp(this, "props", o3d);
       this.$emit("created", o3d);
-      if (this.lookAt)
-        o3d.lookAt((_a = this.lookAt.x) != null ? _a : 0, this.lookAt.y, this.lookAt.z);
+      if (this.lookAt) o3d.lookAt((_a = this.lookAt.x) != null ? _a : 0, this.lookAt.y, this.lookAt.z);
       vue.watch(() => this.lookAt, (v) => {
         var _a2;
         o3d.lookAt((_a2 = v.x) != null ? _a2 : 0, v.y, v.z);
       }, { deep: true });
       this.parent = this.getParent();
       if (!this.disableAdd) {
-        if (this.addToParent())
-          this.$emit("ready", this);
-        else
-          console.error("Missing parent (Scene, Group...)");
+        if (this.addToParent()) this.$emit("ready", this);
+        else console.error("Missing parent (Scene, Group...)");
       }
     },
     getParent() {
       let parent = this.$parent;
       if (!parent) {
         const instance = vue.getCurrentInstance();
-        if (instance && instance.parent)
-          parent = instance.parent.ctx;
+        if (instance && instance.parent) parent = instance.parent.ctx;
       }
       while (parent) {
-        if (parent.add)
-          return parent;
+        if (parent.add) return parent;
         parent = parent.$parent;
       }
       return void 0;
@@ -1038,8 +1903,7 @@ var Raycaster = vue.defineComponent({
     }
     const renderer = this.renderer;
     this.renderer.onMounted(() => {
-      if (!renderer.camera)
-        return;
+      if (!renderer.camera) return;
       this.pointer = usePointer({
         camera: renderer.camera,
         domElement: renderer.canvas,
@@ -1110,8 +1974,7 @@ var CubeCamera = vue.defineComponent({
     return { cubeRT, cubeCamera, updateRT };
   },
   created() {
-    if (this.cubeCamera)
-      this.initObject3D(this.cubeCamera);
+    if (this.cubeCamera) this.initObject3D(this.cubeCamera);
   },
   render() {
     return [];
@@ -1136,8 +1999,7 @@ const Mesh = vue.defineComponent({
     };
   },
   mounted() {
-    if (!this.mesh && !this.loading)
-      this.initMesh();
+    if (!this.mesh && !this.loading) this.initMesh();
   },
   methods: {
     initMesh() {
@@ -1158,27 +2020,22 @@ const Mesh = vue.defineComponent({
     },
     setGeometry(geometry) {
       this.geometry = geometry;
-      if (this.mesh)
-        this.mesh.geometry = geometry;
+      if (this.mesh) this.mesh.geometry = geometry;
     },
     setMaterial(material) {
       this.material = material;
-      if (this.mesh)
-        this.mesh.material = material;
+      if (this.mesh) this.mesh.material = material;
     },
     refreshGeometry() {
       const oldGeo = this.geometry;
       this.createGeometry();
-      if (this.mesh && this.geometry)
-        this.mesh.geometry = this.geometry;
+      if (this.mesh && this.geometry) this.mesh.geometry = this.geometry;
       oldGeo == null ? void 0 : oldGeo.dispose();
     }
   },
   unmounted() {
-    if (this.geometry)
-      this.geometry.dispose();
-    if (this.material)
-      this.material.dispose();
+    if (this.geometry) this.geometry.dispose();
+    if (this.material) this.material.dispose();
   },
   __hmrId: "Mesh"
 });
@@ -1207,6 +2064,7 @@ const Geometry = vue.defineComponent({
     rotateZ: Number,
     attributes: { type: Array, default: () => [] }
   },
+  // inject for sub components
   inject: {
     mesh: MeshInjectionKey
   },
@@ -1220,8 +2078,7 @@ const Geometry = vue.defineComponent({
     }
     this.createGeometry();
     this.rotateGeometry();
-    if (this.geometry)
-      this.mesh.setGeometry(this.geometry);
+    if (this.geometry) this.mesh.setGeometry(this.geometry);
     Object.keys(this.$props).forEach((prop) => {
       vue.watch(() => this[prop], this.refreshGeometry);
     });
@@ -1246,21 +2103,16 @@ const Geometry = vue.defineComponent({
       this.$emit("created", geometry);
     },
     rotateGeometry() {
-      if (!this.geometry)
-        return;
-      if (this.rotateX)
-        this.geometry.rotateX(this.rotateX);
-      if (this.rotateY)
-        this.geometry.rotateY(this.rotateY);
-      if (this.rotateZ)
-        this.geometry.rotateZ(this.rotateZ);
+      if (!this.geometry) return;
+      if (this.rotateX) this.geometry.rotateX(this.rotateX);
+      if (this.rotateY) this.geometry.rotateY(this.rotateY);
+      if (this.rotateZ) this.geometry.rotateZ(this.rotateZ);
     },
     refreshGeometry() {
       const oldGeo = this.geometry;
       this.createGeometry();
       this.rotateGeometry();
-      if (this.geometry && this.mesh)
-        this.mesh.setGeometry(this.geometry);
+      if (this.geometry && this.mesh) this.mesh.setGeometry(this.geometry);
       oldGeo == null ? void 0 : oldGeo.dispose();
     }
   },
@@ -1362,12 +2214,9 @@ function createGeometry$c(comp) {
       const geometries = comp.shapes.map((shape, index) => {
         const geometry = new three.ExtrudeGeometry(shape, comp.options[index]);
         if (comp.rotations) {
-          if (comp.rotations[index].x != 0)
-            geometry.rotateX(comp.rotations[index].x);
-          if (comp.rotations[index].y != 0)
-            geometry.rotateY(comp.rotations[index].y);
-          if (comp.rotations[index].z != 0)
-            geometry.rotateZ(comp.rotations[index].z);
+          if (comp.rotations[index].x != 0) geometry.rotateX(comp.rotations[index].x);
+          if (comp.rotations[index].y != 0) geometry.rotateY(comp.rotations[index].y);
+          if (comp.rotations[index].z != 0) geometry.rotateZ(comp.rotations[index].z);
         }
         if (comp.positions) {
           geometry.translate(comp.positions[index].x, comp.positions[index].y, comp.positions[index].z);
@@ -1534,6 +2383,7 @@ var TubeGeometry = vue.defineComponent({
     createGeometry() {
       this.geometry = createGeometry(this);
     },
+    // update points (without using prop, faster)
     updatePoints(points) {
       updateTubeGeometryPoints(this.geometry, points);
     }
@@ -1757,10 +2607,8 @@ const BaseMaterial = vue.defineComponent({
     },
     setProp(material, key, value, needsUpdate = false) {
       const dstVal = material[key];
-      if (dstVal instanceof three.Color)
-        dstVal.set(value);
-      else
-        material[key] = value;
+      if (dstVal instanceof three.Color) dstVal.set(value);
+      else material[key] = value;
       material.needsUpdate = needsUpdate;
     },
     setTexture(texture, key = "map") {
@@ -1778,6 +2626,7 @@ function materialComponent(name, props, createMaterial) {
     extends: BaseMaterial,
     props,
     methods: {
+      // @ts-ignore
       createMaterial() {
         return createMaterial(this.getMaterialParams());
       }
@@ -1911,10 +2760,8 @@ var SubSurfaceMaterial = vue.defineComponent({
       const uniforms = three.UniformsUtils.clone(params.uniforms);
       bindObjectProp(this, "uniforms", uniforms, true, (dst, key, value) => {
         const dstVal = dst[key].value;
-        if (dstVal instanceof three.Color)
-          dstVal.set(value);
-        else
-          dst[key].value = value;
+        if (dstVal instanceof three.Color) dstVal.set(value);
+        else dst[key].value = value;
       });
       const material = new three.ShaderMaterial({
         ...params,
@@ -1954,16 +2801,13 @@ var Texture = vue.defineComponent({
   },
   methods: {
     createTexture() {
-      if (!this.src)
-        return void 0;
+      if (!this.src) return void 0;
       return new three.TextureLoader().load(this.src, this.onLoaded, this.onProgress, this.onError);
     },
     initTexture() {
-      if (!this.texture)
-        return;
+      if (!this.texture) return;
       bindObjectProp(this, "props", this.texture);
-      if (!this.material)
-        return;
+      if (!this.material) return;
       this.material.setTexture(this.texture, this.name);
       if (this.material.material instanceof three.ShaderMaterial && this.uniform) {
         this.material.material.uniforms[this.uniform] = { value: this.texture };
@@ -2091,8 +2935,7 @@ var Text = vue.defineComponent({
     ];
     watchProps.forEach((p) => {
       vue.watch(() => this[p], () => {
-        if (this.font)
-          this.refreshGeometry();
+        if (this.font) this.refreshGeometry();
       });
     });
     const loader = new FontLoader_js.FontLoader();
@@ -2107,6 +2950,7 @@ var Text = vue.defineComponent({
   methods: {
     createGeometry() {
       this.geometry = new TextGeometry_js.TextGeometry(this.text, {
+        // @ts-ignore
         font: this.font,
         size: this.size,
         height: this.height,
@@ -2140,6 +2984,7 @@ var Tube = vue.defineComponent({
     createGeometry() {
       this.geometry = createGeometry(this);
     },
+    // update curve points (without using prop, faster)
     updatePoints(points) {
       updateTubeGeometryPoints(this.geometry, points);
     }
@@ -2162,8 +3007,7 @@ var Image = vue.defineComponent({
     return {};
   },
   created() {
-    if (!this.renderer)
-      return;
+    if (!this.renderer) return;
     this.geometry = new three.PlaneGeometry(1, 1, this.widthSegments, this.heightSegments);
     this.material = new three.MeshBasicMaterial({ side: three.DoubleSide, map: this.loadTexture() });
     vue.watch(() => this.src, this.refreshTexture);
@@ -2171,8 +3015,7 @@ var Image = vue.defineComponent({
       vue.watch(() => this[p], this.resize);
     });
     this.resize();
-    if (this.keepSize)
-      this.renderer.onResize(this.resize);
+    if (this.keepSize) this.renderer.onResize(this.resize);
   },
   unmounted() {
     var _a;
@@ -2196,8 +3039,7 @@ var Image = vue.defineComponent({
       this.$emit("loaded", texture);
     },
     resize() {
-      if (!this.renderer || !this.texture)
-        return;
+      if (!this.renderer || !this.texture) return;
       const screen = this.renderer.size;
       const iW = this.texture.image.width;
       const iH = this.texture.image.height;
@@ -2213,10 +3055,8 @@ var Image = vue.defineComponent({
         h = this.height * screen.wHeight / screen.height;
         w = h * iRatio;
       } else {
-        if (iRatio > 1)
-          w = h * iRatio;
-        else
-          h = w / iRatio;
+        if (iRatio > 1) w = h * iRatio;
+        else h = w / iRatio;
       }
       if (this.mesh) {
         this.mesh.scale.x = w;
@@ -2234,8 +3074,7 @@ var InstancedMesh = vue.defineComponent({
   },
   methods: {
     initMesh() {
-      if (!this.renderer)
-        return;
+      if (!this.renderer) return;
       if (!this.geometry || !this.material) {
         console.error("Missing geometry and/or material");
         return false;
@@ -2279,8 +3118,7 @@ var Sprite = vue.defineComponent({
       this.$emit("loaded");
     },
     updateUV() {
-      if (!this.texture || !this.sprite)
-        return;
+      if (!this.texture || !this.sprite) return;
       const iWidth = this.texture.image.width;
       const iHeight = this.texture.image.height;
       const iRatio = iWidth / iHeight;
@@ -2322,13 +3160,11 @@ var Points = vue.defineComponent({
   methods: {
     setGeometry(geometry) {
       this.geometry = geometry;
-      if (this.mesh)
-        this.mesh.geometry = geometry;
+      if (this.mesh) this.mesh.geometry = geometry;
     },
     setMaterial(material) {
       this.material = material;
-      if (this.mesh)
-        this.mesh.material = material;
+      if (this.mesh) this.mesh.material = material;
     }
   }
 });
@@ -2434,6 +3270,7 @@ var EffectComposer = vue.defineComponent({
 });
 
 var EffectPass = vue.defineComponent({
+  // inject for sub components
   inject: {
     renderer: RendererInjectionKey,
     composer: ComposerInjectionKey
@@ -2474,8 +3311,7 @@ var EffectPass = vue.defineComponent({
 var RenderPass = vue.defineComponent({
   extends: EffectPass,
   created() {
-    if (!this.renderer)
-      return;
+    if (!this.renderer) return;
     if (!this.renderer.scene) {
       console.error("Missing Scene");
       return;
@@ -2499,8 +3335,7 @@ var BokehPass = vue.defineComponent({
   extends: EffectPass,
   props: props$5,
   created() {
-    if (!this.renderer)
-      return;
+    if (!this.renderer) return;
     if (!this.renderer.scene) {
       console.error("Missing Scene");
       return;
@@ -2584,8 +3419,7 @@ var HalftonePass = vue.defineComponent({
   extends: EffectPass,
   props: props$3,
   created() {
-    if (!this.renderer)
-      return;
+    if (!this.renderer) return;
     const pass = new HalftonePass_js.HalftonePass(this.renderer.size.width, this.renderer.size.height, {});
     Object.keys(props$3).forEach((p) => {
       pass.uniforms[p].value = this[p];
@@ -2601,8 +3435,7 @@ var HalftonePass = vue.defineComponent({
 var SMAAPass = vue.defineComponent({
   extends: EffectPass,
   created() {
-    if (!this.renderer)
-      return;
+    if (!this.renderer) return;
     const pass = new SMAAPass_js.SMAAPass(this.renderer.size.width, this.renderer.size.height);
     this.initEffectPass(pass);
   },
@@ -2618,8 +3451,7 @@ var SSAOPass = vue.defineComponent({
     }
   },
   created() {
-    if (!this.renderer)
-      return;
+    if (!this.renderer) return;
     if (!this.renderer.scene) {
       console.error("Missing Scene");
       return;
@@ -2729,8 +3561,7 @@ var TiltShiftPass = vue.defineComponent({
     return { uniforms1: {}, uniforms2: {} };
   },
   created() {
-    if (!this.composer)
-      return;
+    if (!this.composer) return;
     this.pass1 = new ShaderPass_js.ShaderPass(TiltShift);
     this.pass2 = new ShaderPass_js.ShaderPass(TiltShift);
     const uniforms1 = this.uniforms1 = this.pass1.uniforms;
@@ -2753,8 +3584,7 @@ var TiltShiftPass = vue.defineComponent({
     this.composer.addPass(this.pass2);
   },
   unmounted() {
-    if (this.composer && this.pass2)
-      this.composer.removePass(this.pass2);
+    if (this.composer && this.pass2) this.composer.removePass(this.pass2);
   },
   methods: {
     updateFocusLine() {
@@ -2777,8 +3607,7 @@ var UnrealBloomPass = vue.defineComponent({
   extends: EffectPass,
   props: props$1,
   created() {
-    if (!this.renderer)
-      return;
+    if (!this.renderer) return;
     const size = new three.Vector2(this.renderer.size.width, this.renderer.size.height);
     const pass = new UnrealBloomPass_js.UnrealBloomPass(size, this.strength, this.radius, this.threshold);
     Object.keys(props$1).forEach((p) => {
@@ -2866,8 +3695,7 @@ var GridHelper = vue.defineComponent({
     return {};
   },
   mounted() {
-    if (!this.helper)
-      this.initHelper();
+    if (!this.helper) this.initHelper();
     const watchProps = ["size", "divisions", "color1", "color2"];
     watchProps.forEach((p) => {
       vue.watch(() => this[p], () => {
@@ -2887,8 +3715,7 @@ var GridHelper = vue.defineComponent({
     },
     destroyHelper() {
       var _a, _b;
-      if (this.helper)
-        this.removeFromParent(this.helper);
+      if (this.helper) this.removeFromParent(this.helper);
       (_a = this.getParent()) == null ? void 0 : _a.remove(this.helper);
       (_b = this.helper) == null ? void 0 : _b.dispose();
     },

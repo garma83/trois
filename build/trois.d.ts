@@ -1,9 +1,8 @@
 import * as vue from 'vue';
 import { ComponentPublicInstance, InjectionKey, PropType, ComponentPropsOptions, WatchStopHandle, App } from 'vue';
 import * as three from 'three';
-import { Intersection, Vector2, Vector3, Object3D, WebGLRenderer, Camera, Scene, WebGLRendererParameters, OrthographicCamera, PerspectiveCamera, Group, Mesh as Mesh$1, WebGLCubeRenderTarget, CubeCamera, BufferGeometry, Material, Shape, ExtrudeGeometryOptions, Curve, Light, Texture, Color, ShaderMaterial, VideoTexture, MeshBasicMaterial, SpriteMaterial, Sprite, Points, GridHelper, TextureLoader } from 'three';
+import { Intersection, Vector2, Vector3, Object3D, EventDispatcher, WebGLRenderer, Camera, Scene, WebGLRendererParameters, OrthographicCamera, PerspectiveCamera, Group, Mesh as Mesh$1, WebGLCubeRenderTarget, CubeCamera, BufferGeometry, Material, Curve, Light, Texture, ShaderMaterial, VideoTexture, MeshBasicMaterial, SpriteMaterial, Sprite, Points, GridHelper, TextureLoader } from 'three';
 import { EffectComposer as EffectComposer$1 } from 'three/examples/jsm/postprocessing/EffectComposer';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
 import { Font } from 'three/examples/jsm/loaders/FontLoader.js';
@@ -55,6 +54,165 @@ interface PointerInterface {
     removeListeners(cb: void): void;
     intersect(): void;
 }
+
+/**
+ * Abstract base class for controls.
+ *
+ * @abstract
+ * @augments EventDispatcher
+ */
+declare class Controls extends EventDispatcher {
+    /**
+     * Constructs a new controls instance.
+     *
+     * @param {Object3D} object - The object that is managed by the controls.
+     * @param {?HTMLDOMElement} domElement - The HTML element used for event listeners.
+     */
+    constructor(object: any, domElement?: null);
+    /**
+     * Connects the controls to the DOM. This method has so called "side effects" since
+     * it adds the module's event listeners to the DOM.
+     */
+    connect(): void;
+    /**
+     * Disconnects the controls from the DOM.
+     */
+    disconnect(): void;
+    /**
+     * Call this method if you no longer want use to the controls. It frees all internal
+     * resources and removes all event listeners.
+     */
+    dispose(): void;
+    /**
+     * Controls should implement this method if they have to update their internal state
+     * per simulation step.
+     *
+     * @param {number} [delta] - The time delta in seconds.
+     */
+    update(): void;
+}
+//# sourceMappingURL=Controls.d.ts.map
+
+/**
+ * Orbit controls allow the camera to orbit around a target.
+ *
+ * OrbitControls performs orbiting, dollying (zooming), and panning. Unlike {@link TrackballControls},
+ * it maintains the "up" direction `object.up` (+Y by default).
+ *
+ * - Orbit: Left mouse / touch: one-finger move.
+ * - Zoom: Middle mouse, or mousewheel / touch: two-finger spread or squish.
+ * - Pan: Right mouse, or left mouse + ctrl/meta/shiftKey, or arrow keys / touch: two-finger move.
+ *
+ * ```js
+ * const controls = new OrbitControls( camera, renderer.domElement );
+ *
+ * // controls.update() must be called after any manual changes to the camera's transform
+ * camera.position.set( 0, 20, 100 );
+ * controls.update();
+ *
+ * function animate() {
+ *
+ * 	// required if controls.enableDamping or controls.autoRotate are set to true
+ * 	controls.update();
+ *
+ * 	renderer.render( scene, camera );
+ *
+ * }
+ * ```
+ *
+ * @augments Controls
+ */
+declare class OrbitControls extends Controls {
+    /**
+     * Constructs a new controls instance.
+     *
+     * @param {Object3D} object - The object that is managed by the controls.
+     * @param {?HTMLDOMElement} domElement - The HTML element used for event listeners.
+     */
+    constructor(object: any, domElement?: null);
+    connect(): void;
+    disconnect(): void;
+    dispose(): void;
+    /**
+     * Get the current vertical rotation, in radians.
+     *
+     * @return {number} The current vertical rotation, in radians.
+     */
+    getPolarAngle(): any;
+    /**
+     * Get the current horizontal rotation, in radians.
+     *
+     * @return {number} The current horizontal rotation, in radians.
+     */
+    getAzimuthalAngle(): any;
+    /**
+     * Returns the distance from the camera to the target.
+     *
+     * @return {number} The distance from the camera to the target.
+     */
+    getDistance(): any;
+    /**
+     * Adds key event listeners to the given DOM element.
+     * `window` is a recommended argument for using this method.
+     *
+     * @param {HTMLDOMElement} domElement - The DOM element
+     */
+    listenToKeyEvents(domElement: any): void;
+    /**
+     * Removes the key event listener previously defined with `listenToKeyEvents()`.
+     */
+    stopListenToKeyEvents(): void;
+    /**
+     * Save the current state of the controls. This can later be recovered with `reset()`.
+     */
+    saveState(): void;
+    /**
+     * Reset the controls to their state from either the last time the `saveState()`
+     * was called, or the initial state.
+     */
+    reset(): void;
+    update(deltaTime?: null): boolean;
+    _getAutoRotationAngle(deltaTime: any): number;
+    _getZoomScale(delta: any): number;
+    _rotateLeft(angle: any): void;
+    _rotateUp(angle: any): void;
+    _panLeft(distance: any, objectMatrix: any): void;
+    _panUp(distance: any, objectMatrix: any): void;
+    _pan(deltaX: any, deltaY: any): void;
+    _dollyOut(dollyScale: any): void;
+    _dollyIn(dollyScale: any): void;
+    _updateZoomParameters(x: any, y: any): void;
+    _clampDistance(dist: any): number;
+    _handleMouseDownRotate(event: any): void;
+    _handleMouseDownDolly(event: any): void;
+    _handleMouseDownPan(event: any): void;
+    _handleMouseMoveRotate(event: any): void;
+    _handleMouseMoveDolly(event: any): void;
+    _handleMouseMovePan(event: any): void;
+    _handleMouseWheel(event: any): void;
+    _handleKeyDown(event: any): void;
+    _handleTouchStartRotate(event: any): void;
+    _handleTouchStartPan(event: any): void;
+    _handleTouchStartDolly(event: any): void;
+    _handleTouchStartDollyPan(event: any): void;
+    _handleTouchStartDollyRotate(event: any): void;
+    _handleTouchMoveRotate(event: any): void;
+    _handleTouchMovePan(event: any): void;
+    _handleTouchMoveDolly(event: any): void;
+    _handleTouchMoveDollyPan(event: any): void;
+    _handleTouchMoveDollyRotate(event: any): void;
+    _addPointer(event: any): void;
+    _removePointer(event: any): void;
+    _isTrackingPointer(event: any): boolean;
+    _trackPointer(event: any): void;
+    _getSecondPointerPosition(event: any): any;
+    _customWheelEvent(event: any): {
+        clientX: any;
+        clientY: any;
+        deltaY: any;
+    };
+}
+//# sourceMappingURL=OrbitControls.d.ts.map
 
 interface SizeInterface {
     width: number;
@@ -157,7 +315,7 @@ interface RendererInterface extends RendererSetupInterface {
 interface RendererPublicInterface extends ComponentPublicInstance, RendererInterface {
 }
 declare const RendererInjectionKey: InjectionKey<RendererPublicInterface>;
-declare const _default$19: vue.DefineComponent<{
+declare const _default$19: vue.DefineComponent<vue.ExtractPropTypes<{
     params: {
         type: PropType<WebGLRendererParameters>;
         default: () => {};
@@ -190,7 +348,7 @@ declare const _default$19: vue.DefineComponent<{
         default: () => {};
     };
     onReady: PropType<(r: RendererInterface) => void>;
-}, RendererSetupInterface, unknown, {
+}>, RendererSetupInterface, {}, {
     camera: {
         get: () => Camera | undefined;
         set: (camera: Camera) => void;
@@ -217,7 +375,7 @@ declare const _default$19: vue.DefineComponent<{
     getCallbacks(type: string): InitCallbackType[] | RenderCallbackType[] | ResizeCallbackType[];
     render(time: number): void;
     renderLoop(time: number): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, {}, string, vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     params: {
         type: PropType<WebGLRendererParameters>;
         default: () => {};
@@ -250,18 +408,147 @@ declare const _default$19: vue.DefineComponent<{
         default: () => {};
     };
     onReady: PropType<(r: RendererInterface) => void>;
-}>>, {
-    alpha: boolean;
+}>> & Readonly<{}>, {
     resize: string | boolean;
-    shadow: boolean;
     params: WebGLRendererParameters;
-    props: Record<string, any>;
-    pointer: boolean | PointerPublicConfigInterface;
     antialias: boolean;
+    alpha: boolean;
     autoClear: boolean;
     orbitCtrl: boolean | Record<string, unknown>;
+    pointer: boolean | PointerPublicConfigInterface;
+    props: Record<string, any>;
+    shadow: boolean;
     xr: boolean;
-}>;
+}, {}, {}, {}, string, () => {
+    [x: symbol]: vue.CreateComponentPublicInstanceWithMixins<Readonly<vue.ExtractPropTypes<{
+        params: {
+            type: PropType<WebGLRendererParameters>;
+            default: () => {};
+        };
+        antialias: BooleanConstructor;
+        alpha: BooleanConstructor;
+        autoClear: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+        orbitCtrl: {
+            type: PropType<boolean | Record<string, unknown>>;
+            default: boolean;
+        };
+        pointer: {
+            type: PropType<boolean | PointerPublicConfigInterface>;
+            default: boolean;
+        };
+        resize: {
+            type: PropType<string | boolean>;
+            default: boolean;
+        };
+        shadow: BooleanConstructor;
+        width: StringConstructor;
+        height: StringConstructor;
+        pixelRatio: NumberConstructor;
+        xr: BooleanConstructor;
+        props: {
+            type: ObjectConstructor;
+            default: () => {};
+        };
+        onReady: PropType<(r: RendererInterface) => void>;
+    }>> & Readonly<{}>, RendererSetupInterface, {}, {
+        camera: {
+            get: () => Camera | undefined;
+            set: (camera: Camera) => void;
+        };
+        scene: {
+            get: () => Scene | undefined;
+            set: (scene: Scene) => void;
+        };
+        composer: {
+            get: () => EffectComposer$1 | undefined;
+            set: (composer: EffectComposer$1) => void;
+        };
+    }, {
+        onInit(cb: InitCallbackType): void;
+        onMounted(cb: MountedCallbackType): void;
+        onBeforeRender(cb: RenderCallbackType): void;
+        offBeforeRender(cb: RenderCallbackType): void;
+        onAfterRender(cb: RenderCallbackType): void;
+        offAfterRender(cb: RenderCallbackType): void;
+        onResize(cb: ResizeCallbackType): void;
+        offResize(cb: ResizeCallbackType): void;
+        addListener(type: string, cb: (e?: any) => void): void;
+        removeListener(type: string, cb: (e?: any) => void): void;
+        getCallbacks(type: string): InitCallbackType[] | RenderCallbackType[] | ResizeCallbackType[];
+        render(time: number): void;
+        renderLoop(time: number): void;
+    }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, {}, {}, {}, false, {}, {}, {}, {}, string, {}, any, vue.ComponentProvideOptions, {
+        P: {};
+        B: {};
+        D: {};
+        C: {};
+        M: {};
+        Defaults: {};
+    }, Readonly<vue.ExtractPropTypes<{
+        params: {
+            type: PropType<WebGLRendererParameters>;
+            default: () => {};
+        };
+        antialias: BooleanConstructor;
+        alpha: BooleanConstructor;
+        autoClear: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+        orbitCtrl: {
+            type: PropType<boolean | Record<string, unknown>>;
+            default: boolean;
+        };
+        pointer: {
+            type: PropType<boolean | PointerPublicConfigInterface>;
+            default: boolean;
+        };
+        resize: {
+            type: PropType<string | boolean>;
+            default: boolean;
+        };
+        shadow: BooleanConstructor;
+        width: StringConstructor;
+        height: StringConstructor;
+        pixelRatio: NumberConstructor;
+        xr: BooleanConstructor;
+        props: {
+            type: ObjectConstructor;
+            default: () => {};
+        };
+        onReady: PropType<(r: RendererInterface) => void>;
+    }>> & Readonly<{}>, RendererSetupInterface, {}, {
+        camera: {
+            get: () => Camera | undefined;
+            set: (camera: Camera) => void;
+        };
+        scene: {
+            get: () => Scene | undefined;
+            set: (scene: Scene) => void;
+        };
+        composer: {
+            get: () => EffectComposer$1 | undefined;
+            set: (composer: EffectComposer$1) => void;
+        };
+    }, {
+        onInit(cb: InitCallbackType): void;
+        onMounted(cb: MountedCallbackType): void;
+        onBeforeRender(cb: RenderCallbackType): void;
+        offBeforeRender(cb: RenderCallbackType): void;
+        onAfterRender(cb: RenderCallbackType): void;
+        offAfterRender(cb: RenderCallbackType): void;
+        onResize(cb: ResizeCallbackType): void;
+        offResize(cb: ResizeCallbackType): void;
+        addListener(type: string, cb: (e?: any) => void): void;
+        removeListener(type: string, cb: (e?: any) => void): void;
+        getCallbacks(type: string): InitCallbackType[] | RenderCallbackType[] | ResizeCallbackType[];
+        render(time: number): void;
+        renderLoop(time: number): void;
+    }, {}>;
+}, true, {}, any>;
 
 interface Object3DSetupInterface {
     renderer?: RendererInterface;
@@ -289,7 +576,7 @@ interface Vector3PropInterface extends Vector2PropInterface {
 interface EulerPropInterface extends Vector3PropInterface {
     order?: 'XYZ' | 'YZX' | 'ZXY' | 'XZY' | 'YXZ' | 'ZYX';
 }
-declare const _default$18: vue.DefineComponent<{
+declare const _default$18: vue.DefineComponent<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
     onPointerMove: FunctionConstructor;
@@ -346,14 +633,14 @@ declare const _default$18: vue.DefineComponent<{
         type: BooleanConstructor;
         default: boolean;
     };
-}, Object3DSetupInterface, unknown, {}, {
+}>, Object3DSetupInterface, {}, {}, {
     initObject3D(o3d: Object3D): void;
     getParent(): undefined | ComponentPublicInstance;
     addToParent(o?: Object3D): boolean;
     removeFromParent(o?: Object3D): boolean;
     add(o: Object3D): void;
     remove(o: Object3D): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
     onPointerMove: FunctionConstructor;
@@ -410,22 +697,22 @@ declare const _default$18: vue.DefineComponent<{
         type: BooleanConstructor;
         default: boolean;
     };
-}>> & {
+}>> & Readonly<{
     onReady?: ((...args: any[]) => any) | undefined;
     onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    position: Vector3PropInterface;
-    scale: Vector3PropInterface;
-    visible: boolean;
-    rotation: EulerPropInterface;
+}>, {
     props: Record<string, any>;
+    position: Vector3PropInterface;
+    rotation: EulerPropInterface;
+    scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
     userData: Record<string, any>;
+    visible: boolean;
     disableAdd: boolean;
     disableRemove: boolean;
-}>;
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>;
 
-declare const _default$17: vue.DefineComponent<{
+declare const _default$17: vue.DefineComponent<vue.ExtractPropTypes<{
     left: {
         type: NumberConstructor;
         default: number;
@@ -462,22 +749,22 @@ declare const _default$17: vue.DefineComponent<{
             z: number;
         };
     };
-}, {
+}>, {
     renderer: RendererPublicInterface;
     camera: OrthographicCamera;
-} | undefined, unknown, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<{
+} | undefined, {}, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<vue.ExtractPropTypes<{
     props: {
         type: ObjectConstructor;
         default: () => {};
     };
-}, unknown, unknown, {}, {}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}>, {}, {}, {}, {}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, {}, string, vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     props: {
         type: ObjectConstructor;
         default: () => {};
     };
-}>>, {
+}>> & Readonly<{}>, {
     props: Record<string, any>;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>, {}, string, vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     left: {
         type: NumberConstructor;
         default: number;
@@ -514,19 +801,19 @@ declare const _default$17: vue.DefineComponent<{
             z: number;
         };
     };
-}>>, {
+}>> & Readonly<{}>, {
+    position: Vector3PropInterface;
     left: number;
+    right: number;
     top: number;
     bottom: number;
-    position: Vector3PropInterface;
-    right: number;
-    zoom: number;
     near: number;
     far: number;
-}>;
+    zoom: number;
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>;
 //# sourceMappingURL=OrthographicCamera.d.ts.map
 
-declare const _default$16: vue.DefineComponent<{
+declare const _default$16: vue.DefineComponent<vue.ExtractPropTypes<{
     aspect: {
         type: NumberConstructor;
         default: number;
@@ -555,22 +842,22 @@ declare const _default$16: vue.DefineComponent<{
         type: PropType<Vector3PropInterface>;
         default: null;
     };
-}, {
+}>, {
     renderer: RendererPublicInterface;
     camera: PerspectiveCamera;
-} | undefined, unknown, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<{
+} | undefined, {}, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<vue.ExtractPropTypes<{
     props: {
         type: ObjectConstructor;
         default: () => {};
     };
-}, unknown, unknown, {}, {}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}>, {}, {}, {}, {}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, {}, string, vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     props: {
         type: ObjectConstructor;
         default: () => {};
     };
-}>>, {
+}>> & Readonly<{}>, {
     props: Record<string, any>;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>, {}, string, vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     aspect: {
         type: NumberConstructor;
         default: number;
@@ -599,19 +886,19 @@ declare const _default$16: vue.DefineComponent<{
         type: PropType<Vector3PropInterface>;
         default: null;
     };
-}>>, {
+}>> & Readonly<{}>, {
     position: Vector3PropInterface;
     lookAt: Vector3PropInterface;
     near: number;
     far: number;
     aspect: number;
     fov: number;
-}>;
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>;
 //# sourceMappingURL=PerspectiveCamera.d.ts.map
 
 declare const _default$15: vue.DefineComponent<{}, {
     group: Group;
-}, {}, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<{
+}, {}, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
     onPointerMove: FunctionConstructor;
@@ -668,14 +955,14 @@ declare const _default$15: vue.DefineComponent<{}, {
         type: BooleanConstructor;
         default: boolean;
     };
-}, Object3DSetupInterface, unknown, {}, {
+}>, Object3DSetupInterface, {}, {}, {
     initObject3D(o3d: three.Object3D<three.Event>): void;
-    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string>, {}> | undefined;
+    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
     addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
     removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
     add(o: three.Object3D<three.Event>): void;
     remove(o: three.Object3D<three.Event>): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
     onPointerMove: FunctionConstructor;
@@ -732,38 +1019,38 @@ declare const _default$15: vue.DefineComponent<{}, {
         type: BooleanConstructor;
         default: boolean;
     };
-}>> & {
+}>> & Readonly<{
     onReady?: ((...args: any[]) => any) | undefined;
     onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    position: Vector3PropInterface;
-    scale: Vector3PropInterface;
-    visible: boolean;
-    rotation: EulerPropInterface;
+}>, {
     props: Record<string, any>;
+    position: Vector3PropInterface;
+    rotation: EulerPropInterface;
+    scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
     userData: Record<string, any>;
+    visible: boolean;
     disableAdd: boolean;
     disableRemove: boolean;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{}>>, {}>;
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>, {}, string, vue.PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>;
 //# sourceMappingURL=Group.d.ts.map
 
 declare const SceneInjectionKey: InjectionKey<Scene>;
-declare const _default$14: vue.DefineComponent<{
+declare const _default$14: vue.DefineComponent<vue.ExtractPropTypes<{
     background: (ObjectConstructor | StringConstructor | NumberConstructor)[];
-}, {
+}>, {
     scene: Scene;
     add: (o: Object3D) => void;
     remove: (o: Object3D) => void;
-} | undefined, unknown, {}, {}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+} | undefined, {}, {}, {}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, {}, string, vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     background: (ObjectConstructor | StringConstructor | NumberConstructor)[];
-}>>, {}>;
+}>> & Readonly<{}>, {}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>;
 
 interface RaycasterSetupInterface {
     renderer?: RendererInterface;
     pointer?: PointerInterface;
 }
-declare const _default$13: vue.DefineComponent<{
+declare const _default$13: vue.DefineComponent<vue.ExtractPropTypes<{
     onPointerEnter: {
         type: PropType<PointerIntersectCallbackType>;
         default: PointerIntersectCallbackType;
@@ -800,7 +1087,7 @@ declare const _default$13: vue.DefineComponent<{
         type: BooleanConstructor;
         default: boolean;
     };
-}, RaycasterSetupInterface, unknown, {}, {}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}>, RaycasterSetupInterface, {}, {}, {}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, {}, string, vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     onPointerEnter: {
         type: PropType<PointerIntersectCallbackType>;
         default: PointerIntersectCallbackType;
@@ -837,9 +1124,9 @@ declare const _default$13: vue.DefineComponent<{
         type: BooleanConstructor;
         default: boolean;
     };
-}>>, {
-    onClick: PointerIntersectCallbackType;
+}>> & Readonly<{}>, {
     intersectRecursive: boolean;
+    onClick: PointerIntersectCallbackType;
     onPointerEnter: PointerIntersectCallbackType;
     onPointerOver: PointerIntersectCallbackType;
     onPointerMove: PointerIntersectCallbackType;
@@ -847,7 +1134,7 @@ declare const _default$13: vue.DefineComponent<{
     onPointerDown: PointerIntersectCallbackType;
     onPointerUp: PointerIntersectCallbackType;
     intersectMode: string;
-}>;
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>;
 //# sourceMappingURL=Raycaster.d.ts.map
 
 interface CubeCameraSetupInterface {
@@ -857,7 +1144,7 @@ interface CubeCameraSetupInterface {
         (): void;
     };
 }
-declare const _default$12: vue.DefineComponent<{
+declare const _default$12: vue.DefineComponent<vue.ExtractPropTypes<{
     cubeRTSize: {
         type: NumberConstructor;
         default: number;
@@ -875,7 +1162,7 @@ declare const _default$12: vue.DefineComponent<{
         type: PropType<Mesh$1<three.BufferGeometry, three.Material | three.Material[]>[]>;
         default: () => never[];
     };
-}, CubeCameraSetupInterface, unknown, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<{
+}>, CubeCameraSetupInterface, {}, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
     onPointerMove: FunctionConstructor;
@@ -932,14 +1219,14 @@ declare const _default$12: vue.DefineComponent<{
         type: BooleanConstructor;
         default: boolean;
     };
-}, Object3DSetupInterface, unknown, {}, {
+}>, Object3DSetupInterface, {}, {}, {
     initObject3D(o3d: three.Object3D<three.Event>): void;
-    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string>, {}> | undefined;
+    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
     addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
     removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
     add(o: three.Object3D<three.Event>): void;
     remove(o: three.Object3D<three.Event>): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
     onPointerMove: FunctionConstructor;
@@ -996,20 +1283,20 @@ declare const _default$12: vue.DefineComponent<{
         type: BooleanConstructor;
         default: boolean;
     };
-}>> & {
+}>> & Readonly<{
     onReady?: ((...args: any[]) => any) | undefined;
     onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    position: Vector3PropInterface;
-    scale: Vector3PropInterface;
-    visible: boolean;
-    rotation: EulerPropInterface;
+}>, {
     props: Record<string, any>;
+    position: Vector3PropInterface;
+    rotation: EulerPropInterface;
+    scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
     userData: Record<string, any>;
+    visible: boolean;
     disableAdd: boolean;
     disableRemove: boolean;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>, {}, string, vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     cubeRTSize: {
         type: NumberConstructor;
         default: number;
@@ -1027,13 +1314,13 @@ declare const _default$12: vue.DefineComponent<{
         type: PropType<Mesh$1<three.BufferGeometry, three.Material | three.Material[]>[]>;
         default: () => never[];
     };
-}>>, {
+}>> & Readonly<{}>, {
+    autoUpdate: boolean;
     cubeRTSize: number;
     cubeCameraNear: number;
     cubeCameraFar: number;
-    autoUpdate: boolean;
     hideMeshes: Mesh$1<three.BufferGeometry, three.Material | three.Material[]>[];
-}>;
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>;
 //# sourceMappingURL=CubeCamera.d.ts.map
 
 interface MeshSetupInterface$1 extends Object3DSetupInterface {
@@ -1049,17 +1336,17 @@ interface MeshInterface extends MeshSetupInterface$1 {
 interface MeshPublicInterface extends ComponentPublicInstance, MeshInterface {
 }
 declare const MeshInjectionKey: InjectionKey<MeshPublicInterface>;
-declare const Mesh: vue.DefineComponent<{
+declare const Mesh: vue.DefineComponent<vue.ExtractPropTypes<{
     castShadow: BooleanConstructor;
     receiveShadow: BooleanConstructor;
-}, MeshSetupInterface$1, unknown, {}, {
+}>, MeshSetupInterface$1, {}, {}, {
     initMesh(): void;
     createGeometry(): void;
     addGeometryWatchers(props: Readonly<ComponentPropsOptions>): void;
     setGeometry(geometry: BufferGeometry): void;
     setMaterial(material: Material): void;
     refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
+}, vue.ComponentOptionsMixin, vue.DefineComponent<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
     onPointerMove: FunctionConstructor;
@@ -1116,14 +1403,14 @@ declare const Mesh: vue.DefineComponent<{
         type: BooleanConstructor;
         default: boolean;
     };
-}, Object3DSetupInterface, unknown, {}, {
+}>, Object3DSetupInterface, {}, {}, {
     initObject3D(o3d: three.Object3D<three.Event>): void;
-    getParent(): ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string>, {}> | undefined;
+    getParent(): ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
     addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
     removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
     add(o: three.Object3D<three.Event>): void;
     remove(o: three.Object3D<three.Event>): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
     onPointerMove: FunctionConstructor;
@@ -1180,26 +1467,350 @@ declare const Mesh: vue.DefineComponent<{
         type: BooleanConstructor;
         default: boolean;
     };
-}>> & {
+}>> & Readonly<{
     onReady?: ((...args: any[]) => any) | undefined;
     onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    position: Vector3PropInterface;
-    scale: Vector3PropInterface;
-    visible: boolean;
-    rotation: EulerPropInterface;
+}>, {
     props: Record<string, any>;
+    position: Vector3PropInterface;
+    rotation: EulerPropInterface;
+    scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
     userData: Record<string, any>;
+    visible: boolean;
     disableAdd: boolean;
     disableRemove: boolean;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>, {}, string, vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     castShadow: BooleanConstructor;
     receiveShadow: BooleanConstructor;
-}>>, {
+}>> & Readonly<{}>, {
     castShadow: boolean;
     receiveShadow: boolean;
-}>;
+}, {}, {}, {}, string, () => {
+    [x: symbol]: vue.CreateComponentPublicInstanceWithMixins<Readonly<vue.ExtractPropTypes<{
+        castShadow: BooleanConstructor;
+        receiveShadow: BooleanConstructor;
+    }>> & Readonly<{}>, MeshSetupInterface$1, {}, {}, {
+        initMesh(): void;
+        createGeometry(): void;
+        addGeometryWatchers(props: Readonly<ComponentPropsOptions>): void;
+        setGeometry(geometry: BufferGeometry): void;
+        setMaterial(material: Material): void;
+        refreshGeometry(): void;
+    }, vue.ComponentOptionsMixin, vue.DefineComponent<vue.ExtractPropTypes<{
+        onPointerEnter: FunctionConstructor;
+        onPointerOver: FunctionConstructor;
+        onPointerMove: FunctionConstructor;
+        onPointerLeave: FunctionConstructor;
+        onPointerDown: FunctionConstructor;
+        onPointerUp: FunctionConstructor;
+        onClick: FunctionConstructor;
+        position: {
+            type: vue.PropType<Vector3PropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+            };
+        };
+        rotation: {
+            type: vue.PropType<EulerPropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+            };
+        };
+        scale: {
+            type: vue.PropType<Vector3PropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+                order: string;
+            };
+        };
+        lookAt: {
+            type: vue.PropType<Vector3PropInterface>;
+            default: null;
+        };
+        userData: {
+            type: ObjectConstructor;
+            default: () => {};
+        };
+        visible: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+        props: {
+            type: ObjectConstructor;
+            default: () => {};
+        };
+        disableAdd: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+        disableRemove: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+    }>, Object3DSetupInterface, {}, {}, {
+        initObject3D(o3d: three.Object3D<three.Event>): void;
+        getParent(): ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
+        addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
+        removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
+        add(o: three.Object3D<three.Event>): void;
+        remove(o: three.Object3D<three.Event>): void;
+    }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
+        onPointerEnter: FunctionConstructor;
+        onPointerOver: FunctionConstructor;
+        onPointerMove: FunctionConstructor;
+        onPointerLeave: FunctionConstructor;
+        onPointerDown: FunctionConstructor;
+        onPointerUp: FunctionConstructor;
+        onClick: FunctionConstructor;
+        position: {
+            type: vue.PropType<Vector3PropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+            };
+        };
+        rotation: {
+            type: vue.PropType<EulerPropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+            };
+        };
+        scale: {
+            type: vue.PropType<Vector3PropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+                order: string;
+            };
+        };
+        lookAt: {
+            type: vue.PropType<Vector3PropInterface>;
+            default: null;
+        };
+        userData: {
+            type: ObjectConstructor;
+            default: () => {};
+        };
+        visible: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+        props: {
+            type: ObjectConstructor;
+            default: () => {};
+        };
+        disableAdd: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+        disableRemove: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+    }>> & Readonly<{
+        onReady?: ((...args: any[]) => any) | undefined;
+        onCreated?: ((...args: any[]) => any) | undefined;
+    }>, {
+        props: Record<string, any>;
+        position: Vector3PropInterface;
+        rotation: EulerPropInterface;
+        scale: Vector3PropInterface;
+        lookAt: Vector3PropInterface;
+        userData: Record<string, any>;
+        visible: boolean;
+        disableAdd: boolean;
+        disableRemove: boolean;
+    }, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>, {}, {}, {}, false, {}, {}, {}, {}, string, {}, any, vue.ComponentProvideOptions, {
+        P: {};
+        B: {};
+        D: {};
+        C: {};
+        M: {};
+        Defaults: {};
+    } & {
+        P: Readonly<vue.ExtractPropTypes<{
+            onPointerEnter: FunctionConstructor;
+            onPointerOver: FunctionConstructor;
+            onPointerMove: FunctionConstructor;
+            onPointerLeave: FunctionConstructor;
+            onPointerDown: FunctionConstructor;
+            onPointerUp: FunctionConstructor;
+            onClick: FunctionConstructor;
+            position: {
+                type: vue.PropType<Vector3PropInterface>;
+                default: () => {
+                    x: number;
+                    y: number;
+                    z: number;
+                };
+            };
+            rotation: {
+                type: vue.PropType<EulerPropInterface>;
+                default: () => {
+                    x: number;
+                    y: number;
+                    z: number;
+                };
+            };
+            scale: {
+                type: vue.PropType<Vector3PropInterface>;
+                default: () => {
+                    x: number;
+                    y: number;
+                    z: number;
+                    order: string;
+                };
+            };
+            lookAt: {
+                type: vue.PropType<Vector3PropInterface>;
+                default: null;
+            };
+            userData: {
+                type: ObjectConstructor;
+                default: () => {};
+            };
+            visible: {
+                type: BooleanConstructor;
+                default: boolean;
+            };
+            props: {
+                type: ObjectConstructor;
+                default: () => {};
+            };
+            disableAdd: {
+                type: BooleanConstructor;
+                default: boolean;
+            };
+            disableRemove: {
+                type: BooleanConstructor;
+                default: boolean;
+            };
+        }>> & Readonly<{
+            onReady?: ((...args: any[]) => any) | undefined;
+            onCreated?: ((...args: any[]) => any) | undefined;
+        }>;
+        B: Object3DSetupInterface;
+        D: {};
+        C: {};
+        M: {
+            initObject3D(o3d: three.Object3D<three.Event>): void;
+            getParent(): ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
+            addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
+            removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
+            add(o: three.Object3D<three.Event>): void;
+            remove(o: three.Object3D<three.Event>): void;
+        };
+        Defaults: {
+            props: Record<string, any>;
+            position: Vector3PropInterface;
+            rotation: EulerPropInterface;
+            scale: Vector3PropInterface;
+            lookAt: Vector3PropInterface;
+            userData: Record<string, any>;
+            visible: boolean;
+            disableAdd: boolean;
+            disableRemove: boolean;
+        };
+    }, Readonly<vue.ExtractPropTypes<{
+        onPointerEnter: FunctionConstructor;
+        onPointerOver: FunctionConstructor;
+        onPointerMove: FunctionConstructor;
+        onPointerLeave: FunctionConstructor;
+        onPointerDown: FunctionConstructor;
+        onPointerUp: FunctionConstructor;
+        onClick: FunctionConstructor;
+        position: {
+            type: vue.PropType<Vector3PropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+            };
+        };
+        rotation: {
+            type: vue.PropType<EulerPropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+            };
+        };
+        scale: {
+            type: vue.PropType<Vector3PropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+                order: string;
+            };
+        };
+        lookAt: {
+            type: vue.PropType<Vector3PropInterface>;
+            default: null;
+        };
+        userData: {
+            type: ObjectConstructor;
+            default: () => {};
+        };
+        visible: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+        props: {
+            type: ObjectConstructor;
+            default: () => {};
+        };
+        disableAdd: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+        disableRemove: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+    }>> & Readonly<{
+        onReady?: ((...args: any[]) => any) | undefined;
+        onCreated?: ((...args: any[]) => any) | undefined;
+    }> & Readonly<vue.ExtractPropTypes<{
+        castShadow: BooleanConstructor;
+        receiveShadow: BooleanConstructor;
+    }>> & Readonly<{}>, Object3DSetupInterface & MeshSetupInterface$1, {}, {}, {
+        initObject3D(o3d: three.Object3D<three.Event>): void;
+        getParent(): ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
+        addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
+        removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
+        add(o: three.Object3D<three.Event>): void;
+        remove(o: three.Object3D<three.Event>): void;
+    } & {
+        initMesh(): void;
+        createGeometry(): void;
+        addGeometryWatchers(props: Readonly<ComponentPropsOptions>): void;
+        setGeometry(geometry: BufferGeometry): void;
+        setMaterial(material: Material): void;
+        refreshGeometry(): void;
+    }, {
+        props: Record<string, any>;
+        position: Vector3PropInterface;
+        rotation: EulerPropInterface;
+        scale: Vector3PropInterface;
+        lookAt: Vector3PropInterface;
+        userData: Record<string, any>;
+        visible: boolean;
+        disableAdd: boolean;
+        disableRemove: boolean;
+    }>;
+}, true, {}, any>;
 
 interface GeometrySetupInterface {
     mesh?: MeshInterface;
@@ -1212,7 +1823,7 @@ interface GeometryAttributeInterface {
     itemSize: number;
     normalized?: boolean;
 }
-declare const Geometry: vue.DefineComponent<{
+declare const Geometry: vue.DefineComponent<vue.ExtractPropTypes<{
     rotateX: NumberConstructor;
     rotateY: NumberConstructor;
     rotateZ: NumberConstructor;
@@ -1220,11 +1831,11 @@ declare const Geometry: vue.DefineComponent<{
         type: PropType<GeometryAttributeInterface[]>;
         default: () => never[];
     };
-}, GeometrySetupInterface, unknown, {}, {
+}>, GeometrySetupInterface, {}, {}, {
     createGeometry(): void;
     rotateGeometry(): void;
     refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "created"[], "created", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "created"[], "created", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     rotateX: NumberConstructor;
     rotateY: NumberConstructor;
     rotateZ: NumberConstructor;
@@ -1232,1183 +1843,47 @@ declare const Geometry: vue.DefineComponent<{
         type: PropType<GeometryAttributeInterface[]>;
         default: () => never[];
     };
-}>> & {
+}>> & Readonly<{
     onCreated?: ((...args: any[]) => any) | undefined;
-}, {
+}>, {
     attributes: GeometryAttributeInterface[];
-}>;
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>;
 
-declare const _default$11: vue.DefineComponent<{
-    readonly size: NumberConstructor;
-    readonly width: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly height: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly depth: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly widthSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly heightSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly depthSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-}, unknown, unknown, {}, {
-    createGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    rotateX: NumberConstructor;
-    rotateY: NumberConstructor;
-    rotateZ: NumberConstructor;
-    attributes: {
-        type: vue.PropType<GeometryAttributeInterface[]>;
-        default: () => never[];
-    };
-}, GeometrySetupInterface, unknown, {}, {
-    createGeometry(): void;
-    rotateGeometry(): void;
-    refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "created"[], "created", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    rotateX: NumberConstructor;
-    rotateY: NumberConstructor;
-    rotateZ: NumberConstructor;
-    attributes: {
-        type: vue.PropType<GeometryAttributeInterface[]>;
-        default: () => never[];
-    };
-}>> & {
-    onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    attributes: GeometryAttributeInterface[];
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    readonly size: NumberConstructor;
-    readonly width: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly height: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly depth: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly widthSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly heightSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly depthSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-}>>, {
-    readonly height: number;
-    readonly width: number;
-    readonly depth: number;
-    readonly widthSegments: number;
-    readonly heightSegments: number;
-    readonly depthSegments: number;
-}>;
+declare const _default$11: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
 
-declare const _default$10: vue.DefineComponent<{
-    readonly radius: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly segments: {
-        readonly type: NumberConstructor;
-        readonly default: 8;
-    };
-    readonly thetaStart: {
-        readonly type: NumberConstructor;
-        readonly default: 0;
-    };
-    readonly thetaLength: {
-        readonly type: NumberConstructor;
-        readonly default: number;
-    };
-}, unknown, unknown, {}, {
-    createGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    rotateX: NumberConstructor;
-    rotateY: NumberConstructor;
-    rotateZ: NumberConstructor;
-    attributes: {
-        type: vue.PropType<GeometryAttributeInterface[]>;
-        default: () => never[];
-    };
-}, GeometrySetupInterface, unknown, {}, {
-    createGeometry(): void;
-    rotateGeometry(): void;
-    refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "created"[], "created", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    rotateX: NumberConstructor;
-    rotateY: NumberConstructor;
-    rotateZ: NumberConstructor;
-    attributes: {
-        type: vue.PropType<GeometryAttributeInterface[]>;
-        default: () => never[];
-    };
-}>> & {
-    onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    attributes: GeometryAttributeInterface[];
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    readonly radius: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly segments: {
-        readonly type: NumberConstructor;
-        readonly default: 8;
-    };
-    readonly thetaStart: {
-        readonly type: NumberConstructor;
-        readonly default: 0;
-    };
-    readonly thetaLength: {
-        readonly type: NumberConstructor;
-        readonly default: number;
-    };
-}>>, {
-    readonly segments: number;
-    readonly radius: number;
-    readonly thetaStart: number;
-    readonly thetaLength: number;
-}>;
+declare const _default$10: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
 
-declare const _default$$: vue.DefineComponent<{
-    readonly radius: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly height: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly radialSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 8;
-    };
-    readonly heightSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly openEnded: {
-        readonly type: BooleanConstructor;
-        readonly default: false;
-    };
-    readonly thetaStart: {
-        readonly type: NumberConstructor;
-        readonly default: 0;
-    };
-    readonly thetaLength: {
-        readonly type: NumberConstructor;
-        readonly default: number;
-    };
-}, unknown, unknown, {}, {
-    createGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    rotateX: NumberConstructor;
-    rotateY: NumberConstructor;
-    rotateZ: NumberConstructor;
-    attributes: {
-        type: vue.PropType<GeometryAttributeInterface[]>;
-        default: () => never[];
-    };
-}, GeometrySetupInterface, unknown, {}, {
-    createGeometry(): void;
-    rotateGeometry(): void;
-    refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "created"[], "created", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    rotateX: NumberConstructor;
-    rotateY: NumberConstructor;
-    rotateZ: NumberConstructor;
-    attributes: {
-        type: vue.PropType<GeometryAttributeInterface[]>;
-        default: () => never[];
-    };
-}>> & {
-    onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    attributes: GeometryAttributeInterface[];
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    readonly radius: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly height: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly radialSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 8;
-    };
-    readonly heightSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly openEnded: {
-        readonly type: BooleanConstructor;
-        readonly default: false;
-    };
-    readonly thetaStart: {
-        readonly type: NumberConstructor;
-        readonly default: 0;
-    };
-    readonly thetaLength: {
-        readonly type: NumberConstructor;
-        readonly default: number;
-    };
-}>>, {
-    readonly height: number;
-    readonly radius: number;
-    readonly heightSegments: number;
-    readonly thetaStart: number;
-    readonly thetaLength: number;
-    readonly radialSegments: number;
-    readonly openEnded: boolean;
-}>;
+declare const _default$$: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
 
-declare const _default$_: vue.DefineComponent<{
-    readonly radiusTop: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly radiusBottom: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly height: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly radialSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 8;
-    };
-    readonly heightSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly openEnded: {
-        readonly type: BooleanConstructor;
-        readonly default: false;
-    };
-    readonly thetaStart: {
-        readonly type: NumberConstructor;
-        readonly default: 0;
-    };
-    readonly thetaLength: {
-        readonly type: NumberConstructor;
-        readonly default: number;
-    };
-}, unknown, unknown, {}, {
-    createGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    rotateX: NumberConstructor;
-    rotateY: NumberConstructor;
-    rotateZ: NumberConstructor;
-    attributes: {
-        type: vue.PropType<GeometryAttributeInterface[]>;
-        default: () => never[];
-    };
-}, GeometrySetupInterface, unknown, {}, {
-    createGeometry(): void;
-    rotateGeometry(): void;
-    refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "created"[], "created", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    rotateX: NumberConstructor;
-    rotateY: NumberConstructor;
-    rotateZ: NumberConstructor;
-    attributes: {
-        type: vue.PropType<GeometryAttributeInterface[]>;
-        default: () => never[];
-    };
-}>> & {
-    onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    attributes: GeometryAttributeInterface[];
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    readonly radiusTop: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly radiusBottom: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly height: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly radialSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 8;
-    };
-    readonly heightSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly openEnded: {
-        readonly type: BooleanConstructor;
-        readonly default: false;
-    };
-    readonly thetaStart: {
-        readonly type: NumberConstructor;
-        readonly default: 0;
-    };
-    readonly thetaLength: {
-        readonly type: NumberConstructor;
-        readonly default: number;
-    };
-}>>, {
-    readonly height: number;
-    readonly heightSegments: number;
-    readonly thetaStart: number;
-    readonly thetaLength: number;
-    readonly radialSegments: number;
-    readonly openEnded: boolean;
-    readonly radiusTop: number;
-    readonly radiusBottom: number;
-}>;
+declare const _default$_: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
 
-declare const _default$Z: vue.DefineComponent<{
-    readonly radius: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly detail: {
-        readonly type: NumberConstructor;
-        readonly default: 0;
-    };
-}, unknown, unknown, {}, {
-    createGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    rotateX: NumberConstructor;
-    rotateY: NumberConstructor;
-    rotateZ: NumberConstructor;
-    attributes: {
-        type: vue.PropType<GeometryAttributeInterface[]>;
-        default: () => never[];
-    };
-}, GeometrySetupInterface, unknown, {}, {
-    createGeometry(): void;
-    rotateGeometry(): void;
-    refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "created"[], "created", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    rotateX: NumberConstructor;
-    rotateY: NumberConstructor;
-    rotateZ: NumberConstructor;
-    attributes: {
-        type: vue.PropType<GeometryAttributeInterface[]>;
-        default: () => never[];
-    };
-}>> & {
-    onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    attributes: GeometryAttributeInterface[];
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    readonly radius: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly detail: {
-        readonly type: NumberConstructor;
-        readonly default: 0;
-    };
-}>>, {
-    readonly detail: number;
-    readonly radius: number;
-}>;
+declare const _default$Z: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
 
-declare const _default$Y: vue.DefineComponent<{
-    readonly shapes: {
-        readonly type: PropType<Shape | Shape[]>;
-    };
-    readonly options: {
-        readonly type: PropType<ExtrudeGeometryOptions | ExtrudeGeometryOptions[]>;
-    };
-    readonly positions: {
-        readonly type: PropType<Vector3[] | null>;
-        readonly default: null;
-    };
-    readonly rotations: {
-        readonly type: PropType<Vector3[] | null>;
-        readonly default: null;
-    };
-}, unknown, unknown, {}, {
-    createGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    rotateX: NumberConstructor;
-    rotateY: NumberConstructor;
-    rotateZ: NumberConstructor;
-    attributes: {
-        type: PropType<GeometryAttributeInterface[]>;
-        default: () => never[];
-    };
-}, GeometrySetupInterface, unknown, {}, {
-    createGeometry(): void;
-    rotateGeometry(): void;
-    refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "created"[], "created", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    rotateX: NumberConstructor;
-    rotateY: NumberConstructor;
-    rotateZ: NumberConstructor;
-    attributes: {
-        type: PropType<GeometryAttributeInterface[]>;
-        default: () => never[];
-    };
-}>> & {
-    onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    attributes: GeometryAttributeInterface[];
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    readonly shapes: {
-        readonly type: PropType<Shape | Shape[]>;
-    };
-    readonly options: {
-        readonly type: PropType<ExtrudeGeometryOptions | ExtrudeGeometryOptions[]>;
-    };
-    readonly positions: {
-        readonly type: PropType<Vector3[] | null>;
-        readonly default: null;
-    };
-    readonly rotations: {
-        readonly type: PropType<Vector3[] | null>;
-        readonly default: null;
-    };
-}>>, {
-    readonly positions: Vector3[] | null;
-    readonly rotations: Vector3[] | null;
-}>;
+declare const _default$Y: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
 
-declare const _default$X: vue.DefineComponent<{
-    readonly radius: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly detail: {
-        readonly type: NumberConstructor;
-        readonly default: 0;
-    };
-}, unknown, unknown, {}, {
-    createGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    rotateX: NumberConstructor;
-    rotateY: NumberConstructor;
-    rotateZ: NumberConstructor;
-    attributes: {
-        type: vue.PropType<GeometryAttributeInterface[]>;
-        default: () => never[];
-    };
-}, GeometrySetupInterface, unknown, {}, {
-    createGeometry(): void;
-    rotateGeometry(): void;
-    refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "created"[], "created", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    rotateX: NumberConstructor;
-    rotateY: NumberConstructor;
-    rotateZ: NumberConstructor;
-    attributes: {
-        type: vue.PropType<GeometryAttributeInterface[]>;
-        default: () => never[];
-    };
-}>> & {
-    onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    attributes: GeometryAttributeInterface[];
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    readonly radius: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly detail: {
-        readonly type: NumberConstructor;
-        readonly default: 0;
-    };
-}>>, {
-    readonly detail: number;
-    readonly radius: number;
-}>;
+declare const _default$X: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
 
-declare const _default$W: vue.DefineComponent<{
-    readonly points: ArrayConstructor;
-    readonly segments: {
-        readonly type: NumberConstructor;
-        readonly default: 12;
-    };
-    readonly phiStart: {
-        readonly type: NumberConstructor;
-        readonly default: 0;
-    };
-    readonly phiLength: {
-        readonly type: NumberConstructor;
-        readonly default: number;
-    };
-}, unknown, unknown, {}, {
-    createGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    rotateX: NumberConstructor;
-    rotateY: NumberConstructor;
-    rotateZ: NumberConstructor;
-    attributes: {
-        type: vue.PropType<GeometryAttributeInterface[]>;
-        default: () => never[];
-    };
-}, GeometrySetupInterface, unknown, {}, {
-    createGeometry(): void;
-    rotateGeometry(): void;
-    refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "created"[], "created", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    rotateX: NumberConstructor;
-    rotateY: NumberConstructor;
-    rotateZ: NumberConstructor;
-    attributes: {
-        type: vue.PropType<GeometryAttributeInterface[]>;
-        default: () => never[];
-    };
-}>> & {
-    onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    attributes: GeometryAttributeInterface[];
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    readonly points: ArrayConstructor;
-    readonly segments: {
-        readonly type: NumberConstructor;
-        readonly default: 12;
-    };
-    readonly phiStart: {
-        readonly type: NumberConstructor;
-        readonly default: 0;
-    };
-    readonly phiLength: {
-        readonly type: NumberConstructor;
-        readonly default: number;
-    };
-}>>, {
-    readonly segments: number;
-    readonly phiStart: number;
-    readonly phiLength: number;
-}>;
+declare const _default$W: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
 
-declare const _default$V: vue.DefineComponent<{
-    readonly radius: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly detail: {
-        readonly type: NumberConstructor;
-        readonly default: 0;
-    };
-}, unknown, unknown, {}, {
-    createGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    rotateX: NumberConstructor;
-    rotateY: NumberConstructor;
-    rotateZ: NumberConstructor;
-    attributes: {
-        type: vue.PropType<GeometryAttributeInterface[]>;
-        default: () => never[];
-    };
-}, GeometrySetupInterface, unknown, {}, {
-    createGeometry(): void;
-    rotateGeometry(): void;
-    refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "created"[], "created", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    rotateX: NumberConstructor;
-    rotateY: NumberConstructor;
-    rotateZ: NumberConstructor;
-    attributes: {
-        type: vue.PropType<GeometryAttributeInterface[]>;
-        default: () => never[];
-    };
-}>> & {
-    onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    attributes: GeometryAttributeInterface[];
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    readonly radius: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly detail: {
-        readonly type: NumberConstructor;
-        readonly default: 0;
-    };
-}>>, {
-    readonly detail: number;
-    readonly radius: number;
-}>;
+declare const _default$V: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
 
-declare const _default$U: vue.DefineComponent<{
-    readonly width: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly height: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly widthSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly heightSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-}, unknown, unknown, {}, {
-    createGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    rotateX: NumberConstructor;
-    rotateY: NumberConstructor;
-    rotateZ: NumberConstructor;
-    attributes: {
-        type: vue.PropType<GeometryAttributeInterface[]>;
-        default: () => never[];
-    };
-}, GeometrySetupInterface, unknown, {}, {
-    createGeometry(): void;
-    rotateGeometry(): void;
-    refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "created"[], "created", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    rotateX: NumberConstructor;
-    rotateY: NumberConstructor;
-    rotateZ: NumberConstructor;
-    attributes: {
-        type: vue.PropType<GeometryAttributeInterface[]>;
-        default: () => never[];
-    };
-}>> & {
-    onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    attributes: GeometryAttributeInterface[];
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    readonly width: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly height: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly widthSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly heightSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-}>>, {
-    readonly height: number;
-    readonly width: number;
-    readonly widthSegments: number;
-    readonly heightSegments: number;
-}>;
+declare const _default$U: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
 
-declare const _default$T: vue.DefineComponent<{
-    readonly vertices: ArrayConstructor;
-    readonly indices: ArrayConstructor;
-    readonly radius: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly detail: {
-        readonly type: NumberConstructor;
-        readonly default: 0;
-    };
-}, unknown, unknown, {}, {
-    createGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    rotateX: NumberConstructor;
-    rotateY: NumberConstructor;
-    rotateZ: NumberConstructor;
-    attributes: {
-        type: vue.PropType<GeometryAttributeInterface[]>;
-        default: () => never[];
-    };
-}, GeometrySetupInterface, unknown, {}, {
-    createGeometry(): void;
-    rotateGeometry(): void;
-    refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "created"[], "created", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    rotateX: NumberConstructor;
-    rotateY: NumberConstructor;
-    rotateZ: NumberConstructor;
-    attributes: {
-        type: vue.PropType<GeometryAttributeInterface[]>;
-        default: () => never[];
-    };
-}>> & {
-    onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    attributes: GeometryAttributeInterface[];
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    readonly vertices: ArrayConstructor;
-    readonly indices: ArrayConstructor;
-    readonly radius: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly detail: {
-        readonly type: NumberConstructor;
-        readonly default: 0;
-    };
-}>>, {
-    readonly detail: number;
-    readonly radius: number;
-}>;
+declare const _default$T: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
 
-declare const _default$S: vue.DefineComponent<{
-    readonly innerRadius: {
-        readonly type: NumberConstructor;
-        readonly default: 0.5;
-    };
-    readonly outerRadius: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly thetaSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 8;
-    };
-    readonly phiSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly thetaStart: {
-        readonly type: NumberConstructor;
-        readonly default: 0;
-    };
-    readonly thetaLength: {
-        readonly type: NumberConstructor;
-        readonly default: number;
-    };
-}, unknown, unknown, {}, {
-    createGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    rotateX: NumberConstructor;
-    rotateY: NumberConstructor;
-    rotateZ: NumberConstructor;
-    attributes: {
-        type: vue.PropType<GeometryAttributeInterface[]>;
-        default: () => never[];
-    };
-}, GeometrySetupInterface, unknown, {}, {
-    createGeometry(): void;
-    rotateGeometry(): void;
-    refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "created"[], "created", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    rotateX: NumberConstructor;
-    rotateY: NumberConstructor;
-    rotateZ: NumberConstructor;
-    attributes: {
-        type: vue.PropType<GeometryAttributeInterface[]>;
-        default: () => never[];
-    };
-}>> & {
-    onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    attributes: GeometryAttributeInterface[];
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    readonly innerRadius: {
-        readonly type: NumberConstructor;
-        readonly default: 0.5;
-    };
-    readonly outerRadius: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly thetaSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 8;
-    };
-    readonly phiSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly thetaStart: {
-        readonly type: NumberConstructor;
-        readonly default: 0;
-    };
-    readonly thetaLength: {
-        readonly type: NumberConstructor;
-        readonly default: number;
-    };
-}>>, {
-    readonly thetaStart: number;
-    readonly thetaLength: number;
-    readonly innerRadius: number;
-    readonly outerRadius: number;
-    readonly thetaSegments: number;
-    readonly phiSegments: number;
-}>;
+declare const _default$S: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
 
-declare const _default$R: vue.DefineComponent<{
-    readonly radius: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly widthSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 12;
-    };
-    readonly heightSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 12;
-    };
-    readonly phiStart: {
-        readonly type: NumberConstructor;
-        readonly default: 0;
-    };
-    readonly phiLength: {
-        readonly type: NumberConstructor;
-        readonly default: number;
-    };
-    readonly thetaStart: {
-        readonly type: NumberConstructor;
-        readonly default: 0;
-    };
-    readonly thetaLength: {
-        readonly type: NumberConstructor;
-        readonly default: number;
-    };
-}, unknown, unknown, {}, {
-    createGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    rotateX: NumberConstructor;
-    rotateY: NumberConstructor;
-    rotateZ: NumberConstructor;
-    attributes: {
-        type: vue.PropType<GeometryAttributeInterface[]>;
-        default: () => never[];
-    };
-}, GeometrySetupInterface, unknown, {}, {
-    createGeometry(): void;
-    rotateGeometry(): void;
-    refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "created"[], "created", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    rotateX: NumberConstructor;
-    rotateY: NumberConstructor;
-    rotateZ: NumberConstructor;
-    attributes: {
-        type: vue.PropType<GeometryAttributeInterface[]>;
-        default: () => never[];
-    };
-}>> & {
-    onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    attributes: GeometryAttributeInterface[];
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    readonly radius: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly widthSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 12;
-    };
-    readonly heightSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 12;
-    };
-    readonly phiStart: {
-        readonly type: NumberConstructor;
-        readonly default: 0;
-    };
-    readonly phiLength: {
-        readonly type: NumberConstructor;
-        readonly default: number;
-    };
-    readonly thetaStart: {
-        readonly type: NumberConstructor;
-        readonly default: 0;
-    };
-    readonly thetaLength: {
-        readonly type: NumberConstructor;
-        readonly default: number;
-    };
-}>>, {
-    readonly radius: number;
-    readonly widthSegments: number;
-    readonly heightSegments: number;
-    readonly thetaStart: number;
-    readonly thetaLength: number;
-    readonly phiStart: number;
-    readonly phiLength: number;
-}>;
+declare const _default$R: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
 
-declare const _default$Q: vue.DefineComponent<{
-    readonly shapes: {
-        readonly type: PropType<Shape | Shape[]>;
-    };
-    readonly curveSegments: {
-        readonly type: NumberConstructor;
-    };
-}, unknown, unknown, {}, {
-    createGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    rotateX: NumberConstructor;
-    rotateY: NumberConstructor;
-    rotateZ: NumberConstructor;
-    attributes: {
-        type: PropType<GeometryAttributeInterface[]>;
-        default: () => never[];
-    };
-}, GeometrySetupInterface, unknown, {}, {
-    createGeometry(): void;
-    rotateGeometry(): void;
-    refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "created"[], "created", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    rotateX: NumberConstructor;
-    rotateY: NumberConstructor;
-    rotateZ: NumberConstructor;
-    attributes: {
-        type: PropType<GeometryAttributeInterface[]>;
-        default: () => never[];
-    };
-}>> & {
-    onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    attributes: GeometryAttributeInterface[];
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    readonly shapes: {
-        readonly type: PropType<Shape | Shape[]>;
-    };
-    readonly curveSegments: {
-        readonly type: NumberConstructor;
-    };
-}>>, {}>;
+declare const _default$Q: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
 
-declare const _default$P: vue.DefineComponent<{
-    readonly radius: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly detail: {
-        readonly type: NumberConstructor;
-        readonly default: 0;
-    };
-}, unknown, unknown, {}, {
-    createGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    rotateX: NumberConstructor;
-    rotateY: NumberConstructor;
-    rotateZ: NumberConstructor;
-    attributes: {
-        type: vue.PropType<GeometryAttributeInterface[]>;
-        default: () => never[];
-    };
-}, GeometrySetupInterface, unknown, {}, {
-    createGeometry(): void;
-    rotateGeometry(): void;
-    refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "created"[], "created", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    rotateX: NumberConstructor;
-    rotateY: NumberConstructor;
-    rotateZ: NumberConstructor;
-    attributes: {
-        type: vue.PropType<GeometryAttributeInterface[]>;
-        default: () => never[];
-    };
-}>> & {
-    onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    attributes: GeometryAttributeInterface[];
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    readonly radius: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly detail: {
-        readonly type: NumberConstructor;
-        readonly default: 0;
-    };
-}>>, {
-    readonly detail: number;
-    readonly radius: number;
-}>;
+declare const _default$P: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
 
-declare const _default$O: vue.DefineComponent<{
-    readonly radius: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly tube: {
-        readonly type: NumberConstructor;
-        readonly default: 0.4;
-    };
-    readonly radialSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 8;
-    };
-    readonly tubularSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 6;
-    };
-    readonly arc: {
-        readonly type: NumberConstructor;
-        readonly default: number;
-    };
-}, unknown, unknown, {}, {
-    createGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    rotateX: NumberConstructor;
-    rotateY: NumberConstructor;
-    rotateZ: NumberConstructor;
-    attributes: {
-        type: vue.PropType<GeometryAttributeInterface[]>;
-        default: () => never[];
-    };
-}, GeometrySetupInterface, unknown, {}, {
-    createGeometry(): void;
-    rotateGeometry(): void;
-    refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "created"[], "created", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    rotateX: NumberConstructor;
-    rotateY: NumberConstructor;
-    rotateZ: NumberConstructor;
-    attributes: {
-        type: vue.PropType<GeometryAttributeInterface[]>;
-        default: () => never[];
-    };
-}>> & {
-    onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    attributes: GeometryAttributeInterface[];
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    readonly radius: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly tube: {
-        readonly type: NumberConstructor;
-        readonly default: 0.4;
-    };
-    readonly radialSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 8;
-    };
-    readonly tubularSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 6;
-    };
-    readonly arc: {
-        readonly type: NumberConstructor;
-        readonly default: number;
-    };
-}>>, {
-    readonly radius: number;
-    readonly radialSegments: number;
-    readonly tube: number;
-    readonly tubularSegments: number;
-    readonly arc: number;
-}>;
+declare const _default$O: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
 
-declare const _default$N: vue.DefineComponent<{
-    readonly radius: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly tube: {
-        readonly type: NumberConstructor;
-        readonly default: 0.4;
-    };
-    readonly tubularSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 64;
-    };
-    readonly radialSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 8;
-    };
-    readonly p: {
-        readonly type: NumberConstructor;
-        readonly default: 2;
-    };
-    readonly q: {
-        readonly type: NumberConstructor;
-        readonly default: 3;
-    };
-}, unknown, unknown, {}, {
-    createGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    rotateX: NumberConstructor;
-    rotateY: NumberConstructor;
-    rotateZ: NumberConstructor;
-    attributes: {
-        type: vue.PropType<GeometryAttributeInterface[]>;
-        default: () => never[];
-    };
-}, GeometrySetupInterface, unknown, {}, {
-    createGeometry(): void;
-    rotateGeometry(): void;
-    refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "created"[], "created", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    rotateX: NumberConstructor;
-    rotateY: NumberConstructor;
-    rotateZ: NumberConstructor;
-    attributes: {
-        type: vue.PropType<GeometryAttributeInterface[]>;
-        default: () => never[];
-    };
-}>> & {
-    onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    attributes: GeometryAttributeInterface[];
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    readonly radius: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly tube: {
-        readonly type: NumberConstructor;
-        readonly default: 0.4;
-    };
-    readonly tubularSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 64;
-    };
-    readonly radialSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 8;
-    };
-    readonly p: {
-        readonly type: NumberConstructor;
-        readonly default: 2;
-    };
-    readonly q: {
-        readonly type: NumberConstructor;
-        readonly default: 3;
-    };
-}>>, {
-    readonly p: number;
-    readonly q: number;
-    readonly radius: number;
-    readonly radialSegments: number;
-    readonly tube: number;
-    readonly tubularSegments: number;
-}>;
+declare const _default$N: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
 
-declare const _default$M: vue.DefineComponent<{
+declare const _default$M: vue.DefineComponent<vue.ExtractPropTypes<{
     readonly points: ArrayConstructor;
     readonly path: typeof Curve;
     readonly tubularSegments: {
@@ -2427,10 +1902,10 @@ declare const _default$M: vue.DefineComponent<{
         readonly type: BooleanConstructor;
         readonly default: false;
     };
-}, unknown, unknown, {}, {
+}>, {}, {}, {}, {
     createGeometry(): void;
     updatePoints(points: Vector3[]): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
+}, vue.ComponentOptionsMixin, vue.DefineComponent<vue.ExtractPropTypes<{
     rotateX: NumberConstructor;
     rotateY: NumberConstructor;
     rotateZ: NumberConstructor;
@@ -2438,11 +1913,11 @@ declare const _default$M: vue.DefineComponent<{
         type: vue.PropType<GeometryAttributeInterface[]>;
         default: () => never[];
     };
-}, GeometrySetupInterface, unknown, {}, {
+}>, GeometrySetupInterface, {}, {}, {
     createGeometry(): void;
     rotateGeometry(): void;
     refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "created"[], "created", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "created"[], "created", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     rotateX: NumberConstructor;
     rotateY: NumberConstructor;
     rotateZ: NumberConstructor;
@@ -2450,11 +1925,11 @@ declare const _default$M: vue.DefineComponent<{
         type: vue.PropType<GeometryAttributeInterface[]>;
         default: () => never[];
     };
-}>> & {
+}>> & Readonly<{
     onCreated?: ((...args: any[]) => any) | undefined;
-}, {
+}>, {
     attributes: GeometryAttributeInterface[];
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>, {}, string, vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     readonly points: ArrayConstructor;
     readonly path: typeof Curve;
     readonly tubularSegments: {
@@ -2473,18 +1948,18 @@ declare const _default$M: vue.DefineComponent<{
         readonly type: BooleanConstructor;
         readonly default: false;
     };
-}>>, {
-    readonly closed: boolean;
+}>> & Readonly<{}>, {
     readonly radius: number;
     readonly radialSegments: number;
     readonly tubularSegments: number;
-}>;
+    readonly closed: boolean;
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>;
 
 interface LightSetupInterface {
     light?: Light;
 }
 
-declare const _default$L: vue.DefineComponent<{}, {}, {}, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<{
+declare const _default$L: vue.DefineComponent<{}, {}, {}, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<vue.ExtractPropTypes<{
     color: {
         type: StringConstructor;
         default: string;
@@ -2508,9 +1983,9 @@ declare const _default$L: vue.DefineComponent<{}, {}, {}, {}, {}, vue.ComponentO
         type: ObjectConstructor;
         default: () => {};
     };
-}, LightSetupInterface, unknown, {}, {
+}>, LightSetupInterface, {}, {}, {
     initLight(light: three.Light): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
+}, vue.ComponentOptionsMixin, vue.DefineComponent<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
     onPointerMove: FunctionConstructor;
@@ -2567,14 +2042,14 @@ declare const _default$L: vue.DefineComponent<{}, {}, {}, {}, {}, vue.ComponentO
         type: BooleanConstructor;
         default: boolean;
     };
-}, Object3DSetupInterface, unknown, {}, {
+}>, Object3DSetupInterface, {}, {}, {
     initObject3D(o3d: three.Object3D<three.Event>): void;
-    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string>, {}> | undefined;
+    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
     addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
     removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
     add(o: three.Object3D<three.Event>): void;
     remove(o: three.Object3D<three.Event>): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
     onPointerMove: FunctionConstructor;
@@ -2631,20 +2106,20 @@ declare const _default$L: vue.DefineComponent<{}, {}, {}, {}, {}, vue.ComponentO
         type: BooleanConstructor;
         default: boolean;
     };
-}>> & {
+}>> & Readonly<{
     onReady?: ((...args: any[]) => any) | undefined;
     onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    position: Vector3PropInterface;
-    scale: Vector3PropInterface;
-    visible: boolean;
-    rotation: EulerPropInterface;
+}>, {
     props: Record<string, any>;
+    position: Vector3PropInterface;
+    rotation: EulerPropInterface;
+    scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
     userData: Record<string, any>;
+    visible: boolean;
     disableAdd: boolean;
     disableRemove: boolean;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>, {}, string, vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     color: {
         type: StringConstructor;
         default: string;
@@ -2668,16 +2143,16 @@ declare const _default$L: vue.DefineComponent<{}, {}, {}, {}, {}, vue.ComponentO
         type: ObjectConstructor;
         default: () => {};
     };
-}>>, {
-    color: string;
+}>> & Readonly<{}>, {
     castShadow: boolean;
+    color: string;
     intensity: number;
     shadowMapSize: Vector2PropInterface;
     shadowCamera: Record<string, any>;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{}>>, {}>;
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>, {}, string, vue.PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>;
 //# sourceMappingURL=AmbientLight.d.ts.map
 
-declare const _default$K: vue.DefineComponent<{
+declare const _default$K: vue.DefineComponent<vue.ExtractPropTypes<{
     target: {
         type: PropType<Vector3PropInterface>;
         default: () => {
@@ -2686,7 +2161,7 @@ declare const _default$K: vue.DefineComponent<{
             z: number;
         };
     };
-}, unknown, unknown, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<{
+}>, {}, {}, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<vue.ExtractPropTypes<{
     color: {
         type: StringConstructor;
         default: string;
@@ -2710,9 +2185,9 @@ declare const _default$K: vue.DefineComponent<{
         type: ObjectConstructor;
         default: () => {};
     };
-}, LightSetupInterface, unknown, {}, {
+}>, LightSetupInterface, {}, {}, {
     initLight(light: three.Light): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
+}, vue.ComponentOptionsMixin, vue.DefineComponent<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
     onPointerMove: FunctionConstructor;
@@ -2769,14 +2244,14 @@ declare const _default$K: vue.DefineComponent<{
         type: BooleanConstructor;
         default: boolean;
     };
-}, Object3DSetupInterface, unknown, {}, {
+}>, Object3DSetupInterface, {}, {}, {
     initObject3D(o3d: three.Object3D<three.Event>): void;
-    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string>, {}> | undefined;
+    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
     addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
     removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
     add(o: three.Object3D<three.Event>): void;
     remove(o: three.Object3D<three.Event>): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
     onPointerMove: FunctionConstructor;
@@ -2833,20 +2308,20 @@ declare const _default$K: vue.DefineComponent<{
         type: BooleanConstructor;
         default: boolean;
     };
-}>> & {
+}>> & Readonly<{
     onReady?: ((...args: any[]) => any) | undefined;
     onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    position: Vector3PropInterface;
-    scale: Vector3PropInterface;
-    visible: boolean;
-    rotation: EulerPropInterface;
+}>, {
     props: Record<string, any>;
+    position: Vector3PropInterface;
+    rotation: EulerPropInterface;
+    scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
     userData: Record<string, any>;
+    visible: boolean;
     disableAdd: boolean;
     disableRemove: boolean;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>, {}, string, vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     color: {
         type: StringConstructor;
         default: string;
@@ -2870,13 +2345,13 @@ declare const _default$K: vue.DefineComponent<{
         type: ObjectConstructor;
         default: () => {};
     };
-}>>, {
-    color: string;
+}>> & Readonly<{}>, {
     castShadow: boolean;
+    color: string;
     intensity: number;
     shadowMapSize: Vector2PropInterface;
     shadowCamera: Record<string, any>;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>, {}, string, vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     target: {
         type: PropType<Vector3PropInterface>;
         default: () => {
@@ -2885,17 +2360,17 @@ declare const _default$K: vue.DefineComponent<{
             z: number;
         };
     };
-}>>, {
+}>> & Readonly<{}>, {
     target: Vector3PropInterface;
-}>;
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>;
 //# sourceMappingURL=DirectionalLight.d.ts.map
 
-declare const _default$J: vue.DefineComponent<{
+declare const _default$J: vue.DefineComponent<vue.ExtractPropTypes<{
     groundColor: {
         type: StringConstructor;
         default: string;
     };
-}, unknown, unknown, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<{
+}>, {}, {}, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<vue.ExtractPropTypes<{
     color: {
         type: StringConstructor;
         default: string;
@@ -2919,9 +2394,9 @@ declare const _default$J: vue.DefineComponent<{
         type: ObjectConstructor;
         default: () => {};
     };
-}, LightSetupInterface, unknown, {}, {
+}>, LightSetupInterface, {}, {}, {
     initLight(light: three.Light): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
+}, vue.ComponentOptionsMixin, vue.DefineComponent<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
     onPointerMove: FunctionConstructor;
@@ -2978,14 +2453,14 @@ declare const _default$J: vue.DefineComponent<{
         type: BooleanConstructor;
         default: boolean;
     };
-}, Object3DSetupInterface, unknown, {}, {
+}>, Object3DSetupInterface, {}, {}, {
     initObject3D(o3d: three.Object3D<three.Event>): void;
-    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string>, {}> | undefined;
+    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
     addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
     removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
     add(o: three.Object3D<three.Event>): void;
     remove(o: three.Object3D<three.Event>): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
     onPointerMove: FunctionConstructor;
@@ -3042,20 +2517,20 @@ declare const _default$J: vue.DefineComponent<{
         type: BooleanConstructor;
         default: boolean;
     };
-}>> & {
+}>> & Readonly<{
     onReady?: ((...args: any[]) => any) | undefined;
     onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    position: Vector3PropInterface;
-    scale: Vector3PropInterface;
-    visible: boolean;
-    rotation: EulerPropInterface;
+}>, {
     props: Record<string, any>;
+    position: Vector3PropInterface;
+    rotation: EulerPropInterface;
+    scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
     userData: Record<string, any>;
+    visible: boolean;
     disableAdd: boolean;
     disableRemove: boolean;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>, {}, string, vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     color: {
         type: StringConstructor;
         default: string;
@@ -3079,23 +2554,23 @@ declare const _default$J: vue.DefineComponent<{
         type: ObjectConstructor;
         default: () => {};
     };
-}>>, {
-    color: string;
+}>> & Readonly<{}>, {
     castShadow: boolean;
+    color: string;
     intensity: number;
     shadowMapSize: Vector2PropInterface;
     shadowCamera: Record<string, any>;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>, {}, string, vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     groundColor: {
         type: StringConstructor;
         default: string;
     };
-}>>, {
+}>> & Readonly<{}>, {
     groundColor: string;
-}>;
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>;
 //# sourceMappingURL=HemisphereLight.d.ts.map
 
-declare const _default$I: vue.DefineComponent<{
+declare const _default$I: vue.DefineComponent<vue.ExtractPropTypes<{
     distance: {
         type: NumberConstructor;
         default: number;
@@ -3104,7 +2579,7 @@ declare const _default$I: vue.DefineComponent<{
         type: NumberConstructor;
         default: number;
     };
-}, unknown, unknown, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<{
+}>, {}, {}, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<vue.ExtractPropTypes<{
     color: {
         type: StringConstructor;
         default: string;
@@ -3128,9 +2603,9 @@ declare const _default$I: vue.DefineComponent<{
         type: ObjectConstructor;
         default: () => {};
     };
-}, LightSetupInterface, unknown, {}, {
+}>, LightSetupInterface, {}, {}, {
     initLight(light: three.Light): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
+}, vue.ComponentOptionsMixin, vue.DefineComponent<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
     onPointerMove: FunctionConstructor;
@@ -3187,14 +2662,14 @@ declare const _default$I: vue.DefineComponent<{
         type: BooleanConstructor;
         default: boolean;
     };
-}, Object3DSetupInterface, unknown, {}, {
+}>, Object3DSetupInterface, {}, {}, {
     initObject3D(o3d: three.Object3D<three.Event>): void;
-    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string>, {}> | undefined;
+    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
     addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
     removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
     add(o: three.Object3D<three.Event>): void;
     remove(o: three.Object3D<three.Event>): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
     onPointerMove: FunctionConstructor;
@@ -3251,20 +2726,20 @@ declare const _default$I: vue.DefineComponent<{
         type: BooleanConstructor;
         default: boolean;
     };
-}>> & {
+}>> & Readonly<{
     onReady?: ((...args: any[]) => any) | undefined;
     onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    position: Vector3PropInterface;
-    scale: Vector3PropInterface;
-    visible: boolean;
-    rotation: EulerPropInterface;
+}>, {
     props: Record<string, any>;
+    position: Vector3PropInterface;
+    rotation: EulerPropInterface;
+    scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
     userData: Record<string, any>;
+    visible: boolean;
     disableAdd: boolean;
     disableRemove: boolean;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>, {}, string, vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     color: {
         type: StringConstructor;
         default: string;
@@ -3288,13 +2763,13 @@ declare const _default$I: vue.DefineComponent<{
         type: ObjectConstructor;
         default: () => {};
     };
-}>>, {
-    color: string;
+}>> & Readonly<{}>, {
     castShadow: boolean;
+    color: string;
     intensity: number;
     shadowMapSize: Vector2PropInterface;
     shadowCamera: Record<string, any>;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>, {}, string, vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     distance: {
         type: NumberConstructor;
         default: number;
@@ -3303,13 +2778,13 @@ declare const _default$I: vue.DefineComponent<{
         type: NumberConstructor;
         default: number;
     };
-}>>, {
+}>> & Readonly<{}>, {
     distance: number;
     decay: number;
-}>;
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>;
 //# sourceMappingURL=PointLight.d.ts.map
 
-declare const _default$H: vue.DefineComponent<{
+declare const _default$H: vue.DefineComponent<vue.ExtractPropTypes<{
     width: {
         type: NumberConstructor;
         default: number;
@@ -3319,7 +2794,7 @@ declare const _default$H: vue.DefineComponent<{
         default: number;
     };
     helper: BooleanConstructor;
-}, unknown, unknown, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<{
+}>, {}, {}, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<vue.ExtractPropTypes<{
     color: {
         type: StringConstructor;
         default: string;
@@ -3343,9 +2818,9 @@ declare const _default$H: vue.DefineComponent<{
         type: ObjectConstructor;
         default: () => {};
     };
-}, LightSetupInterface, unknown, {}, {
+}>, LightSetupInterface, {}, {}, {
     initLight(light: three.Light): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
+}, vue.ComponentOptionsMixin, vue.DefineComponent<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
     onPointerMove: FunctionConstructor;
@@ -3402,14 +2877,14 @@ declare const _default$H: vue.DefineComponent<{
         type: BooleanConstructor;
         default: boolean;
     };
-}, Object3DSetupInterface, unknown, {}, {
+}>, Object3DSetupInterface, {}, {}, {
     initObject3D(o3d: three.Object3D<three.Event>): void;
-    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string>, {}> | undefined;
+    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
     addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
     removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
     add(o: three.Object3D<three.Event>): void;
     remove(o: three.Object3D<three.Event>): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
     onPointerMove: FunctionConstructor;
@@ -3466,20 +2941,20 @@ declare const _default$H: vue.DefineComponent<{
         type: BooleanConstructor;
         default: boolean;
     };
-}>> & {
+}>> & Readonly<{
     onReady?: ((...args: any[]) => any) | undefined;
     onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    position: Vector3PropInterface;
-    scale: Vector3PropInterface;
-    visible: boolean;
-    rotation: EulerPropInterface;
+}>, {
     props: Record<string, any>;
+    position: Vector3PropInterface;
+    rotation: EulerPropInterface;
+    scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
     userData: Record<string, any>;
+    visible: boolean;
     disableAdd: boolean;
     disableRemove: boolean;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>, {}, string, vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     color: {
         type: StringConstructor;
         default: string;
@@ -3503,13 +2978,13 @@ declare const _default$H: vue.DefineComponent<{
         type: ObjectConstructor;
         default: () => {};
     };
-}>>, {
-    color: string;
+}>> & Readonly<{}>, {
     castShadow: boolean;
+    color: string;
     intensity: number;
     shadowMapSize: Vector2PropInterface;
     shadowCamera: Record<string, any>;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>, {}, string, vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     width: {
         type: NumberConstructor;
         default: number;
@@ -3519,14 +2994,14 @@ declare const _default$H: vue.DefineComponent<{
         default: number;
     };
     helper: BooleanConstructor;
-}>>, {
-    height: number;
+}>> & Readonly<{}>, {
     width: number;
+    height: number;
     helper: boolean;
-}>;
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>;
 //# sourceMappingURL=RectAreaLight.d.ts.map
 
-declare const _default$G: vue.DefineComponent<{
+declare const _default$G: vue.DefineComponent<vue.ExtractPropTypes<{
     angle: {
         type: NumberConstructor;
         default: number;
@@ -3544,7 +3019,7 @@ declare const _default$G: vue.DefineComponent<{
         default: number;
     };
     target: ObjectConstructor;
-}, unknown, unknown, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<{
+}>, {}, {}, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<vue.ExtractPropTypes<{
     color: {
         type: StringConstructor;
         default: string;
@@ -3568,9 +3043,9 @@ declare const _default$G: vue.DefineComponent<{
         type: ObjectConstructor;
         default: () => {};
     };
-}, LightSetupInterface, unknown, {}, {
+}>, LightSetupInterface, {}, {}, {
     initLight(light: three.Light): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
+}, vue.ComponentOptionsMixin, vue.DefineComponent<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
     onPointerMove: FunctionConstructor;
@@ -3627,14 +3102,14 @@ declare const _default$G: vue.DefineComponent<{
         type: BooleanConstructor;
         default: boolean;
     };
-}, Object3DSetupInterface, unknown, {}, {
+}>, Object3DSetupInterface, {}, {}, {
     initObject3D(o3d: three.Object3D<three.Event>): void;
-    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string>, {}> | undefined;
+    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
     addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
     removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
     add(o: three.Object3D<three.Event>): void;
     remove(o: three.Object3D<three.Event>): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
     onPointerMove: FunctionConstructor;
@@ -3691,20 +3166,20 @@ declare const _default$G: vue.DefineComponent<{
         type: BooleanConstructor;
         default: boolean;
     };
-}>> & {
+}>> & Readonly<{
     onReady?: ((...args: any[]) => any) | undefined;
     onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    position: Vector3PropInterface;
-    scale: Vector3PropInterface;
-    visible: boolean;
-    rotation: EulerPropInterface;
+}>, {
     props: Record<string, any>;
+    position: Vector3PropInterface;
+    rotation: EulerPropInterface;
+    scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
     userData: Record<string, any>;
+    visible: boolean;
     disableAdd: boolean;
     disableRemove: boolean;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>, {}, string, vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     color: {
         type: StringConstructor;
         default: string;
@@ -3728,13 +3203,13 @@ declare const _default$G: vue.DefineComponent<{
         type: ObjectConstructor;
         default: () => {};
     };
-}>>, {
-    color: string;
+}>> & Readonly<{}>, {
     castShadow: boolean;
+    color: string;
     intensity: number;
     shadowMapSize: Vector2PropInterface;
     shadowCamera: Record<string, any>;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>, {}, string, vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     angle: {
         type: NumberConstructor;
         default: number;
@@ -3752,12 +3227,12 @@ declare const _default$G: vue.DefineComponent<{
         default: number;
     };
     target: ObjectConstructor;
-}>>, {
+}>> & Readonly<{}>, {
     distance: number;
     decay: number;
     angle: number;
     penumbra: number;
-}>;
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>;
 //# sourceMappingURL=SpotLight.d.ts.map
 
 interface MaterialPropsInterface {
@@ -3775,76 +3250,6 @@ interface MaterialPropsInterface {
     visible?: boolean;
     [index: string]: any;
 }
-interface AlphaPropsInterface {
-    alphaMap?: Texture;
-}
-interface AOPropsInterface {
-    aoMap?: Texture;
-    aoMapIntensity?: number;
-}
-interface BumpPropsInterface {
-    bumpMap?: Texture;
-    bumpScale?: number;
-}
-interface DisplacementPropsInterface {
-    displacementMap?: Texture;
-    displacementScale?: number;
-    displacementBias?: number;
-}
-interface EmissivePropsInterface {
-    emissive?: number | string;
-    emissiveIntensity?: number;
-    emissiveMap?: Texture;
-}
-interface EnvPropsInterface {
-    envMap?: Texture;
-    envMapIntensity?: number;
-    reflectivity?: number;
-    refractionRatio?: number;
-}
-interface LightPropsInterface {
-    lightMap?: Texture;
-    lightMapIntensity?: number;
-}
-interface WireframePropsInterface {
-    wireframe?: boolean;
-    wireframeLinewidth?: number;
-}
-interface BasicMaterialPropsInterface extends MaterialPropsInterface, AlphaPropsInterface, AOPropsInterface, EnvPropsInterface, WireframePropsInterface {
-}
-interface LambertMaterialPropsInterface extends MaterialPropsInterface, AlphaPropsInterface, AOPropsInterface, EmissivePropsInterface, EnvPropsInterface, LightPropsInterface, WireframePropsInterface {
-}
-interface PhongMaterialPropsInterface extends MaterialPropsInterface, AlphaPropsInterface, AOPropsInterface, DisplacementPropsInterface, EmissivePropsInterface, EnvPropsInterface, LightPropsInterface, WireframePropsInterface {
-    flatShading?: boolean;
-    shininess?: number;
-    specular?: number | string;
-}
-interface PhysicalMaterialPropsInterface extends MaterialPropsInterface {
-    clearcoat?: number;
-    clearcoatMap?: Texture;
-    clearcoatRoughness?: number;
-    clearcoatRoughnessMap?: Texture;
-    clearcoatNormalScale?: Vector2;
-    clearcoatNormalMap?: Texture;
-    ior?: number;
-    reflectivity?: number;
-    sheen?: Color;
-    transmission?: number;
-    transmissionMap?: Texture | null;
-}
-interface PointsMaterialPropsInterface extends MaterialPropsInterface, AlphaPropsInterface {
-    size?: number;
-    sizeAttenuation?: boolean;
-}
-interface StandardMaterialPropsInterface extends MaterialPropsInterface, AlphaPropsInterface, AOPropsInterface, BumpPropsInterface, DisplacementPropsInterface, EmissivePropsInterface, EnvPropsInterface, LightPropsInterface, WireframePropsInterface {
-    flatShading?: boolean;
-    metalness?: number;
-    metalnessMap?: Texture;
-    roughness?: number;
-    roughnessMap?: Texture;
-}
-interface ToonMaterialPropsInterface extends MaterialPropsInterface, AlphaPropsInterface, AOPropsInterface, BumpPropsInterface, DisplacementPropsInterface, EmissivePropsInterface, LightPropsInterface, WireframePropsInterface {
-}
 
 interface MaterialSetupInterface {
     mesh?: MeshInterface;
@@ -3857,7 +3262,7 @@ interface MaterialInterface extends MaterialSetupInterface {
 interface MaterialPublicInterface extends ComponentPublicInstance, MaterialInterface {
 }
 declare const MaterialInjectionKey: InjectionKey<MaterialPublicInterface>;
-declare const BaseMaterial: vue.DefineComponent<{
+declare const BaseMaterial: vue.DefineComponent<vue.ExtractPropTypes<{
     color: {
         type: StringConstructor;
         default: string;
@@ -3866,7 +3271,7 @@ declare const BaseMaterial: vue.DefineComponent<{
         type: PropType<MaterialPropsInterface>;
         default: () => {};
     };
-}, MaterialSetupInterface, unknown, {}, {
+}>, MaterialSetupInterface, {}, {}, {
     getMaterialParams(): {
         [x: string]: any;
         alphaTest?: number | undefined;
@@ -3884,7 +3289,7 @@ declare const BaseMaterial: vue.DefineComponent<{
     };
     setProp(material: any, key: string, value: any, needsUpdate?: boolean): void;
     setTexture(texture: Texture | null, key?: string): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "created"[], "created", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "created"[], "created", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     color: {
         type: StringConstructor;
         default: string;
@@ -3893,595 +3298,95 @@ declare const BaseMaterial: vue.DefineComponent<{
         type: PropType<MaterialPropsInterface>;
         default: () => {};
     };
-}>> & {
+}>> & Readonly<{
     onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    color: string;
+}>, {
     props: MaterialPropsInterface;
-}>;
+    color: string;
+}, {}, {}, {}, string, () => {
+    [x: symbol]: vue.CreateComponentPublicInstanceWithMixins<Readonly<vue.ExtractPropTypes<{
+        color: {
+            type: StringConstructor;
+            default: string;
+        };
+        props: {
+            type: PropType<MaterialPropsInterface>;
+            default: () => {};
+        };
+    }>> & Readonly<{
+        onCreated?: ((...args: any[]) => any) | undefined;
+    }>, MaterialSetupInterface, {}, {}, {
+        getMaterialParams(): {
+            [x: string]: any;
+            alphaTest?: number | undefined;
+            blending?: number | undefined;
+            color?: string | number | undefined;
+            depthTest?: boolean | undefined;
+            depthWrite?: boolean | undefined;
+            fog?: boolean | undefined;
+            opacity?: number | undefined;
+            side?: number | undefined;
+            toneMapped?: boolean | undefined;
+            transparent?: boolean | undefined;
+            vertexColors?: boolean | undefined;
+            visible?: boolean | undefined;
+        };
+        setProp(material: any, key: string, value: any, needsUpdate?: boolean): void;
+        setTexture(texture: Texture | null, key?: string): void;
+    }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "created"[], {}, {}, false, {
+        mesh: symbol;
+    }, {}, {}, {}, string, {}, any, vue.ComponentProvideOptions, {
+        P: {};
+        B: {};
+        D: {};
+        C: {};
+        M: {};
+        Defaults: {};
+    }, Readonly<vue.ExtractPropTypes<{
+        color: {
+            type: StringConstructor;
+            default: string;
+        };
+        props: {
+            type: PropType<MaterialPropsInterface>;
+            default: () => {};
+        };
+    }>> & Readonly<{
+        onCreated?: ((...args: any[]) => any) | undefined;
+    }>, MaterialSetupInterface, {}, {}, {
+        getMaterialParams(): {
+            [x: string]: any;
+            alphaTest?: number | undefined;
+            blending?: number | undefined;
+            color?: string | number | undefined;
+            depthTest?: boolean | undefined;
+            depthWrite?: boolean | undefined;
+            fog?: boolean | undefined;
+            opacity?: number | undefined;
+            side?: number | undefined;
+            toneMapped?: boolean | undefined;
+            transparent?: boolean | undefined;
+            vertexColors?: boolean | undefined;
+            visible?: boolean | undefined;
+        };
+        setProp(material: any, key: string, value: any, needsUpdate?: boolean): void;
+        setTexture(texture: Texture | null, key?: string): void;
+    }, {}>;
+}, true, {}, any>;
 
-declare const BasicMaterial: vue.DefineComponent<{
-    props: {
-        type: PropType<BasicMaterialPropsInterface>;
-        default: () => {};
-    };
-}, unknown, unknown, {}, {
-    createMaterial(): Material;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    color: {
-        type: StringConstructor;
-        default: string;
-    };
-    props: {
-        type: PropType<MaterialPropsInterface>;
-        default: () => {};
-    };
-}, MaterialSetupInterface, unknown, {}, {
-    getMaterialParams(): {
-        [x: string]: any;
-        alphaTest?: number | undefined;
-        blending?: number | undefined;
-        color?: string | number | undefined;
-        depthTest?: boolean | undefined;
-        depthWrite?: boolean | undefined;
-        fog?: boolean | undefined;
-        opacity?: number | undefined;
-        side?: number | undefined;
-        toneMapped?: boolean | undefined;
-        transparent?: boolean | undefined;
-        vertexColors?: boolean | undefined;
-        visible?: boolean | undefined;
-    };
-    setProp(material: any, key: string, value: any, needsUpdate?: boolean): void;
-    setTexture(texture: Texture | null, key?: string): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "created"[], "created", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    color: {
-        type: StringConstructor;
-        default: string;
-    };
-    props: {
-        type: PropType<MaterialPropsInterface>;
-        default: () => {};
-    };
-}>> & {
-    onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    color: string;
-    props: MaterialPropsInterface;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    props: {
-        type: PropType<BasicMaterialPropsInterface>;
-        default: () => {};
-    };
-}>>, {
-    props: BasicMaterialPropsInterface;
-}>;
-declare const LambertMaterial: vue.DefineComponent<{
-    props: {
-        type: PropType<LambertMaterialPropsInterface>;
-        default: () => {};
-    };
-}, unknown, unknown, {}, {
-    createMaterial(): Material;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    color: {
-        type: StringConstructor;
-        default: string;
-    };
-    props: {
-        type: PropType<MaterialPropsInterface>;
-        default: () => {};
-    };
-}, MaterialSetupInterface, unknown, {}, {
-    getMaterialParams(): {
-        [x: string]: any;
-        alphaTest?: number | undefined;
-        blending?: number | undefined;
-        color?: string | number | undefined;
-        depthTest?: boolean | undefined;
-        depthWrite?: boolean | undefined;
-        fog?: boolean | undefined;
-        opacity?: number | undefined;
-        side?: number | undefined;
-        toneMapped?: boolean | undefined;
-        transparent?: boolean | undefined;
-        vertexColors?: boolean | undefined;
-        visible?: boolean | undefined;
-    };
-    setProp(material: any, key: string, value: any, needsUpdate?: boolean): void;
-    setTexture(texture: Texture | null, key?: string): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "created"[], "created", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    color: {
-        type: StringConstructor;
-        default: string;
-    };
-    props: {
-        type: PropType<MaterialPropsInterface>;
-        default: () => {};
-    };
-}>> & {
-    onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    color: string;
-    props: MaterialPropsInterface;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    props: {
-        type: PropType<LambertMaterialPropsInterface>;
-        default: () => {};
-    };
-}>>, {
-    props: LambertMaterialPropsInterface;
-}>;
-declare const PhongMaterial: vue.DefineComponent<{
-    props: {
-        type: PropType<PhongMaterialPropsInterface>;
-        default: () => {};
-    };
-}, unknown, unknown, {}, {
-    createMaterial(): Material;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    color: {
-        type: StringConstructor;
-        default: string;
-    };
-    props: {
-        type: PropType<MaterialPropsInterface>;
-        default: () => {};
-    };
-}, MaterialSetupInterface, unknown, {}, {
-    getMaterialParams(): {
-        [x: string]: any;
-        alphaTest?: number | undefined;
-        blending?: number | undefined;
-        color?: string | number | undefined;
-        depthTest?: boolean | undefined;
-        depthWrite?: boolean | undefined;
-        fog?: boolean | undefined;
-        opacity?: number | undefined;
-        side?: number | undefined;
-        toneMapped?: boolean | undefined;
-        transparent?: boolean | undefined;
-        vertexColors?: boolean | undefined;
-        visible?: boolean | undefined;
-    };
-    setProp(material: any, key: string, value: any, needsUpdate?: boolean): void;
-    setTexture(texture: Texture | null, key?: string): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "created"[], "created", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    color: {
-        type: StringConstructor;
-        default: string;
-    };
-    props: {
-        type: PropType<MaterialPropsInterface>;
-        default: () => {};
-    };
-}>> & {
-    onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    color: string;
-    props: MaterialPropsInterface;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    props: {
-        type: PropType<PhongMaterialPropsInterface>;
-        default: () => {};
-    };
-}>>, {
-    props: PhongMaterialPropsInterface;
-}>;
-declare const PhysicalMaterial: vue.DefineComponent<{
-    props: {
-        type: PropType<PhysicalMaterialPropsInterface>;
-        default: () => {};
-    };
-}, unknown, unknown, {}, {
-    createMaterial(): Material;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    color: {
-        type: StringConstructor;
-        default: string;
-    };
-    props: {
-        type: PropType<MaterialPropsInterface>;
-        default: () => {};
-    };
-}, MaterialSetupInterface, unknown, {}, {
-    getMaterialParams(): {
-        [x: string]: any;
-        alphaTest?: number | undefined;
-        blending?: number | undefined;
-        color?: string | number | undefined;
-        depthTest?: boolean | undefined;
-        depthWrite?: boolean | undefined;
-        fog?: boolean | undefined;
-        opacity?: number | undefined;
-        side?: number | undefined;
-        toneMapped?: boolean | undefined;
-        transparent?: boolean | undefined;
-        vertexColors?: boolean | undefined;
-        visible?: boolean | undefined;
-    };
-    setProp(material: any, key: string, value: any, needsUpdate?: boolean): void;
-    setTexture(texture: Texture | null, key?: string): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "created"[], "created", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    color: {
-        type: StringConstructor;
-        default: string;
-    };
-    props: {
-        type: PropType<MaterialPropsInterface>;
-        default: () => {};
-    };
-}>> & {
-    onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    color: string;
-    props: MaterialPropsInterface;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    props: {
-        type: PropType<PhysicalMaterialPropsInterface>;
-        default: () => {};
-    };
-}>>, {
-    props: PhysicalMaterialPropsInterface;
-}>;
-declare const PointsMaterial: vue.DefineComponent<{
-    props: {
-        type: PropType<PointsMaterialPropsInterface>;
-        default: () => {};
-    };
-}, unknown, unknown, {}, {
-    createMaterial(): Material;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    color: {
-        type: StringConstructor;
-        default: string;
-    };
-    props: {
-        type: PropType<MaterialPropsInterface>;
-        default: () => {};
-    };
-}, MaterialSetupInterface, unknown, {}, {
-    getMaterialParams(): {
-        [x: string]: any;
-        alphaTest?: number | undefined;
-        blending?: number | undefined;
-        color?: string | number | undefined;
-        depthTest?: boolean | undefined;
-        depthWrite?: boolean | undefined;
-        fog?: boolean | undefined;
-        opacity?: number | undefined;
-        side?: number | undefined;
-        toneMapped?: boolean | undefined;
-        transparent?: boolean | undefined;
-        vertexColors?: boolean | undefined;
-        visible?: boolean | undefined;
-    };
-    setProp(material: any, key: string, value: any, needsUpdate?: boolean): void;
-    setTexture(texture: Texture | null, key?: string): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "created"[], "created", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    color: {
-        type: StringConstructor;
-        default: string;
-    };
-    props: {
-        type: PropType<MaterialPropsInterface>;
-        default: () => {};
-    };
-}>> & {
-    onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    color: string;
-    props: MaterialPropsInterface;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    props: {
-        type: PropType<PointsMaterialPropsInterface>;
-        default: () => {};
-    };
-}>>, {
-    props: PointsMaterialPropsInterface;
-}>;
-declare const ShadowMaterial: vue.DefineComponent<{
-    color: {
-        type: StringConstructor;
-        default: string;
-    };
-    props: {
-        type: PropType<MaterialPropsInterface>;
-        default: () => {};
-    };
-}, unknown, unknown, {}, {
-    createMaterial(): Material;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    color: {
-        type: StringConstructor;
-        default: string;
-    };
-    props: {
-        type: PropType<MaterialPropsInterface>;
-        default: () => {};
-    };
-}, MaterialSetupInterface, unknown, {}, {
-    getMaterialParams(): {
-        [x: string]: any;
-        alphaTest?: number | undefined;
-        blending?: number | undefined;
-        color?: string | number | undefined;
-        depthTest?: boolean | undefined;
-        depthWrite?: boolean | undefined;
-        fog?: boolean | undefined;
-        opacity?: number | undefined;
-        side?: number | undefined;
-        toneMapped?: boolean | undefined;
-        transparent?: boolean | undefined;
-        vertexColors?: boolean | undefined;
-        visible?: boolean | undefined;
-    };
-    setProp(material: any, key: string, value: any, needsUpdate?: boolean): void;
-    setTexture(texture: Texture | null, key?: string): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "created"[], "created", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    color: {
-        type: StringConstructor;
-        default: string;
-    };
-    props: {
-        type: PropType<MaterialPropsInterface>;
-        default: () => {};
-    };
-}>> & {
-    onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    color: string;
-    props: MaterialPropsInterface;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    color: {
-        type: StringConstructor;
-        default: string;
-    };
-    props: {
-        type: PropType<MaterialPropsInterface>;
-        default: () => {};
-    };
-}>>, {
-    color: string;
-    props: MaterialPropsInterface;
-}>;
-declare const StandardMaterial: vue.DefineComponent<{
-    props: {
-        type: PropType<StandardMaterialPropsInterface>;
-        default: () => {};
-    };
-}, unknown, unknown, {}, {
-    createMaterial(): Material;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    color: {
-        type: StringConstructor;
-        default: string;
-    };
-    props: {
-        type: PropType<MaterialPropsInterface>;
-        default: () => {};
-    };
-}, MaterialSetupInterface, unknown, {}, {
-    getMaterialParams(): {
-        [x: string]: any;
-        alphaTest?: number | undefined;
-        blending?: number | undefined;
-        color?: string | number | undefined;
-        depthTest?: boolean | undefined;
-        depthWrite?: boolean | undefined;
-        fog?: boolean | undefined;
-        opacity?: number | undefined;
-        side?: number | undefined;
-        toneMapped?: boolean | undefined;
-        transparent?: boolean | undefined;
-        vertexColors?: boolean | undefined;
-        visible?: boolean | undefined;
-    };
-    setProp(material: any, key: string, value: any, needsUpdate?: boolean): void;
-    setTexture(texture: Texture | null, key?: string): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "created"[], "created", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    color: {
-        type: StringConstructor;
-        default: string;
-    };
-    props: {
-        type: PropType<MaterialPropsInterface>;
-        default: () => {};
-    };
-}>> & {
-    onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    color: string;
-    props: MaterialPropsInterface;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    props: {
-        type: PropType<StandardMaterialPropsInterface>;
-        default: () => {};
-    };
-}>>, {
-    props: StandardMaterialPropsInterface;
-}>;
-declare const ToonMaterial: vue.DefineComponent<{
-    props: {
-        type: PropType<ToonMaterialPropsInterface>;
-        default: () => {};
-    };
-}, unknown, unknown, {}, {
-    createMaterial(): Material;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    color: {
-        type: StringConstructor;
-        default: string;
-    };
-    props: {
-        type: PropType<MaterialPropsInterface>;
-        default: () => {};
-    };
-}, MaterialSetupInterface, unknown, {}, {
-    getMaterialParams(): {
-        [x: string]: any;
-        alphaTest?: number | undefined;
-        blending?: number | undefined;
-        color?: string | number | undefined;
-        depthTest?: boolean | undefined;
-        depthWrite?: boolean | undefined;
-        fog?: boolean | undefined;
-        opacity?: number | undefined;
-        side?: number | undefined;
-        toneMapped?: boolean | undefined;
-        transparent?: boolean | undefined;
-        vertexColors?: boolean | undefined;
-        visible?: boolean | undefined;
-    };
-    setProp(material: any, key: string, value: any, needsUpdate?: boolean): void;
-    setTexture(texture: Texture | null, key?: string): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "created"[], "created", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    color: {
-        type: StringConstructor;
-        default: string;
-    };
-    props: {
-        type: PropType<MaterialPropsInterface>;
-        default: () => {};
-    };
-}>> & {
-    onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    color: string;
-    props: MaterialPropsInterface;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    props: {
-        type: PropType<ToonMaterialPropsInterface>;
-        default: () => {};
-    };
-}>>, {
-    props: ToonMaterialPropsInterface;
-}>;
+declare const BasicMaterial: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
+declare const LambertMaterial: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
+declare const PhongMaterial: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
+declare const PhysicalMaterial: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
+declare const PointsMaterial: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
+declare const ShadowMaterial: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
+declare const StandardMaterial: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
+declare const ToonMaterial: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
 
-declare const _default$F: vue.DefineComponent<{
-    src: StringConstructor;
-    name: {
-        type: StringConstructor;
-        default: string;
-    };
-}, unknown, unknown, {}, {
-    createMaterial(): three.Material;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    color: {
-        type: StringConstructor;
-        default: string;
-    };
-    props: {
-        type: vue.PropType<MaterialPropsInterface>;
-        default: () => {};
-    };
-}, MaterialSetupInterface, unknown, {}, {
-    getMaterialParams(): {
-        [x: string]: any;
-        alphaTest?: number | undefined;
-        blending?: number | undefined;
-        color?: string | number | undefined;
-        depthTest?: boolean | undefined;
-        depthWrite?: boolean | undefined;
-        fog?: boolean | undefined;
-        opacity?: number | undefined;
-        side?: number | undefined;
-        toneMapped?: boolean | undefined;
-        transparent?: boolean | undefined;
-        vertexColors?: boolean | undefined;
-        visible?: boolean | undefined;
-    };
-    setProp(material: any, key: string, value: any, needsUpdate?: boolean): void;
-    setTexture(texture: three.Texture | null, key?: string): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "created"[], "created", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    color: {
-        type: StringConstructor;
-        default: string;
-    };
-    props: {
-        type: vue.PropType<MaterialPropsInterface>;
-        default: () => {};
-    };
-}>> & {
-    onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    color: string;
-    props: MaterialPropsInterface;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    src: StringConstructor;
-    name: {
-        type: StringConstructor;
-        default: string;
-    };
-}>>, {
-    name: string;
-}>;
+declare const _default$F: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
 //# sourceMappingURL=MatcapMaterial.d.ts.map
 
-declare const _default$E: vue.DefineComponent<{
-    props: {
-        type: ObjectConstructor;
-        default: () => {
-            uniforms: {};
-            vertexShader: string;
-            fragmentShader: string;
-        };
-    };
-}, unknown, unknown, {}, {
-    createMaterial(): three.Material;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    color: {
-        type: StringConstructor;
-        default: string;
-    };
-    props: {
-        type: vue.PropType<MaterialPropsInterface>;
-        default: () => {};
-    };
-}, MaterialSetupInterface, unknown, {}, {
-    getMaterialParams(): {
-        [x: string]: any;
-        alphaTest?: number | undefined;
-        blending?: number | undefined;
-        color?: string | number | undefined;
-        depthTest?: boolean | undefined;
-        depthWrite?: boolean | undefined;
-        fog?: boolean | undefined;
-        opacity?: number | undefined;
-        side?: number | undefined;
-        toneMapped?: boolean | undefined;
-        transparent?: boolean | undefined;
-        vertexColors?: boolean | undefined;
-        visible?: boolean | undefined;
-    };
-    setProp(material: any, key: string, value: any, needsUpdate?: boolean): void;
-    setTexture(texture: three.Texture | null, key?: string): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "created"[], "created", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    color: {
-        type: StringConstructor;
-        default: string;
-    };
-    props: {
-        type: vue.PropType<MaterialPropsInterface>;
-        default: () => {};
-    };
-}>> & {
-    onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    color: string;
-    props: MaterialPropsInterface;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    props: {
-        type: ObjectConstructor;
-        default: () => {
-            uniforms: {};
-            vertexShader: string;
-            fragmentShader: string;
-        };
-    };
-}>>, {
-    props: Record<string, any>;
-}>;
+declare const _default$E: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
 //# sourceMappingURL=ShaderMaterial.d.ts.map
 
 interface SubSurfaceMaterialUniformsInterface {
@@ -4493,7 +3398,7 @@ interface SubSurfaceMaterialUniformsInterface {
     thicknessPower?: number;
     thicknessScale?: number;
 }
-declare const _default$D: vue.DefineComponent<{
+declare const _default$D: vue.DefineComponent<vue.ExtractPropTypes<{
     uniforms: {
         type: PropType<SubSurfaceMaterialUniformsInterface>;
         default: () => {
@@ -4506,9 +3411,9 @@ declare const _default$D: vue.DefineComponent<{
             thicknessScale: number;
         };
     };
-}, unknown, unknown, {}, {
+}>, {}, {}, {}, {
     createMaterial(): ShaderMaterial;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
+}, vue.ComponentOptionsMixin, vue.DefineComponent<vue.ExtractPropTypes<{
     color: {
         type: StringConstructor;
         default: string;
@@ -4517,7 +3422,7 @@ declare const _default$D: vue.DefineComponent<{
         type: PropType<MaterialPropsInterface>;
         default: () => {};
     };
-}, MaterialSetupInterface, unknown, {}, {
+}>, MaterialSetupInterface, {}, {}, {
     getMaterialParams(): {
         [x: string]: any;
         alphaTest?: number | undefined;
@@ -4535,7 +3440,7 @@ declare const _default$D: vue.DefineComponent<{
     };
     setProp(material: any, key: string, value: any, needsUpdate?: boolean): void;
     setTexture(texture: three.Texture | null, key?: string): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "created"[], "created", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "created"[], "created", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     color: {
         type: StringConstructor;
         default: string;
@@ -4544,12 +3449,81 @@ declare const _default$D: vue.DefineComponent<{
         type: PropType<MaterialPropsInterface>;
         default: () => {};
     };
-}>> & {
+}>> & Readonly<{
     onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    color: string;
+}>, {
     props: MaterialPropsInterface;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+    color: string;
+}, {}, {}, {}, string, () => {
+    [x: symbol]: vue.CreateComponentPublicInstanceWithMixins<Readonly<vue.ExtractPropTypes<{
+        color: {
+            type: StringConstructor;
+            default: string;
+        };
+        props: {
+            type: PropType<MaterialPropsInterface>;
+            default: () => {};
+        };
+    }>> & Readonly<{
+        onCreated?: ((...args: any[]) => any) | undefined;
+    }>, MaterialSetupInterface, {}, {}, {
+        getMaterialParams(): {
+            [x: string]: any;
+            alphaTest?: number | undefined;
+            blending?: number | undefined;
+            color?: string | number | undefined;
+            depthTest?: boolean | undefined;
+            depthWrite?: boolean | undefined;
+            fog?: boolean | undefined;
+            opacity?: number | undefined;
+            side?: number | undefined;
+            toneMapped?: boolean | undefined;
+            transparent?: boolean | undefined;
+            vertexColors?: boolean | undefined;
+            visible?: boolean | undefined;
+        };
+        setProp(material: any, key: string, value: any, needsUpdate?: boolean): void;
+        setTexture(texture: three.Texture | null, key?: string): void;
+    }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "created"[], {}, {}, false, {
+        mesh: symbol;
+    }, {}, {}, {}, string, {}, any, vue.ComponentProvideOptions, {
+        P: {};
+        B: {};
+        D: {};
+        C: {};
+        M: {};
+        Defaults: {};
+    }, Readonly<vue.ExtractPropTypes<{
+        color: {
+            type: StringConstructor;
+            default: string;
+        };
+        props: {
+            type: PropType<MaterialPropsInterface>;
+            default: () => {};
+        };
+    }>> & Readonly<{
+        onCreated?: ((...args: any[]) => any) | undefined;
+    }>, MaterialSetupInterface, {}, {}, {
+        getMaterialParams(): {
+            [x: string]: any;
+            alphaTest?: number | undefined;
+            blending?: number | undefined;
+            color?: string | number | undefined;
+            depthTest?: boolean | undefined;
+            depthWrite?: boolean | undefined;
+            fog?: boolean | undefined;
+            opacity?: number | undefined;
+            side?: number | undefined;
+            toneMapped?: boolean | undefined;
+            transparent?: boolean | undefined;
+            vertexColors?: boolean | undefined;
+            visible?: boolean | undefined;
+        };
+        setProp(material: any, key: string, value: any, needsUpdate?: boolean): void;
+        setTexture(texture: three.Texture | null, key?: string): void;
+    }, {}>;
+}, true, {}, any>, {}, string, vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     uniforms: {
         type: PropType<SubSurfaceMaterialUniformsInterface>;
         default: () => {
@@ -4562,15 +3536,15 @@ declare const _default$D: vue.DefineComponent<{
             thicknessScale: number;
         };
     };
-}>>, {
+}>> & Readonly<{}>, {
     uniforms: SubSurfaceMaterialUniformsInterface;
-}>;
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>;
 
 interface TexureInterface {
     material?: MaterialInterface;
     texture?: Texture;
 }
-declare const _default$C: vue.DefineComponent<{
+declare const _default$C: vue.DefineComponent<vue.ExtractPropTypes<{
     name: {
         type: StringConstructor;
         default: string;
@@ -4584,12 +3558,12 @@ declare const _default$C: vue.DefineComponent<{
         type: ObjectConstructor;
         default: () => {};
     };
-}, TexureInterface, unknown, {}, {
+}>, TexureInterface, {}, {}, {
     createTexture(): Texture | undefined;
     initTexture(): void;
     refreshTexture(): void;
     onLoaded(t: Texture): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, {}, string, vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     name: {
         type: StringConstructor;
         default: string;
@@ -4603,12 +3577,12 @@ declare const _default$C: vue.DefineComponent<{
         type: ObjectConstructor;
         default: () => {};
     };
-}>>, {
-    name: string;
+}>> & Readonly<{}>, {
     props: Record<string, any>;
-}>;
+    name: string;
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>;
 
-declare const _default$B: vue.DefineComponent<{
+declare const _default$B: vue.DefineComponent<vue.ExtractPropTypes<{
     name: {
         type: StringConstructor;
         default: string;
@@ -4627,9 +3601,9 @@ declare const _default$B: vue.DefineComponent<{
             mapping: three.Mapping;
         };
     };
-}, unknown, unknown, {}, {
+}>, {}, {}, {}, {
     createTexture(): three.CubeTexture;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
+}, vue.ComponentOptionsMixin, vue.DefineComponent<vue.ExtractPropTypes<{
     name: {
         type: StringConstructor;
         default: string;
@@ -4643,12 +3617,12 @@ declare const _default$B: vue.DefineComponent<{
         type: ObjectConstructor;
         default: () => {};
     };
-}, TexureInterface, unknown, {}, {
+}>, TexureInterface, {}, {}, {
     createTexture(): three.Texture | undefined;
     initTexture(): void;
     refreshTexture(): void;
     onLoaded(t: three.Texture): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, {}, string, vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     name: {
         type: StringConstructor;
         default: string;
@@ -4662,10 +3636,10 @@ declare const _default$B: vue.DefineComponent<{
         type: ObjectConstructor;
         default: () => {};
     };
-}>>, {
-    name: string;
+}>> & Readonly<{}>, {
     props: Record<string, any>;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+    name: string;
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>, {}, string, vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     name: {
         type: StringConstructor;
         default: string;
@@ -4684,21 +3658,21 @@ declare const _default$B: vue.DefineComponent<{
             mapping: three.Mapping;
         };
     };
-}>>, {
-    name: string;
+}>> & Readonly<{}>, {
     props: Record<string, any>;
+    name: string;
     urls: string[];
-}>;
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>;
 //# sourceMappingURL=CubeTexture.d.ts.map
 
-declare const _default$A: vue.DefineComponent<{
+declare const _default$A: vue.DefineComponent<vue.ExtractPropTypes<{
     videoId: {
         type: StringConstructor;
         required: true;
     };
-}, unknown, unknown, {}, {
+}>, {}, {}, {}, {
     createTexture(): VideoTexture;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
+}, vue.ComponentOptionsMixin, vue.DefineComponent<vue.ExtractPropTypes<{
     name: {
         type: StringConstructor;
         default: string;
@@ -4712,12 +3686,12 @@ declare const _default$A: vue.DefineComponent<{
         type: ObjectConstructor;
         default: () => {};
     };
-}, TexureInterface, unknown, {}, {
+}>, TexureInterface, {}, {}, {
     createTexture(): three.Texture | undefined;
     initTexture(): void;
     refreshTexture(): void;
     onLoaded(t: three.Texture): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, {}, string, vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     name: {
         type: StringConstructor;
         default: string;
@@ -4731,2605 +3705,61 @@ declare const _default$A: vue.DefineComponent<{
         type: ObjectConstructor;
         default: () => {};
     };
-}>>, {
-    name: string;
+}>> & Readonly<{}>, {
     props: Record<string, any>;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+    name: string;
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>, {}, string, vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     videoId: {
         type: StringConstructor;
         required: true;
     };
-}>>, {}>;
+}>> & Readonly<{}>, {}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>;
 //# sourceMappingURL=VideoTexture.d.ts.map
 
-declare const _default$z: vue.DefineComponent<{
-    readonly size: NumberConstructor;
-    readonly width: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly height: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly depth: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly widthSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly heightSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly depthSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-}, unknown, unknown, {}, {
-    createGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    castShadow: BooleanConstructor;
-    receiveShadow: BooleanConstructor;
-}, MeshSetupInterface$1, unknown, {}, {
-    initMesh(): void;
-    createGeometry(): void;
-    addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
-        [x: string]: unknown;
-    }>>): void;
-    setGeometry(geometry: three.BufferGeometry): void;
-    setMaterial(material: three.Material): void;
-    refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    onPointerEnter: FunctionConstructor;
-    onPointerOver: FunctionConstructor;
-    onPointerMove: FunctionConstructor;
-    onPointerLeave: FunctionConstructor;
-    onPointerDown: FunctionConstructor;
-    onPointerUp: FunctionConstructor;
-    onClick: FunctionConstructor;
-    position: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    rotation: {
-        type: vue.PropType<EulerPropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    scale: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-            order: string;
-        };
-    };
-    lookAt: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: null;
-    };
-    userData: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    visible: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    props: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    disableAdd: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    disableRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-}, Object3DSetupInterface, unknown, {}, {
-    initObject3D(o3d: three.Object3D<three.Event>): void;
-    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string>, {}> | undefined;
-    addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    add(o: three.Object3D<three.Event>): void;
-    remove(o: three.Object3D<three.Event>): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    onPointerEnter: FunctionConstructor;
-    onPointerOver: FunctionConstructor;
-    onPointerMove: FunctionConstructor;
-    onPointerLeave: FunctionConstructor;
-    onPointerDown: FunctionConstructor;
-    onPointerUp: FunctionConstructor;
-    onClick: FunctionConstructor;
-    position: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    rotation: {
-        type: vue.PropType<EulerPropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    scale: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-            order: string;
-        };
-    };
-    lookAt: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: null;
-    };
-    userData: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    visible: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    props: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    disableAdd: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    disableRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-}>> & {
-    onReady?: ((...args: any[]) => any) | undefined;
-    onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    position: Vector3PropInterface;
-    scale: Vector3PropInterface;
-    visible: boolean;
-    rotation: EulerPropInterface;
-    props: Record<string, any>;
-    lookAt: Vector3PropInterface;
-    userData: Record<string, any>;
-    disableAdd: boolean;
-    disableRemove: boolean;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    castShadow: BooleanConstructor;
-    receiveShadow: BooleanConstructor;
-}>>, {
-    castShadow: boolean;
-    receiveShadow: boolean;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    readonly size: NumberConstructor;
-    readonly width: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly height: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly depth: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly widthSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly heightSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly depthSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-}>>, {
-    readonly height: number;
-    readonly width: number;
-    readonly depth: number;
-    readonly widthSegments: number;
-    readonly heightSegments: number;
-    readonly depthSegments: number;
-}>;
+declare const _default$z: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
 //# sourceMappingURL=Box.d.ts.map
 
-declare const _default$y: vue.DefineComponent<{
-    readonly radius: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly segments: {
-        readonly type: NumberConstructor;
-        readonly default: 8;
-    };
-    readonly thetaStart: {
-        readonly type: NumberConstructor;
-        readonly default: 0;
-    };
-    readonly thetaLength: {
-        readonly type: NumberConstructor;
-        readonly default: number;
-    };
-}, unknown, unknown, {}, {
-    createGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    castShadow: BooleanConstructor;
-    receiveShadow: BooleanConstructor;
-}, MeshSetupInterface$1, unknown, {}, {
-    initMesh(): void;
-    createGeometry(): void;
-    addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
-        [x: string]: unknown;
-    }>>): void;
-    setGeometry(geometry: three.BufferGeometry): void;
-    setMaterial(material: three.Material): void;
-    refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    onPointerEnter: FunctionConstructor;
-    onPointerOver: FunctionConstructor;
-    onPointerMove: FunctionConstructor;
-    onPointerLeave: FunctionConstructor;
-    onPointerDown: FunctionConstructor;
-    onPointerUp: FunctionConstructor;
-    onClick: FunctionConstructor;
-    position: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    rotation: {
-        type: vue.PropType<EulerPropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    scale: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-            order: string;
-        };
-    };
-    lookAt: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: null;
-    };
-    userData: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    visible: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    props: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    disableAdd: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    disableRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-}, Object3DSetupInterface, unknown, {}, {
-    initObject3D(o3d: three.Object3D<three.Event>): void;
-    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string>, {}> | undefined;
-    addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    add(o: three.Object3D<three.Event>): void;
-    remove(o: three.Object3D<three.Event>): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    onPointerEnter: FunctionConstructor;
-    onPointerOver: FunctionConstructor;
-    onPointerMove: FunctionConstructor;
-    onPointerLeave: FunctionConstructor;
-    onPointerDown: FunctionConstructor;
-    onPointerUp: FunctionConstructor;
-    onClick: FunctionConstructor;
-    position: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    rotation: {
-        type: vue.PropType<EulerPropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    scale: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-            order: string;
-        };
-    };
-    lookAt: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: null;
-    };
-    userData: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    visible: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    props: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    disableAdd: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    disableRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-}>> & {
-    onReady?: ((...args: any[]) => any) | undefined;
-    onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    position: Vector3PropInterface;
-    scale: Vector3PropInterface;
-    visible: boolean;
-    rotation: EulerPropInterface;
-    props: Record<string, any>;
-    lookAt: Vector3PropInterface;
-    userData: Record<string, any>;
-    disableAdd: boolean;
-    disableRemove: boolean;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    castShadow: BooleanConstructor;
-    receiveShadow: BooleanConstructor;
-}>>, {
-    castShadow: boolean;
-    receiveShadow: boolean;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    readonly radius: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly segments: {
-        readonly type: NumberConstructor;
-        readonly default: 8;
-    };
-    readonly thetaStart: {
-        readonly type: NumberConstructor;
-        readonly default: 0;
-    };
-    readonly thetaLength: {
-        readonly type: NumberConstructor;
-        readonly default: number;
-    };
-}>>, {
-    readonly segments: number;
-    readonly radius: number;
-    readonly thetaStart: number;
-    readonly thetaLength: number;
-}>;
+declare const _default$y: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
 //# sourceMappingURL=Circle.d.ts.map
 
-declare const _default$x: vue.DefineComponent<{
-    readonly radius: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly height: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly radialSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 8;
-    };
-    readonly heightSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly openEnded: {
-        readonly type: BooleanConstructor;
-        readonly default: false;
-    };
-    readonly thetaStart: {
-        readonly type: NumberConstructor;
-        readonly default: 0;
-    };
-    readonly thetaLength: {
-        readonly type: NumberConstructor;
-        readonly default: number;
-    };
-}, unknown, unknown, {}, {
-    createGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    castShadow: BooleanConstructor;
-    receiveShadow: BooleanConstructor;
-}, MeshSetupInterface$1, unknown, {}, {
-    initMesh(): void;
-    createGeometry(): void;
-    addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
-        [x: string]: unknown;
-    }>>): void;
-    setGeometry(geometry: three.BufferGeometry): void;
-    setMaterial(material: three.Material): void;
-    refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    onPointerEnter: FunctionConstructor;
-    onPointerOver: FunctionConstructor;
-    onPointerMove: FunctionConstructor;
-    onPointerLeave: FunctionConstructor;
-    onPointerDown: FunctionConstructor;
-    onPointerUp: FunctionConstructor;
-    onClick: FunctionConstructor;
-    position: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    rotation: {
-        type: vue.PropType<EulerPropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    scale: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-            order: string;
-        };
-    };
-    lookAt: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: null;
-    };
-    userData: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    visible: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    props: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    disableAdd: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    disableRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-}, Object3DSetupInterface, unknown, {}, {
-    initObject3D(o3d: three.Object3D<three.Event>): void;
-    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string>, {}> | undefined;
-    addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    add(o: three.Object3D<three.Event>): void;
-    remove(o: three.Object3D<three.Event>): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    onPointerEnter: FunctionConstructor;
-    onPointerOver: FunctionConstructor;
-    onPointerMove: FunctionConstructor;
-    onPointerLeave: FunctionConstructor;
-    onPointerDown: FunctionConstructor;
-    onPointerUp: FunctionConstructor;
-    onClick: FunctionConstructor;
-    position: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    rotation: {
-        type: vue.PropType<EulerPropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    scale: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-            order: string;
-        };
-    };
-    lookAt: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: null;
-    };
-    userData: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    visible: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    props: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    disableAdd: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    disableRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-}>> & {
-    onReady?: ((...args: any[]) => any) | undefined;
-    onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    position: Vector3PropInterface;
-    scale: Vector3PropInterface;
-    visible: boolean;
-    rotation: EulerPropInterface;
-    props: Record<string, any>;
-    lookAt: Vector3PropInterface;
-    userData: Record<string, any>;
-    disableAdd: boolean;
-    disableRemove: boolean;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    castShadow: BooleanConstructor;
-    receiveShadow: BooleanConstructor;
-}>>, {
-    castShadow: boolean;
-    receiveShadow: boolean;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    readonly radius: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly height: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly radialSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 8;
-    };
-    readonly heightSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly openEnded: {
-        readonly type: BooleanConstructor;
-        readonly default: false;
-    };
-    readonly thetaStart: {
-        readonly type: NumberConstructor;
-        readonly default: 0;
-    };
-    readonly thetaLength: {
-        readonly type: NumberConstructor;
-        readonly default: number;
-    };
-}>>, {
-    readonly height: number;
-    readonly radius: number;
-    readonly heightSegments: number;
-    readonly thetaStart: number;
-    readonly thetaLength: number;
-    readonly radialSegments: number;
-    readonly openEnded: boolean;
-}>;
+declare const _default$x: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
 //# sourceMappingURL=Cone.d.ts.map
 
-declare const _default$w: vue.DefineComponent<{
-    readonly radiusTop: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly radiusBottom: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly height: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly radialSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 8;
-    };
-    readonly heightSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly openEnded: {
-        readonly type: BooleanConstructor;
-        readonly default: false;
-    };
-    readonly thetaStart: {
-        readonly type: NumberConstructor;
-        readonly default: 0;
-    };
-    readonly thetaLength: {
-        readonly type: NumberConstructor;
-        readonly default: number;
-    };
-}, unknown, unknown, {}, {
-    createGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    castShadow: BooleanConstructor;
-    receiveShadow: BooleanConstructor;
-}, MeshSetupInterface$1, unknown, {}, {
-    initMesh(): void;
-    createGeometry(): void;
-    addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
-        [x: string]: unknown;
-    }>>): void;
-    setGeometry(geometry: three.BufferGeometry): void;
-    setMaterial(material: three.Material): void;
-    refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    onPointerEnter: FunctionConstructor;
-    onPointerOver: FunctionConstructor;
-    onPointerMove: FunctionConstructor;
-    onPointerLeave: FunctionConstructor;
-    onPointerDown: FunctionConstructor;
-    onPointerUp: FunctionConstructor;
-    onClick: FunctionConstructor;
-    position: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    rotation: {
-        type: vue.PropType<EulerPropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    scale: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-            order: string;
-        };
-    };
-    lookAt: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: null;
-    };
-    userData: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    visible: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    props: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    disableAdd: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    disableRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-}, Object3DSetupInterface, unknown, {}, {
-    initObject3D(o3d: three.Object3D<three.Event>): void;
-    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string>, {}> | undefined;
-    addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    add(o: three.Object3D<three.Event>): void;
-    remove(o: three.Object3D<three.Event>): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    onPointerEnter: FunctionConstructor;
-    onPointerOver: FunctionConstructor;
-    onPointerMove: FunctionConstructor;
-    onPointerLeave: FunctionConstructor;
-    onPointerDown: FunctionConstructor;
-    onPointerUp: FunctionConstructor;
-    onClick: FunctionConstructor;
-    position: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    rotation: {
-        type: vue.PropType<EulerPropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    scale: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-            order: string;
-        };
-    };
-    lookAt: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: null;
-    };
-    userData: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    visible: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    props: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    disableAdd: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    disableRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-}>> & {
-    onReady?: ((...args: any[]) => any) | undefined;
-    onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    position: Vector3PropInterface;
-    scale: Vector3PropInterface;
-    visible: boolean;
-    rotation: EulerPropInterface;
-    props: Record<string, any>;
-    lookAt: Vector3PropInterface;
-    userData: Record<string, any>;
-    disableAdd: boolean;
-    disableRemove: boolean;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    castShadow: BooleanConstructor;
-    receiveShadow: BooleanConstructor;
-}>>, {
-    castShadow: boolean;
-    receiveShadow: boolean;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    readonly radiusTop: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly radiusBottom: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly height: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly radialSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 8;
-    };
-    readonly heightSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly openEnded: {
-        readonly type: BooleanConstructor;
-        readonly default: false;
-    };
-    readonly thetaStart: {
-        readonly type: NumberConstructor;
-        readonly default: 0;
-    };
-    readonly thetaLength: {
-        readonly type: NumberConstructor;
-        readonly default: number;
-    };
-}>>, {
-    readonly height: number;
-    readonly heightSegments: number;
-    readonly thetaStart: number;
-    readonly thetaLength: number;
-    readonly radialSegments: number;
-    readonly openEnded: boolean;
-    readonly radiusTop: number;
-    readonly radiusBottom: number;
-}>;
+declare const _default$w: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
 //# sourceMappingURL=Cylinder.d.ts.map
 
-declare const _default$v: vue.DefineComponent<{
-    readonly radius: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly detail: {
-        readonly type: NumberConstructor;
-        readonly default: 0;
-    };
-}, unknown, unknown, {}, {
-    createGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    castShadow: BooleanConstructor;
-    receiveShadow: BooleanConstructor;
-}, MeshSetupInterface$1, unknown, {}, {
-    initMesh(): void;
-    createGeometry(): void;
-    addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
-        [x: string]: unknown;
-    }>>): void;
-    setGeometry(geometry: three.BufferGeometry): void;
-    setMaterial(material: three.Material): void;
-    refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    onPointerEnter: FunctionConstructor;
-    onPointerOver: FunctionConstructor;
-    onPointerMove: FunctionConstructor;
-    onPointerLeave: FunctionConstructor;
-    onPointerDown: FunctionConstructor;
-    onPointerUp: FunctionConstructor;
-    onClick: FunctionConstructor;
-    position: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    rotation: {
-        type: vue.PropType<EulerPropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    scale: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-            order: string;
-        };
-    };
-    lookAt: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: null;
-    };
-    userData: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    visible: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    props: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    disableAdd: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    disableRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-}, Object3DSetupInterface, unknown, {}, {
-    initObject3D(o3d: three.Object3D<three.Event>): void;
-    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string>, {}> | undefined;
-    addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    add(o: three.Object3D<three.Event>): void;
-    remove(o: three.Object3D<three.Event>): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    onPointerEnter: FunctionConstructor;
-    onPointerOver: FunctionConstructor;
-    onPointerMove: FunctionConstructor;
-    onPointerLeave: FunctionConstructor;
-    onPointerDown: FunctionConstructor;
-    onPointerUp: FunctionConstructor;
-    onClick: FunctionConstructor;
-    position: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    rotation: {
-        type: vue.PropType<EulerPropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    scale: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-            order: string;
-        };
-    };
-    lookAt: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: null;
-    };
-    userData: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    visible: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    props: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    disableAdd: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    disableRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-}>> & {
-    onReady?: ((...args: any[]) => any) | undefined;
-    onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    position: Vector3PropInterface;
-    scale: Vector3PropInterface;
-    visible: boolean;
-    rotation: EulerPropInterface;
-    props: Record<string, any>;
-    lookAt: Vector3PropInterface;
-    userData: Record<string, any>;
-    disableAdd: boolean;
-    disableRemove: boolean;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    castShadow: BooleanConstructor;
-    receiveShadow: BooleanConstructor;
-}>>, {
-    castShadow: boolean;
-    receiveShadow: boolean;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    readonly radius: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly detail: {
-        readonly type: NumberConstructor;
-        readonly default: 0;
-    };
-}>>, {
-    readonly detail: number;
-    readonly radius: number;
-}>;
+declare const _default$v: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
 //# sourceMappingURL=Dodecahedron.d.ts.map
 
-declare const _default$u: vue.DefineComponent<{
-    readonly radius: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly detail: {
-        readonly type: NumberConstructor;
-        readonly default: 0;
-    };
-}, unknown, unknown, {}, {
-    createGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    castShadow: BooleanConstructor;
-    receiveShadow: BooleanConstructor;
-}, MeshSetupInterface$1, unknown, {}, {
-    initMesh(): void;
-    createGeometry(): void;
-    addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
-        [x: string]: unknown;
-    }>>): void;
-    setGeometry(geometry: three.BufferGeometry): void;
-    setMaterial(material: three.Material): void;
-    refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    onPointerEnter: FunctionConstructor;
-    onPointerOver: FunctionConstructor;
-    onPointerMove: FunctionConstructor;
-    onPointerLeave: FunctionConstructor;
-    onPointerDown: FunctionConstructor;
-    onPointerUp: FunctionConstructor;
-    onClick: FunctionConstructor;
-    position: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    rotation: {
-        type: vue.PropType<EulerPropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    scale: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-            order: string;
-        };
-    };
-    lookAt: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: null;
-    };
-    userData: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    visible: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    props: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    disableAdd: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    disableRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-}, Object3DSetupInterface, unknown, {}, {
-    initObject3D(o3d: three.Object3D<three.Event>): void;
-    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string>, {}> | undefined;
-    addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    add(o: three.Object3D<three.Event>): void;
-    remove(o: three.Object3D<three.Event>): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    onPointerEnter: FunctionConstructor;
-    onPointerOver: FunctionConstructor;
-    onPointerMove: FunctionConstructor;
-    onPointerLeave: FunctionConstructor;
-    onPointerDown: FunctionConstructor;
-    onPointerUp: FunctionConstructor;
-    onClick: FunctionConstructor;
-    position: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    rotation: {
-        type: vue.PropType<EulerPropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    scale: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-            order: string;
-        };
-    };
-    lookAt: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: null;
-    };
-    userData: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    visible: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    props: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    disableAdd: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    disableRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-}>> & {
-    onReady?: ((...args: any[]) => any) | undefined;
-    onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    position: Vector3PropInterface;
-    scale: Vector3PropInterface;
-    visible: boolean;
-    rotation: EulerPropInterface;
-    props: Record<string, any>;
-    lookAt: Vector3PropInterface;
-    userData: Record<string, any>;
-    disableAdd: boolean;
-    disableRemove: boolean;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    castShadow: BooleanConstructor;
-    receiveShadow: BooleanConstructor;
-}>>, {
-    castShadow: boolean;
-    receiveShadow: boolean;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    readonly radius: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly detail: {
-        readonly type: NumberConstructor;
-        readonly default: 0;
-    };
-}>>, {
-    readonly detail: number;
-    readonly radius: number;
-}>;
+declare const _default$u: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
 //# sourceMappingURL=Icosahedron.d.ts.map
 
-declare const _default$t: vue.DefineComponent<{
-    readonly points: ArrayConstructor;
-    readonly segments: {
-        readonly type: NumberConstructor;
-        readonly default: 12;
-    };
-    readonly phiStart: {
-        readonly type: NumberConstructor;
-        readonly default: 0;
-    };
-    readonly phiLength: {
-        readonly type: NumberConstructor;
-        readonly default: number;
-    };
-}, unknown, unknown, {}, {
-    createGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    castShadow: BooleanConstructor;
-    receiveShadow: BooleanConstructor;
-}, MeshSetupInterface$1, unknown, {}, {
-    initMesh(): void;
-    createGeometry(): void;
-    addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
-        [x: string]: unknown;
-    }>>): void;
-    setGeometry(geometry: three.BufferGeometry): void;
-    setMaterial(material: three.Material): void;
-    refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    onPointerEnter: FunctionConstructor;
-    onPointerOver: FunctionConstructor;
-    onPointerMove: FunctionConstructor;
-    onPointerLeave: FunctionConstructor;
-    onPointerDown: FunctionConstructor;
-    onPointerUp: FunctionConstructor;
-    onClick: FunctionConstructor;
-    position: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    rotation: {
-        type: vue.PropType<EulerPropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    scale: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-            order: string;
-        };
-    };
-    lookAt: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: null;
-    };
-    userData: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    visible: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    props: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    disableAdd: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    disableRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-}, Object3DSetupInterface, unknown, {}, {
-    initObject3D(o3d: three.Object3D<three.Event>): void;
-    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string>, {}> | undefined;
-    addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    add(o: three.Object3D<three.Event>): void;
-    remove(o: three.Object3D<three.Event>): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    onPointerEnter: FunctionConstructor;
-    onPointerOver: FunctionConstructor;
-    onPointerMove: FunctionConstructor;
-    onPointerLeave: FunctionConstructor;
-    onPointerDown: FunctionConstructor;
-    onPointerUp: FunctionConstructor;
-    onClick: FunctionConstructor;
-    position: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    rotation: {
-        type: vue.PropType<EulerPropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    scale: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-            order: string;
-        };
-    };
-    lookAt: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: null;
-    };
-    userData: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    visible: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    props: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    disableAdd: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    disableRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-}>> & {
-    onReady?: ((...args: any[]) => any) | undefined;
-    onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    position: Vector3PropInterface;
-    scale: Vector3PropInterface;
-    visible: boolean;
-    rotation: EulerPropInterface;
-    props: Record<string, any>;
-    lookAt: Vector3PropInterface;
-    userData: Record<string, any>;
-    disableAdd: boolean;
-    disableRemove: boolean;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    castShadow: BooleanConstructor;
-    receiveShadow: BooleanConstructor;
-}>>, {
-    castShadow: boolean;
-    receiveShadow: boolean;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    readonly points: ArrayConstructor;
-    readonly segments: {
-        readonly type: NumberConstructor;
-        readonly default: 12;
-    };
-    readonly phiStart: {
-        readonly type: NumberConstructor;
-        readonly default: 0;
-    };
-    readonly phiLength: {
-        readonly type: NumberConstructor;
-        readonly default: number;
-    };
-}>>, {
-    readonly segments: number;
-    readonly phiStart: number;
-    readonly phiLength: number;
-}>;
+declare const _default$t: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
 //# sourceMappingURL=Lathe.d.ts.map
 
-declare const _default$s: vue.DefineComponent<{
-    readonly radius: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly detail: {
-        readonly type: NumberConstructor;
-        readonly default: 0;
-    };
-}, unknown, unknown, {}, {
-    createGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    castShadow: BooleanConstructor;
-    receiveShadow: BooleanConstructor;
-}, MeshSetupInterface$1, unknown, {}, {
-    initMesh(): void;
-    createGeometry(): void;
-    addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
-        [x: string]: unknown;
-    }>>): void;
-    setGeometry(geometry: three.BufferGeometry): void;
-    setMaterial(material: three.Material): void;
-    refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    onPointerEnter: FunctionConstructor;
-    onPointerOver: FunctionConstructor;
-    onPointerMove: FunctionConstructor;
-    onPointerLeave: FunctionConstructor;
-    onPointerDown: FunctionConstructor;
-    onPointerUp: FunctionConstructor;
-    onClick: FunctionConstructor;
-    position: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    rotation: {
-        type: vue.PropType<EulerPropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    scale: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-            order: string;
-        };
-    };
-    lookAt: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: null;
-    };
-    userData: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    visible: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    props: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    disableAdd: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    disableRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-}, Object3DSetupInterface, unknown, {}, {
-    initObject3D(o3d: three.Object3D<three.Event>): void;
-    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string>, {}> | undefined;
-    addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    add(o: three.Object3D<three.Event>): void;
-    remove(o: three.Object3D<three.Event>): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    onPointerEnter: FunctionConstructor;
-    onPointerOver: FunctionConstructor;
-    onPointerMove: FunctionConstructor;
-    onPointerLeave: FunctionConstructor;
-    onPointerDown: FunctionConstructor;
-    onPointerUp: FunctionConstructor;
-    onClick: FunctionConstructor;
-    position: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    rotation: {
-        type: vue.PropType<EulerPropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    scale: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-            order: string;
-        };
-    };
-    lookAt: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: null;
-    };
-    userData: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    visible: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    props: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    disableAdd: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    disableRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-}>> & {
-    onReady?: ((...args: any[]) => any) | undefined;
-    onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    position: Vector3PropInterface;
-    scale: Vector3PropInterface;
-    visible: boolean;
-    rotation: EulerPropInterface;
-    props: Record<string, any>;
-    lookAt: Vector3PropInterface;
-    userData: Record<string, any>;
-    disableAdd: boolean;
-    disableRemove: boolean;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    castShadow: BooleanConstructor;
-    receiveShadow: BooleanConstructor;
-}>>, {
-    castShadow: boolean;
-    receiveShadow: boolean;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    readonly radius: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly detail: {
-        readonly type: NumberConstructor;
-        readonly default: 0;
-    };
-}>>, {
-    readonly detail: number;
-    readonly radius: number;
-}>;
+declare const _default$s: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
 //# sourceMappingURL=Octahedron.d.ts.map
 
-declare const _default$r: vue.DefineComponent<{
-    readonly width: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly height: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly widthSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly heightSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-}, unknown, unknown, {}, {
-    createGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    castShadow: BooleanConstructor;
-    receiveShadow: BooleanConstructor;
-}, MeshSetupInterface$1, unknown, {}, {
-    initMesh(): void;
-    createGeometry(): void;
-    addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
-        [x: string]: unknown;
-    }>>): void;
-    setGeometry(geometry: three.BufferGeometry): void;
-    setMaterial(material: three.Material): void;
-    refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    onPointerEnter: FunctionConstructor;
-    onPointerOver: FunctionConstructor;
-    onPointerMove: FunctionConstructor;
-    onPointerLeave: FunctionConstructor;
-    onPointerDown: FunctionConstructor;
-    onPointerUp: FunctionConstructor;
-    onClick: FunctionConstructor;
-    position: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    rotation: {
-        type: vue.PropType<EulerPropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    scale: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-            order: string;
-        };
-    };
-    lookAt: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: null;
-    };
-    userData: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    visible: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    props: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    disableAdd: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    disableRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-}, Object3DSetupInterface, unknown, {}, {
-    initObject3D(o3d: three.Object3D<three.Event>): void;
-    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string>, {}> | undefined;
-    addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    add(o: three.Object3D<three.Event>): void;
-    remove(o: three.Object3D<three.Event>): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    onPointerEnter: FunctionConstructor;
-    onPointerOver: FunctionConstructor;
-    onPointerMove: FunctionConstructor;
-    onPointerLeave: FunctionConstructor;
-    onPointerDown: FunctionConstructor;
-    onPointerUp: FunctionConstructor;
-    onClick: FunctionConstructor;
-    position: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    rotation: {
-        type: vue.PropType<EulerPropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    scale: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-            order: string;
-        };
-    };
-    lookAt: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: null;
-    };
-    userData: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    visible: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    props: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    disableAdd: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    disableRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-}>> & {
-    onReady?: ((...args: any[]) => any) | undefined;
-    onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    position: Vector3PropInterface;
-    scale: Vector3PropInterface;
-    visible: boolean;
-    rotation: EulerPropInterface;
-    props: Record<string, any>;
-    lookAt: Vector3PropInterface;
-    userData: Record<string, any>;
-    disableAdd: boolean;
-    disableRemove: boolean;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    castShadow: BooleanConstructor;
-    receiveShadow: BooleanConstructor;
-}>>, {
-    castShadow: boolean;
-    receiveShadow: boolean;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    readonly width: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly height: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly widthSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly heightSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-}>>, {
-    readonly height: number;
-    readonly width: number;
-    readonly widthSegments: number;
-    readonly heightSegments: number;
-}>;
+declare const _default$r: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
 //# sourceMappingURL=Plane.d.ts.map
 
-declare const _default$q: vue.DefineComponent<{
-    readonly vertices: ArrayConstructor;
-    readonly indices: ArrayConstructor;
-    readonly radius: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly detail: {
-        readonly type: NumberConstructor;
-        readonly default: 0;
-    };
-}, unknown, unknown, {}, {
-    createGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    castShadow: BooleanConstructor;
-    receiveShadow: BooleanConstructor;
-}, MeshSetupInterface$1, unknown, {}, {
-    initMesh(): void;
-    createGeometry(): void;
-    addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
-        [x: string]: unknown;
-    }>>): void;
-    setGeometry(geometry: three.BufferGeometry): void;
-    setMaterial(material: three.Material): void;
-    refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    onPointerEnter: FunctionConstructor;
-    onPointerOver: FunctionConstructor;
-    onPointerMove: FunctionConstructor;
-    onPointerLeave: FunctionConstructor;
-    onPointerDown: FunctionConstructor;
-    onPointerUp: FunctionConstructor;
-    onClick: FunctionConstructor;
-    position: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    rotation: {
-        type: vue.PropType<EulerPropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    scale: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-            order: string;
-        };
-    };
-    lookAt: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: null;
-    };
-    userData: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    visible: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    props: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    disableAdd: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    disableRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-}, Object3DSetupInterface, unknown, {}, {
-    initObject3D(o3d: three.Object3D<three.Event>): void;
-    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string>, {}> | undefined;
-    addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    add(o: three.Object3D<three.Event>): void;
-    remove(o: three.Object3D<three.Event>): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    onPointerEnter: FunctionConstructor;
-    onPointerOver: FunctionConstructor;
-    onPointerMove: FunctionConstructor;
-    onPointerLeave: FunctionConstructor;
-    onPointerDown: FunctionConstructor;
-    onPointerUp: FunctionConstructor;
-    onClick: FunctionConstructor;
-    position: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    rotation: {
-        type: vue.PropType<EulerPropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    scale: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-            order: string;
-        };
-    };
-    lookAt: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: null;
-    };
-    userData: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    visible: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    props: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    disableAdd: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    disableRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-}>> & {
-    onReady?: ((...args: any[]) => any) | undefined;
-    onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    position: Vector3PropInterface;
-    scale: Vector3PropInterface;
-    visible: boolean;
-    rotation: EulerPropInterface;
-    props: Record<string, any>;
-    lookAt: Vector3PropInterface;
-    userData: Record<string, any>;
-    disableAdd: boolean;
-    disableRemove: boolean;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    castShadow: BooleanConstructor;
-    receiveShadow: BooleanConstructor;
-}>>, {
-    castShadow: boolean;
-    receiveShadow: boolean;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    readonly vertices: ArrayConstructor;
-    readonly indices: ArrayConstructor;
-    readonly radius: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly detail: {
-        readonly type: NumberConstructor;
-        readonly default: 0;
-    };
-}>>, {
-    readonly detail: number;
-    readonly radius: number;
-}>;
+declare const _default$q: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
 //# sourceMappingURL=Polyhedron.d.ts.map
 
-declare const _default$p: vue.DefineComponent<{
-    readonly innerRadius: {
-        readonly type: NumberConstructor;
-        readonly default: 0.5;
-    };
-    readonly outerRadius: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly thetaSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 8;
-    };
-    readonly phiSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly thetaStart: {
-        readonly type: NumberConstructor;
-        readonly default: 0;
-    };
-    readonly thetaLength: {
-        readonly type: NumberConstructor;
-        readonly default: number;
-    };
-}, unknown, unknown, {}, {
-    createGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    castShadow: BooleanConstructor;
-    receiveShadow: BooleanConstructor;
-}, MeshSetupInterface$1, unknown, {}, {
-    initMesh(): void;
-    createGeometry(): void;
-    addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
-        [x: string]: unknown;
-    }>>): void;
-    setGeometry(geometry: three.BufferGeometry): void;
-    setMaterial(material: three.Material): void;
-    refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    onPointerEnter: FunctionConstructor;
-    onPointerOver: FunctionConstructor;
-    onPointerMove: FunctionConstructor;
-    onPointerLeave: FunctionConstructor;
-    onPointerDown: FunctionConstructor;
-    onPointerUp: FunctionConstructor;
-    onClick: FunctionConstructor;
-    position: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    rotation: {
-        type: vue.PropType<EulerPropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    scale: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-            order: string;
-        };
-    };
-    lookAt: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: null;
-    };
-    userData: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    visible: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    props: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    disableAdd: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    disableRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-}, Object3DSetupInterface, unknown, {}, {
-    initObject3D(o3d: three.Object3D<three.Event>): void;
-    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string>, {}> | undefined;
-    addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    add(o: three.Object3D<three.Event>): void;
-    remove(o: three.Object3D<three.Event>): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    onPointerEnter: FunctionConstructor;
-    onPointerOver: FunctionConstructor;
-    onPointerMove: FunctionConstructor;
-    onPointerLeave: FunctionConstructor;
-    onPointerDown: FunctionConstructor;
-    onPointerUp: FunctionConstructor;
-    onClick: FunctionConstructor;
-    position: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    rotation: {
-        type: vue.PropType<EulerPropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    scale: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-            order: string;
-        };
-    };
-    lookAt: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: null;
-    };
-    userData: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    visible: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    props: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    disableAdd: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    disableRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-}>> & {
-    onReady?: ((...args: any[]) => any) | undefined;
-    onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    position: Vector3PropInterface;
-    scale: Vector3PropInterface;
-    visible: boolean;
-    rotation: EulerPropInterface;
-    props: Record<string, any>;
-    lookAt: Vector3PropInterface;
-    userData: Record<string, any>;
-    disableAdd: boolean;
-    disableRemove: boolean;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    castShadow: BooleanConstructor;
-    receiveShadow: BooleanConstructor;
-}>>, {
-    castShadow: boolean;
-    receiveShadow: boolean;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    readonly innerRadius: {
-        readonly type: NumberConstructor;
-        readonly default: 0.5;
-    };
-    readonly outerRadius: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly thetaSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 8;
-    };
-    readonly phiSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly thetaStart: {
-        readonly type: NumberConstructor;
-        readonly default: 0;
-    };
-    readonly thetaLength: {
-        readonly type: NumberConstructor;
-        readonly default: number;
-    };
-}>>, {
-    readonly thetaStart: number;
-    readonly thetaLength: number;
-    readonly innerRadius: number;
-    readonly outerRadius: number;
-    readonly thetaSegments: number;
-    readonly phiSegments: number;
-}>;
+declare const _default$p: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
 //# sourceMappingURL=Ring.d.ts.map
 
-declare const _default$o: vue.DefineComponent<{
-    readonly radius: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly widthSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 12;
-    };
-    readonly heightSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 12;
-    };
-    readonly phiStart: {
-        readonly type: NumberConstructor;
-        readonly default: 0;
-    };
-    readonly phiLength: {
-        readonly type: NumberConstructor;
-        readonly default: number;
-    };
-    readonly thetaStart: {
-        readonly type: NumberConstructor;
-        readonly default: 0;
-    };
-    readonly thetaLength: {
-        readonly type: NumberConstructor;
-        readonly default: number;
-    };
-}, unknown, unknown, {}, {
-    createGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    castShadow: BooleanConstructor;
-    receiveShadow: BooleanConstructor;
-}, MeshSetupInterface$1, unknown, {}, {
-    initMesh(): void;
-    createGeometry(): void;
-    addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
-        [x: string]: unknown;
-    }>>): void;
-    setGeometry(geometry: three.BufferGeometry): void;
-    setMaterial(material: three.Material): void;
-    refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    onPointerEnter: FunctionConstructor;
-    onPointerOver: FunctionConstructor;
-    onPointerMove: FunctionConstructor;
-    onPointerLeave: FunctionConstructor;
-    onPointerDown: FunctionConstructor;
-    onPointerUp: FunctionConstructor;
-    onClick: FunctionConstructor;
-    position: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    rotation: {
-        type: vue.PropType<EulerPropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    scale: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-            order: string;
-        };
-    };
-    lookAt: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: null;
-    };
-    userData: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    visible: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    props: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    disableAdd: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    disableRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-}, Object3DSetupInterface, unknown, {}, {
-    initObject3D(o3d: three.Object3D<three.Event>): void;
-    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string>, {}> | undefined;
-    addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    add(o: three.Object3D<three.Event>): void;
-    remove(o: three.Object3D<three.Event>): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    onPointerEnter: FunctionConstructor;
-    onPointerOver: FunctionConstructor;
-    onPointerMove: FunctionConstructor;
-    onPointerLeave: FunctionConstructor;
-    onPointerDown: FunctionConstructor;
-    onPointerUp: FunctionConstructor;
-    onClick: FunctionConstructor;
-    position: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    rotation: {
-        type: vue.PropType<EulerPropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    scale: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-            order: string;
-        };
-    };
-    lookAt: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: null;
-    };
-    userData: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    visible: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    props: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    disableAdd: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    disableRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-}>> & {
-    onReady?: ((...args: any[]) => any) | undefined;
-    onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    position: Vector3PropInterface;
-    scale: Vector3PropInterface;
-    visible: boolean;
-    rotation: EulerPropInterface;
-    props: Record<string, any>;
-    lookAt: Vector3PropInterface;
-    userData: Record<string, any>;
-    disableAdd: boolean;
-    disableRemove: boolean;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    castShadow: BooleanConstructor;
-    receiveShadow: BooleanConstructor;
-}>>, {
-    castShadow: boolean;
-    receiveShadow: boolean;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    readonly radius: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly widthSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 12;
-    };
-    readonly heightSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 12;
-    };
-    readonly phiStart: {
-        readonly type: NumberConstructor;
-        readonly default: 0;
-    };
-    readonly phiLength: {
-        readonly type: NumberConstructor;
-        readonly default: number;
-    };
-    readonly thetaStart: {
-        readonly type: NumberConstructor;
-        readonly default: 0;
-    };
-    readonly thetaLength: {
-        readonly type: NumberConstructor;
-        readonly default: number;
-    };
-}>>, {
-    readonly radius: number;
-    readonly widthSegments: number;
-    readonly heightSegments: number;
-    readonly thetaStart: number;
-    readonly thetaLength: number;
-    readonly phiStart: number;
-    readonly phiLength: number;
-}>;
+declare const _default$o: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
 //# sourceMappingURL=Sphere.d.ts.map
 
-declare const _default$n: vue.DefineComponent<{
-    readonly radius: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly detail: {
-        readonly type: NumberConstructor;
-        readonly default: 0;
-    };
-}, unknown, unknown, {}, {
-    createGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    castShadow: BooleanConstructor;
-    receiveShadow: BooleanConstructor;
-}, MeshSetupInterface$1, unknown, {}, {
-    initMesh(): void;
-    createGeometry(): void;
-    addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
-        [x: string]: unknown;
-    }>>): void;
-    setGeometry(geometry: three.BufferGeometry): void;
-    setMaterial(material: three.Material): void;
-    refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    onPointerEnter: FunctionConstructor;
-    onPointerOver: FunctionConstructor;
-    onPointerMove: FunctionConstructor;
-    onPointerLeave: FunctionConstructor;
-    onPointerDown: FunctionConstructor;
-    onPointerUp: FunctionConstructor;
-    onClick: FunctionConstructor;
-    position: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    rotation: {
-        type: vue.PropType<EulerPropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    scale: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-            order: string;
-        };
-    };
-    lookAt: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: null;
-    };
-    userData: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    visible: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    props: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    disableAdd: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    disableRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-}, Object3DSetupInterface, unknown, {}, {
-    initObject3D(o3d: three.Object3D<three.Event>): void;
-    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string>, {}> | undefined;
-    addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    add(o: three.Object3D<three.Event>): void;
-    remove(o: three.Object3D<three.Event>): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    onPointerEnter: FunctionConstructor;
-    onPointerOver: FunctionConstructor;
-    onPointerMove: FunctionConstructor;
-    onPointerLeave: FunctionConstructor;
-    onPointerDown: FunctionConstructor;
-    onPointerUp: FunctionConstructor;
-    onClick: FunctionConstructor;
-    position: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    rotation: {
-        type: vue.PropType<EulerPropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    scale: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-            order: string;
-        };
-    };
-    lookAt: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: null;
-    };
-    userData: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    visible: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    props: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    disableAdd: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    disableRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-}>> & {
-    onReady?: ((...args: any[]) => any) | undefined;
-    onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    position: Vector3PropInterface;
-    scale: Vector3PropInterface;
-    visible: boolean;
-    rotation: EulerPropInterface;
-    props: Record<string, any>;
-    lookAt: Vector3PropInterface;
-    userData: Record<string, any>;
-    disableAdd: boolean;
-    disableRemove: boolean;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    castShadow: BooleanConstructor;
-    receiveShadow: BooleanConstructor;
-}>>, {
-    castShadow: boolean;
-    receiveShadow: boolean;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    readonly radius: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly detail: {
-        readonly type: NumberConstructor;
-        readonly default: 0;
-    };
-}>>, {
-    readonly detail: number;
-    readonly radius: number;
-}>;
+declare const _default$n: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
 //# sourceMappingURL=Tetrahedron.d.ts.map
 
 interface TextSetupInterface extends MeshSetupInterface$1 {
     geometry?: TextGeometry;
     font?: Font;
 }
-declare const _default$m: vue.DefineComponent<{
+declare const _default$m: vue.DefineComponent<vue.ExtractPropTypes<{
     readonly text: {
         readonly type: StringConstructor;
         readonly required: true;
@@ -7379,12 +3809,12 @@ declare const _default$m: vue.DefineComponent<{
         readonly type: PropType<string | boolean>;
         readonly default: false;
     };
-}, TextSetupInterface, unknown, {}, {
+}>, TextSetupInterface, {}, {}, {
     createGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
+}, vue.ComponentOptionsMixin, vue.DefineComponent<vue.ExtractPropTypes<{
     castShadow: BooleanConstructor;
     receiveShadow: BooleanConstructor;
-}, MeshSetupInterface$1, unknown, {}, {
+}>, MeshSetupInterface$1, {}, {}, {
     initMesh(): void;
     createGeometry(): void;
     addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
@@ -7393,7 +3823,7 @@ declare const _default$m: vue.DefineComponent<{
     setGeometry(geometry: three.BufferGeometry): void;
     setMaterial(material: three.Material): void;
     refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
+}, vue.ComponentOptionsMixin, vue.DefineComponent<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
     onPointerMove: FunctionConstructor;
@@ -7450,14 +3880,14 @@ declare const _default$m: vue.DefineComponent<{
         type: BooleanConstructor;
         default: boolean;
     };
-}, Object3DSetupInterface, unknown, {}, {
+}>, Object3DSetupInterface, {}, {}, {
     initObject3D(o3d: three.Object3D<three.Event>): void;
-    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string>, {}> | undefined;
+    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
     addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
     removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
     add(o: three.Object3D<three.Event>): void;
     remove(o: three.Object3D<three.Event>): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
     onPointerMove: FunctionConstructor;
@@ -7514,26 +3944,354 @@ declare const _default$m: vue.DefineComponent<{
         type: BooleanConstructor;
         default: boolean;
     };
-}>> & {
+}>> & Readonly<{
     onReady?: ((...args: any[]) => any) | undefined;
     onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    position: Vector3PropInterface;
-    scale: Vector3PropInterface;
-    visible: boolean;
-    rotation: EulerPropInterface;
+}>, {
     props: Record<string, any>;
+    position: Vector3PropInterface;
+    rotation: EulerPropInterface;
+    scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
     userData: Record<string, any>;
+    visible: boolean;
     disableAdd: boolean;
     disableRemove: boolean;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>, {}, string, vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     castShadow: BooleanConstructor;
     receiveShadow: BooleanConstructor;
-}>>, {
+}>> & Readonly<{}>, {
     castShadow: boolean;
     receiveShadow: boolean;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, {}, {}, {}, string, () => {
+    [x: symbol]: vue.CreateComponentPublicInstanceWithMixins<Readonly<vue.ExtractPropTypes<{
+        castShadow: BooleanConstructor;
+        receiveShadow: BooleanConstructor;
+    }>> & Readonly<{}>, MeshSetupInterface$1, {}, {}, {
+        initMesh(): void;
+        createGeometry(): void;
+        addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
+            [x: string]: unknown;
+        }>>): void;
+        setGeometry(geometry: three.BufferGeometry): void;
+        setMaterial(material: three.Material): void;
+        refreshGeometry(): void;
+    }, vue.ComponentOptionsMixin, vue.DefineComponent<vue.ExtractPropTypes<{
+        onPointerEnter: FunctionConstructor;
+        onPointerOver: FunctionConstructor;
+        onPointerMove: FunctionConstructor;
+        onPointerLeave: FunctionConstructor;
+        onPointerDown: FunctionConstructor;
+        onPointerUp: FunctionConstructor;
+        onClick: FunctionConstructor;
+        position: {
+            type: PropType<Vector3PropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+            };
+        };
+        rotation: {
+            type: PropType<EulerPropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+            };
+        };
+        scale: {
+            type: PropType<Vector3PropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+                order: string;
+            };
+        };
+        lookAt: {
+            type: PropType<Vector3PropInterface>;
+            default: null;
+        };
+        userData: {
+            type: ObjectConstructor;
+            default: () => {};
+        };
+        visible: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+        props: {
+            type: ObjectConstructor;
+            default: () => {};
+        };
+        disableAdd: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+        disableRemove: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+    }>, Object3DSetupInterface, {}, {}, {
+        initObject3D(o3d: three.Object3D<three.Event>): void;
+        getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
+        addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
+        removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
+        add(o: three.Object3D<three.Event>): void;
+        remove(o: three.Object3D<three.Event>): void;
+    }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
+        onPointerEnter: FunctionConstructor;
+        onPointerOver: FunctionConstructor;
+        onPointerMove: FunctionConstructor;
+        onPointerLeave: FunctionConstructor;
+        onPointerDown: FunctionConstructor;
+        onPointerUp: FunctionConstructor;
+        onClick: FunctionConstructor;
+        position: {
+            type: PropType<Vector3PropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+            };
+        };
+        rotation: {
+            type: PropType<EulerPropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+            };
+        };
+        scale: {
+            type: PropType<Vector3PropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+                order: string;
+            };
+        };
+        lookAt: {
+            type: PropType<Vector3PropInterface>;
+            default: null;
+        };
+        userData: {
+            type: ObjectConstructor;
+            default: () => {};
+        };
+        visible: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+        props: {
+            type: ObjectConstructor;
+            default: () => {};
+        };
+        disableAdd: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+        disableRemove: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+    }>> & Readonly<{
+        onReady?: ((...args: any[]) => any) | undefined;
+        onCreated?: ((...args: any[]) => any) | undefined;
+    }>, {
+        props: Record<string, any>;
+        position: Vector3PropInterface;
+        rotation: EulerPropInterface;
+        scale: Vector3PropInterface;
+        lookAt: Vector3PropInterface;
+        userData: Record<string, any>;
+        visible: boolean;
+        disableAdd: boolean;
+        disableRemove: boolean;
+    }, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>, {}, {}, {}, false, {}, {}, {}, {}, string, {}, any, vue.ComponentProvideOptions, {
+        P: {};
+        B: {};
+        D: {};
+        C: {};
+        M: {};
+        Defaults: {};
+    } & {
+        P: Readonly<vue.ExtractPropTypes<{
+            onPointerEnter: FunctionConstructor;
+            onPointerOver: FunctionConstructor;
+            onPointerMove: FunctionConstructor;
+            onPointerLeave: FunctionConstructor;
+            onPointerDown: FunctionConstructor;
+            onPointerUp: FunctionConstructor;
+            onClick: FunctionConstructor;
+            position: {
+                type: PropType<Vector3PropInterface>;
+                default: () => {
+                    x: number;
+                    y: number;
+                    z: number;
+                };
+            };
+            rotation: {
+                type: PropType<EulerPropInterface>;
+                default: () => {
+                    x: number;
+                    y: number;
+                    z: number;
+                };
+            };
+            scale: {
+                type: PropType<Vector3PropInterface>;
+                default: () => {
+                    x: number;
+                    y: number;
+                    z: number;
+                    order: string;
+                };
+            };
+            lookAt: {
+                type: PropType<Vector3PropInterface>;
+                default: null;
+            };
+            userData: {
+                type: ObjectConstructor;
+                default: () => {};
+            };
+            visible: {
+                type: BooleanConstructor;
+                default: boolean;
+            };
+            props: {
+                type: ObjectConstructor;
+                default: () => {};
+            };
+            disableAdd: {
+                type: BooleanConstructor;
+                default: boolean;
+            };
+            disableRemove: {
+                type: BooleanConstructor;
+                default: boolean;
+            };
+        }>> & Readonly<{
+            onReady?: ((...args: any[]) => any) | undefined;
+            onCreated?: ((...args: any[]) => any) | undefined;
+        }>;
+        B: Object3DSetupInterface;
+        D: {};
+        C: {};
+        M: {
+            initObject3D(o3d: three.Object3D<three.Event>): void;
+            getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
+            addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
+            removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
+            add(o: three.Object3D<three.Event>): void;
+            remove(o: three.Object3D<three.Event>): void;
+        };
+        Defaults: {
+            props: Record<string, any>;
+            position: Vector3PropInterface;
+            rotation: EulerPropInterface;
+            scale: Vector3PropInterface;
+            lookAt: Vector3PropInterface;
+            userData: Record<string, any>;
+            visible: boolean;
+            disableAdd: boolean;
+            disableRemove: boolean;
+        };
+    }, Readonly<vue.ExtractPropTypes<{
+        onPointerEnter: FunctionConstructor;
+        onPointerOver: FunctionConstructor;
+        onPointerMove: FunctionConstructor;
+        onPointerLeave: FunctionConstructor;
+        onPointerDown: FunctionConstructor;
+        onPointerUp: FunctionConstructor;
+        onClick: FunctionConstructor;
+        position: {
+            type: PropType<Vector3PropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+            };
+        };
+        rotation: {
+            type: PropType<EulerPropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+            };
+        };
+        scale: {
+            type: PropType<Vector3PropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+                order: string;
+            };
+        };
+        lookAt: {
+            type: PropType<Vector3PropInterface>;
+            default: null;
+        };
+        userData: {
+            type: ObjectConstructor;
+            default: () => {};
+        };
+        visible: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+        props: {
+            type: ObjectConstructor;
+            default: () => {};
+        };
+        disableAdd: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+        disableRemove: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+    }>> & Readonly<{
+        onReady?: ((...args: any[]) => any) | undefined;
+        onCreated?: ((...args: any[]) => any) | undefined;
+    }> & Readonly<vue.ExtractPropTypes<{
+        castShadow: BooleanConstructor;
+        receiveShadow: BooleanConstructor;
+    }>> & Readonly<{}>, Object3DSetupInterface & MeshSetupInterface$1, {}, {}, {
+        initObject3D(o3d: three.Object3D<three.Event>): void;
+        getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
+        addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
+        removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
+        add(o: three.Object3D<three.Event>): void;
+        remove(o: three.Object3D<three.Event>): void;
+    } & {
+        initMesh(): void;
+        createGeometry(): void;
+        addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
+            [x: string]: unknown;
+        }>>): void;
+        setGeometry(geometry: three.BufferGeometry): void;
+        setMaterial(material: three.Material): void;
+        refreshGeometry(): void;
+    }, {
+        props: Record<string, any>;
+        position: Vector3PropInterface;
+        rotation: EulerPropInterface;
+        scale: Vector3PropInterface;
+        lookAt: Vector3PropInterface;
+        userData: Record<string, any>;
+        visible: boolean;
+        disableAdd: boolean;
+        disableRemove: boolean;
+    }>;
+}, true, {}, any>, {}, string, vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     readonly text: {
         readonly type: StringConstructor;
         readonly required: true;
@@ -7583,441 +4341,28 @@ declare const _default$m: vue.DefineComponent<{
         readonly type: PropType<string | boolean>;
         readonly default: false;
     };
-}>>, {
+}>> & Readonly<{}>, {
     readonly height: number;
-    readonly text: string;
     readonly size: number;
     readonly depth: number;
-    readonly align: string | boolean;
     readonly curveSegments: number;
+    readonly text: string;
     readonly bevelEnabled: boolean;
     readonly bevelThickness: number;
     readonly bevelSize: number;
     readonly bevelOffset: number;
     readonly bevelSegments: number;
-}>;
+    readonly align: string | boolean;
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>;
 //# sourceMappingURL=Text.d.ts.map
 
-declare const _default$l: vue.DefineComponent<{
-    readonly radius: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly tube: {
-        readonly type: NumberConstructor;
-        readonly default: 0.4;
-    };
-    readonly radialSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 8;
-    };
-    readonly tubularSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 6;
-    };
-    readonly arc: {
-        readonly type: NumberConstructor;
-        readonly default: number;
-    };
-}, unknown, unknown, {}, {
-    createGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    castShadow: BooleanConstructor;
-    receiveShadow: BooleanConstructor;
-}, MeshSetupInterface$1, unknown, {}, {
-    initMesh(): void;
-    createGeometry(): void;
-    addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
-        [x: string]: unknown;
-    }>>): void;
-    setGeometry(geometry: three.BufferGeometry): void;
-    setMaterial(material: three.Material): void;
-    refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    onPointerEnter: FunctionConstructor;
-    onPointerOver: FunctionConstructor;
-    onPointerMove: FunctionConstructor;
-    onPointerLeave: FunctionConstructor;
-    onPointerDown: FunctionConstructor;
-    onPointerUp: FunctionConstructor;
-    onClick: FunctionConstructor;
-    position: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    rotation: {
-        type: vue.PropType<EulerPropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    scale: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-            order: string;
-        };
-    };
-    lookAt: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: null;
-    };
-    userData: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    visible: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    props: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    disableAdd: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    disableRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-}, Object3DSetupInterface, unknown, {}, {
-    initObject3D(o3d: three.Object3D<three.Event>): void;
-    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string>, {}> | undefined;
-    addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    add(o: three.Object3D<three.Event>): void;
-    remove(o: three.Object3D<three.Event>): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    onPointerEnter: FunctionConstructor;
-    onPointerOver: FunctionConstructor;
-    onPointerMove: FunctionConstructor;
-    onPointerLeave: FunctionConstructor;
-    onPointerDown: FunctionConstructor;
-    onPointerUp: FunctionConstructor;
-    onClick: FunctionConstructor;
-    position: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    rotation: {
-        type: vue.PropType<EulerPropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    scale: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-            order: string;
-        };
-    };
-    lookAt: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: null;
-    };
-    userData: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    visible: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    props: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    disableAdd: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    disableRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-}>> & {
-    onReady?: ((...args: any[]) => any) | undefined;
-    onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    position: Vector3PropInterface;
-    scale: Vector3PropInterface;
-    visible: boolean;
-    rotation: EulerPropInterface;
-    props: Record<string, any>;
-    lookAt: Vector3PropInterface;
-    userData: Record<string, any>;
-    disableAdd: boolean;
-    disableRemove: boolean;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    castShadow: BooleanConstructor;
-    receiveShadow: BooleanConstructor;
-}>>, {
-    castShadow: boolean;
-    receiveShadow: boolean;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    readonly radius: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly tube: {
-        readonly type: NumberConstructor;
-        readonly default: 0.4;
-    };
-    readonly radialSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 8;
-    };
-    readonly tubularSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 6;
-    };
-    readonly arc: {
-        readonly type: NumberConstructor;
-        readonly default: number;
-    };
-}>>, {
-    readonly radius: number;
-    readonly radialSegments: number;
-    readonly tube: number;
-    readonly tubularSegments: number;
-    readonly arc: number;
-}>;
+declare const _default$l: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
 //# sourceMappingURL=Torus.d.ts.map
 
-declare const _default$k: vue.DefineComponent<{
-    readonly radius: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly tube: {
-        readonly type: NumberConstructor;
-        readonly default: 0.4;
-    };
-    readonly tubularSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 64;
-    };
-    readonly radialSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 8;
-    };
-    readonly p: {
-        readonly type: NumberConstructor;
-        readonly default: 2;
-    };
-    readonly q: {
-        readonly type: NumberConstructor;
-        readonly default: 3;
-    };
-}, unknown, unknown, {}, {
-    createGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    castShadow: BooleanConstructor;
-    receiveShadow: BooleanConstructor;
-}, MeshSetupInterface$1, unknown, {}, {
-    initMesh(): void;
-    createGeometry(): void;
-    addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
-        [x: string]: unknown;
-    }>>): void;
-    setGeometry(geometry: three.BufferGeometry): void;
-    setMaterial(material: three.Material): void;
-    refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    onPointerEnter: FunctionConstructor;
-    onPointerOver: FunctionConstructor;
-    onPointerMove: FunctionConstructor;
-    onPointerLeave: FunctionConstructor;
-    onPointerDown: FunctionConstructor;
-    onPointerUp: FunctionConstructor;
-    onClick: FunctionConstructor;
-    position: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    rotation: {
-        type: vue.PropType<EulerPropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    scale: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-            order: string;
-        };
-    };
-    lookAt: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: null;
-    };
-    userData: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    visible: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    props: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    disableAdd: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    disableRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-}, Object3DSetupInterface, unknown, {}, {
-    initObject3D(o3d: three.Object3D<three.Event>): void;
-    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string>, {}> | undefined;
-    addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    add(o: three.Object3D<three.Event>): void;
-    remove(o: three.Object3D<three.Event>): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    onPointerEnter: FunctionConstructor;
-    onPointerOver: FunctionConstructor;
-    onPointerMove: FunctionConstructor;
-    onPointerLeave: FunctionConstructor;
-    onPointerDown: FunctionConstructor;
-    onPointerUp: FunctionConstructor;
-    onClick: FunctionConstructor;
-    position: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    rotation: {
-        type: vue.PropType<EulerPropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    scale: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-            order: string;
-        };
-    };
-    lookAt: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: null;
-    };
-    userData: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    visible: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    props: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-    disableAdd: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    disableRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-}>> & {
-    onReady?: ((...args: any[]) => any) | undefined;
-    onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    position: Vector3PropInterface;
-    scale: Vector3PropInterface;
-    visible: boolean;
-    rotation: EulerPropInterface;
-    props: Record<string, any>;
-    lookAt: Vector3PropInterface;
-    userData: Record<string, any>;
-    disableAdd: boolean;
-    disableRemove: boolean;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    castShadow: BooleanConstructor;
-    receiveShadow: BooleanConstructor;
-}>>, {
-    castShadow: boolean;
-    receiveShadow: boolean;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
-    readonly radius: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly tube: {
-        readonly type: NumberConstructor;
-        readonly default: 0.4;
-    };
-    readonly tubularSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 64;
-    };
-    readonly radialSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 8;
-    };
-    readonly p: {
-        readonly type: NumberConstructor;
-        readonly default: 2;
-    };
-    readonly q: {
-        readonly type: NumberConstructor;
-        readonly default: 3;
-    };
-}>>, {
-    readonly p: number;
-    readonly q: number;
-    readonly radius: number;
-    readonly radialSegments: number;
-    readonly tube: number;
-    readonly tubularSegments: number;
-}>;
+declare const _default$k: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
 //# sourceMappingURL=TorusKnot.d.ts.map
 
-declare const _default$j: vue.DefineComponent<{
+declare const _default$j: vue.DefineComponent<vue.ExtractPropTypes<{
     readonly points: ArrayConstructor;
     readonly path: typeof three.Curve;
     readonly tubularSegments: {
@@ -8036,13 +4381,13 @@ declare const _default$j: vue.DefineComponent<{
         readonly type: BooleanConstructor;
         readonly default: false;
     };
-}, unknown, unknown, {}, {
+}>, {}, {}, {}, {
     createGeometry(): void;
     updatePoints(points: Vector3[]): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
+}, vue.ComponentOptionsMixin, vue.DefineComponent<vue.ExtractPropTypes<{
     castShadow: BooleanConstructor;
     receiveShadow: BooleanConstructor;
-}, MeshSetupInterface$1, unknown, {}, {
+}>, MeshSetupInterface$1, {}, {}, {
     initMesh(): void;
     createGeometry(): void;
     addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
@@ -8051,7 +4396,7 @@ declare const _default$j: vue.DefineComponent<{
     setGeometry(geometry: three.BufferGeometry): void;
     setMaterial(material: three.Material): void;
     refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
+}, vue.ComponentOptionsMixin, vue.DefineComponent<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
     onPointerMove: FunctionConstructor;
@@ -8108,14 +4453,14 @@ declare const _default$j: vue.DefineComponent<{
         type: BooleanConstructor;
         default: boolean;
     };
-}, Object3DSetupInterface, unknown, {}, {
+}>, Object3DSetupInterface, {}, {}, {
     initObject3D(o3d: three.Object3D<three.Event>): void;
-    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string>, {}> | undefined;
+    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
     addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
     removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
     add(o: three.Object3D<three.Event>): void;
     remove(o: three.Object3D<three.Event>): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
     onPointerMove: FunctionConstructor;
@@ -8172,26 +4517,354 @@ declare const _default$j: vue.DefineComponent<{
         type: BooleanConstructor;
         default: boolean;
     };
-}>> & {
+}>> & Readonly<{
     onReady?: ((...args: any[]) => any) | undefined;
     onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    position: Vector3PropInterface;
-    scale: Vector3PropInterface;
-    visible: boolean;
-    rotation: EulerPropInterface;
+}>, {
     props: Record<string, any>;
+    position: Vector3PropInterface;
+    rotation: EulerPropInterface;
+    scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
     userData: Record<string, any>;
+    visible: boolean;
     disableAdd: boolean;
     disableRemove: boolean;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>, {}, string, vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     castShadow: BooleanConstructor;
     receiveShadow: BooleanConstructor;
-}>>, {
+}>> & Readonly<{}>, {
     castShadow: boolean;
     receiveShadow: boolean;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, {}, {}, {}, string, () => {
+    [x: symbol]: vue.CreateComponentPublicInstanceWithMixins<Readonly<vue.ExtractPropTypes<{
+        castShadow: BooleanConstructor;
+        receiveShadow: BooleanConstructor;
+    }>> & Readonly<{}>, MeshSetupInterface$1, {}, {}, {
+        initMesh(): void;
+        createGeometry(): void;
+        addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
+            [x: string]: unknown;
+        }>>): void;
+        setGeometry(geometry: three.BufferGeometry): void;
+        setMaterial(material: three.Material): void;
+        refreshGeometry(): void;
+    }, vue.ComponentOptionsMixin, vue.DefineComponent<vue.ExtractPropTypes<{
+        onPointerEnter: FunctionConstructor;
+        onPointerOver: FunctionConstructor;
+        onPointerMove: FunctionConstructor;
+        onPointerLeave: FunctionConstructor;
+        onPointerDown: FunctionConstructor;
+        onPointerUp: FunctionConstructor;
+        onClick: FunctionConstructor;
+        position: {
+            type: vue.PropType<Vector3PropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+            };
+        };
+        rotation: {
+            type: vue.PropType<EulerPropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+            };
+        };
+        scale: {
+            type: vue.PropType<Vector3PropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+                order: string;
+            };
+        };
+        lookAt: {
+            type: vue.PropType<Vector3PropInterface>;
+            default: null;
+        };
+        userData: {
+            type: ObjectConstructor;
+            default: () => {};
+        };
+        visible: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+        props: {
+            type: ObjectConstructor;
+            default: () => {};
+        };
+        disableAdd: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+        disableRemove: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+    }>, Object3DSetupInterface, {}, {}, {
+        initObject3D(o3d: three.Object3D<three.Event>): void;
+        getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
+        addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
+        removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
+        add(o: three.Object3D<three.Event>): void;
+        remove(o: three.Object3D<three.Event>): void;
+    }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
+        onPointerEnter: FunctionConstructor;
+        onPointerOver: FunctionConstructor;
+        onPointerMove: FunctionConstructor;
+        onPointerLeave: FunctionConstructor;
+        onPointerDown: FunctionConstructor;
+        onPointerUp: FunctionConstructor;
+        onClick: FunctionConstructor;
+        position: {
+            type: vue.PropType<Vector3PropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+            };
+        };
+        rotation: {
+            type: vue.PropType<EulerPropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+            };
+        };
+        scale: {
+            type: vue.PropType<Vector3PropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+                order: string;
+            };
+        };
+        lookAt: {
+            type: vue.PropType<Vector3PropInterface>;
+            default: null;
+        };
+        userData: {
+            type: ObjectConstructor;
+            default: () => {};
+        };
+        visible: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+        props: {
+            type: ObjectConstructor;
+            default: () => {};
+        };
+        disableAdd: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+        disableRemove: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+    }>> & Readonly<{
+        onReady?: ((...args: any[]) => any) | undefined;
+        onCreated?: ((...args: any[]) => any) | undefined;
+    }>, {
+        props: Record<string, any>;
+        position: Vector3PropInterface;
+        rotation: EulerPropInterface;
+        scale: Vector3PropInterface;
+        lookAt: Vector3PropInterface;
+        userData: Record<string, any>;
+        visible: boolean;
+        disableAdd: boolean;
+        disableRemove: boolean;
+    }, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>, {}, {}, {}, false, {}, {}, {}, {}, string, {}, any, vue.ComponentProvideOptions, {
+        P: {};
+        B: {};
+        D: {};
+        C: {};
+        M: {};
+        Defaults: {};
+    } & {
+        P: Readonly<vue.ExtractPropTypes<{
+            onPointerEnter: FunctionConstructor;
+            onPointerOver: FunctionConstructor;
+            onPointerMove: FunctionConstructor;
+            onPointerLeave: FunctionConstructor;
+            onPointerDown: FunctionConstructor;
+            onPointerUp: FunctionConstructor;
+            onClick: FunctionConstructor;
+            position: {
+                type: vue.PropType<Vector3PropInterface>;
+                default: () => {
+                    x: number;
+                    y: number;
+                    z: number;
+                };
+            };
+            rotation: {
+                type: vue.PropType<EulerPropInterface>;
+                default: () => {
+                    x: number;
+                    y: number;
+                    z: number;
+                };
+            };
+            scale: {
+                type: vue.PropType<Vector3PropInterface>;
+                default: () => {
+                    x: number;
+                    y: number;
+                    z: number;
+                    order: string;
+                };
+            };
+            lookAt: {
+                type: vue.PropType<Vector3PropInterface>;
+                default: null;
+            };
+            userData: {
+                type: ObjectConstructor;
+                default: () => {};
+            };
+            visible: {
+                type: BooleanConstructor;
+                default: boolean;
+            };
+            props: {
+                type: ObjectConstructor;
+                default: () => {};
+            };
+            disableAdd: {
+                type: BooleanConstructor;
+                default: boolean;
+            };
+            disableRemove: {
+                type: BooleanConstructor;
+                default: boolean;
+            };
+        }>> & Readonly<{
+            onReady?: ((...args: any[]) => any) | undefined;
+            onCreated?: ((...args: any[]) => any) | undefined;
+        }>;
+        B: Object3DSetupInterface;
+        D: {};
+        C: {};
+        M: {
+            initObject3D(o3d: three.Object3D<three.Event>): void;
+            getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
+            addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
+            removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
+            add(o: three.Object3D<three.Event>): void;
+            remove(o: three.Object3D<three.Event>): void;
+        };
+        Defaults: {
+            props: Record<string, any>;
+            position: Vector3PropInterface;
+            rotation: EulerPropInterface;
+            scale: Vector3PropInterface;
+            lookAt: Vector3PropInterface;
+            userData: Record<string, any>;
+            visible: boolean;
+            disableAdd: boolean;
+            disableRemove: boolean;
+        };
+    }, Readonly<vue.ExtractPropTypes<{
+        onPointerEnter: FunctionConstructor;
+        onPointerOver: FunctionConstructor;
+        onPointerMove: FunctionConstructor;
+        onPointerLeave: FunctionConstructor;
+        onPointerDown: FunctionConstructor;
+        onPointerUp: FunctionConstructor;
+        onClick: FunctionConstructor;
+        position: {
+            type: vue.PropType<Vector3PropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+            };
+        };
+        rotation: {
+            type: vue.PropType<EulerPropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+            };
+        };
+        scale: {
+            type: vue.PropType<Vector3PropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+                order: string;
+            };
+        };
+        lookAt: {
+            type: vue.PropType<Vector3PropInterface>;
+            default: null;
+        };
+        userData: {
+            type: ObjectConstructor;
+            default: () => {};
+        };
+        visible: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+        props: {
+            type: ObjectConstructor;
+            default: () => {};
+        };
+        disableAdd: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+        disableRemove: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+    }>> & Readonly<{
+        onReady?: ((...args: any[]) => any) | undefined;
+        onCreated?: ((...args: any[]) => any) | undefined;
+    }> & Readonly<vue.ExtractPropTypes<{
+        castShadow: BooleanConstructor;
+        receiveShadow: BooleanConstructor;
+    }>> & Readonly<{}>, Object3DSetupInterface & MeshSetupInterface$1, {}, {}, {
+        initObject3D(o3d: three.Object3D<three.Event>): void;
+        getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
+        addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
+        removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
+        add(o: three.Object3D<three.Event>): void;
+        remove(o: three.Object3D<three.Event>): void;
+    } & {
+        initMesh(): void;
+        createGeometry(): void;
+        addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
+            [x: string]: unknown;
+        }>>): void;
+        setGeometry(geometry: three.BufferGeometry): void;
+        setMaterial(material: three.Material): void;
+        refreshGeometry(): void;
+    }, {
+        props: Record<string, any>;
+        position: Vector3PropInterface;
+        rotation: EulerPropInterface;
+        scale: Vector3PropInterface;
+        lookAt: Vector3PropInterface;
+        userData: Record<string, any>;
+        visible: boolean;
+        disableAdd: boolean;
+        disableRemove: boolean;
+    }>;
+}, true, {}, any>, {}, string, vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     readonly points: ArrayConstructor;
     readonly path: typeof three.Curve;
     readonly tubularSegments: {
@@ -8210,19 +4883,19 @@ declare const _default$j: vue.DefineComponent<{
         readonly type: BooleanConstructor;
         readonly default: false;
     };
-}>>, {
-    readonly closed: boolean;
+}>> & Readonly<{}>, {
     readonly radius: number;
     readonly radialSegments: number;
     readonly tubularSegments: number;
-}>;
+    readonly closed: boolean;
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>;
 //# sourceMappingURL=Tube.d.ts.map
 
 interface ImageSetupInterface extends MeshSetupInterface$1 {
     material?: MeshBasicMaterial;
     texture?: Texture;
 }
-declare const _default$i: vue.DefineComponent<{
+declare const _default$i: vue.DefineComponent<vue.ExtractPropTypes<{
     src: {
         type: StringConstructor;
         required: true;
@@ -8238,15 +4911,15 @@ declare const _default$i: vue.DefineComponent<{
         default: number;
     };
     keepSize: BooleanConstructor;
-}, ImageSetupInterface, unknown, {}, {
+}>, ImageSetupInterface, {}, {}, {
     loadTexture(): Texture;
     refreshTexture(): void;
     onLoaded(texture: Texture): void;
     resize(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
+}, vue.ComponentOptionsMixin, vue.DefineComponent<vue.ExtractPropTypes<{
     castShadow: BooleanConstructor;
     receiveShadow: BooleanConstructor;
-}, MeshSetupInterface$1, unknown, {}, {
+}>, MeshSetupInterface$1, {}, {}, {
     initMesh(): void;
     createGeometry(): void;
     addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
@@ -8255,7 +4928,7 @@ declare const _default$i: vue.DefineComponent<{
     setGeometry(geometry: three.BufferGeometry): void;
     setMaterial(material: three.Material): void;
     refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
+}, vue.ComponentOptionsMixin, vue.DefineComponent<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
     onPointerMove: FunctionConstructor;
@@ -8312,14 +4985,14 @@ declare const _default$i: vue.DefineComponent<{
         type: BooleanConstructor;
         default: boolean;
     };
-}, Object3DSetupInterface, unknown, {}, {
+}>, Object3DSetupInterface, {}, {}, {
     initObject3D(o3d: three.Object3D<three.Event>): void;
-    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string>, {}> | undefined;
+    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
     addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
     removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
     add(o: three.Object3D<three.Event>): void;
     remove(o: three.Object3D<three.Event>): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
     onPointerMove: FunctionConstructor;
@@ -8376,26 +5049,354 @@ declare const _default$i: vue.DefineComponent<{
         type: BooleanConstructor;
         default: boolean;
     };
-}>> & {
+}>> & Readonly<{
     onReady?: ((...args: any[]) => any) | undefined;
     onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    position: Vector3PropInterface;
-    scale: Vector3PropInterface;
-    visible: boolean;
-    rotation: EulerPropInterface;
+}>, {
     props: Record<string, any>;
+    position: Vector3PropInterface;
+    rotation: EulerPropInterface;
+    scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
     userData: Record<string, any>;
+    visible: boolean;
     disableAdd: boolean;
     disableRemove: boolean;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>, {}, string, vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     castShadow: BooleanConstructor;
     receiveShadow: BooleanConstructor;
-}>>, {
+}>> & Readonly<{}>, {
     castShadow: boolean;
     receiveShadow: boolean;
-}>, "loaded"[], "loaded", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, {}, {}, {}, string, () => {
+    [x: symbol]: vue.CreateComponentPublicInstanceWithMixins<Readonly<vue.ExtractPropTypes<{
+        castShadow: BooleanConstructor;
+        receiveShadow: BooleanConstructor;
+    }>> & Readonly<{}>, MeshSetupInterface$1, {}, {}, {
+        initMesh(): void;
+        createGeometry(): void;
+        addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
+            [x: string]: unknown;
+        }>>): void;
+        setGeometry(geometry: three.BufferGeometry): void;
+        setMaterial(material: three.Material): void;
+        refreshGeometry(): void;
+    }, vue.ComponentOptionsMixin, vue.DefineComponent<vue.ExtractPropTypes<{
+        onPointerEnter: FunctionConstructor;
+        onPointerOver: FunctionConstructor;
+        onPointerMove: FunctionConstructor;
+        onPointerLeave: FunctionConstructor;
+        onPointerDown: FunctionConstructor;
+        onPointerUp: FunctionConstructor;
+        onClick: FunctionConstructor;
+        position: {
+            type: vue.PropType<Vector3PropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+            };
+        };
+        rotation: {
+            type: vue.PropType<EulerPropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+            };
+        };
+        scale: {
+            type: vue.PropType<Vector3PropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+                order: string;
+            };
+        };
+        lookAt: {
+            type: vue.PropType<Vector3PropInterface>;
+            default: null;
+        };
+        userData: {
+            type: ObjectConstructor;
+            default: () => {};
+        };
+        visible: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+        props: {
+            type: ObjectConstructor;
+            default: () => {};
+        };
+        disableAdd: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+        disableRemove: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+    }>, Object3DSetupInterface, {}, {}, {
+        initObject3D(o3d: three.Object3D<three.Event>): void;
+        getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
+        addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
+        removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
+        add(o: three.Object3D<three.Event>): void;
+        remove(o: three.Object3D<three.Event>): void;
+    }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
+        onPointerEnter: FunctionConstructor;
+        onPointerOver: FunctionConstructor;
+        onPointerMove: FunctionConstructor;
+        onPointerLeave: FunctionConstructor;
+        onPointerDown: FunctionConstructor;
+        onPointerUp: FunctionConstructor;
+        onClick: FunctionConstructor;
+        position: {
+            type: vue.PropType<Vector3PropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+            };
+        };
+        rotation: {
+            type: vue.PropType<EulerPropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+            };
+        };
+        scale: {
+            type: vue.PropType<Vector3PropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+                order: string;
+            };
+        };
+        lookAt: {
+            type: vue.PropType<Vector3PropInterface>;
+            default: null;
+        };
+        userData: {
+            type: ObjectConstructor;
+            default: () => {};
+        };
+        visible: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+        props: {
+            type: ObjectConstructor;
+            default: () => {};
+        };
+        disableAdd: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+        disableRemove: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+    }>> & Readonly<{
+        onReady?: ((...args: any[]) => any) | undefined;
+        onCreated?: ((...args: any[]) => any) | undefined;
+    }>, {
+        props: Record<string, any>;
+        position: Vector3PropInterface;
+        rotation: EulerPropInterface;
+        scale: Vector3PropInterface;
+        lookAt: Vector3PropInterface;
+        userData: Record<string, any>;
+        visible: boolean;
+        disableAdd: boolean;
+        disableRemove: boolean;
+    }, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>, {}, {}, {}, false, {}, {}, {}, {}, string, {}, any, vue.ComponentProvideOptions, {
+        P: {};
+        B: {};
+        D: {};
+        C: {};
+        M: {};
+        Defaults: {};
+    } & {
+        P: Readonly<vue.ExtractPropTypes<{
+            onPointerEnter: FunctionConstructor;
+            onPointerOver: FunctionConstructor;
+            onPointerMove: FunctionConstructor;
+            onPointerLeave: FunctionConstructor;
+            onPointerDown: FunctionConstructor;
+            onPointerUp: FunctionConstructor;
+            onClick: FunctionConstructor;
+            position: {
+                type: vue.PropType<Vector3PropInterface>;
+                default: () => {
+                    x: number;
+                    y: number;
+                    z: number;
+                };
+            };
+            rotation: {
+                type: vue.PropType<EulerPropInterface>;
+                default: () => {
+                    x: number;
+                    y: number;
+                    z: number;
+                };
+            };
+            scale: {
+                type: vue.PropType<Vector3PropInterface>;
+                default: () => {
+                    x: number;
+                    y: number;
+                    z: number;
+                    order: string;
+                };
+            };
+            lookAt: {
+                type: vue.PropType<Vector3PropInterface>;
+                default: null;
+            };
+            userData: {
+                type: ObjectConstructor;
+                default: () => {};
+            };
+            visible: {
+                type: BooleanConstructor;
+                default: boolean;
+            };
+            props: {
+                type: ObjectConstructor;
+                default: () => {};
+            };
+            disableAdd: {
+                type: BooleanConstructor;
+                default: boolean;
+            };
+            disableRemove: {
+                type: BooleanConstructor;
+                default: boolean;
+            };
+        }>> & Readonly<{
+            onReady?: ((...args: any[]) => any) | undefined;
+            onCreated?: ((...args: any[]) => any) | undefined;
+        }>;
+        B: Object3DSetupInterface;
+        D: {};
+        C: {};
+        M: {
+            initObject3D(o3d: three.Object3D<three.Event>): void;
+            getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
+            addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
+            removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
+            add(o: three.Object3D<three.Event>): void;
+            remove(o: three.Object3D<three.Event>): void;
+        };
+        Defaults: {
+            props: Record<string, any>;
+            position: Vector3PropInterface;
+            rotation: EulerPropInterface;
+            scale: Vector3PropInterface;
+            lookAt: Vector3PropInterface;
+            userData: Record<string, any>;
+            visible: boolean;
+            disableAdd: boolean;
+            disableRemove: boolean;
+        };
+    }, Readonly<vue.ExtractPropTypes<{
+        onPointerEnter: FunctionConstructor;
+        onPointerOver: FunctionConstructor;
+        onPointerMove: FunctionConstructor;
+        onPointerLeave: FunctionConstructor;
+        onPointerDown: FunctionConstructor;
+        onPointerUp: FunctionConstructor;
+        onClick: FunctionConstructor;
+        position: {
+            type: vue.PropType<Vector3PropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+            };
+        };
+        rotation: {
+            type: vue.PropType<EulerPropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+            };
+        };
+        scale: {
+            type: vue.PropType<Vector3PropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+                order: string;
+            };
+        };
+        lookAt: {
+            type: vue.PropType<Vector3PropInterface>;
+            default: null;
+        };
+        userData: {
+            type: ObjectConstructor;
+            default: () => {};
+        };
+        visible: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+        props: {
+            type: ObjectConstructor;
+            default: () => {};
+        };
+        disableAdd: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+        disableRemove: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+    }>> & Readonly<{
+        onReady?: ((...args: any[]) => any) | undefined;
+        onCreated?: ((...args: any[]) => any) | undefined;
+    }> & Readonly<vue.ExtractPropTypes<{
+        castShadow: BooleanConstructor;
+        receiveShadow: BooleanConstructor;
+    }>> & Readonly<{}>, Object3DSetupInterface & MeshSetupInterface$1, {}, {}, {
+        initObject3D(o3d: three.Object3D<three.Event>): void;
+        getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
+        addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
+        removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
+        add(o: three.Object3D<three.Event>): void;
+        remove(o: three.Object3D<three.Event>): void;
+    } & {
+        initMesh(): void;
+        createGeometry(): void;
+        addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
+            [x: string]: unknown;
+        }>>): void;
+        setGeometry(geometry: three.BufferGeometry): void;
+        setMaterial(material: three.Material): void;
+        refreshGeometry(): void;
+    }, {
+        props: Record<string, any>;
+        position: Vector3PropInterface;
+        rotation: EulerPropInterface;
+        scale: Vector3PropInterface;
+        lookAt: Vector3PropInterface;
+        userData: Record<string, any>;
+        visible: boolean;
+        disableAdd: boolean;
+        disableRemove: boolean;
+    }>;
+}, true, {}, any>, "loaded"[], "loaded", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     src: {
         type: StringConstructor;
         required: true;
@@ -8411,26 +5412,26 @@ declare const _default$i: vue.DefineComponent<{
         default: number;
     };
     keepSize: BooleanConstructor;
-}>> & {
+}>> & Readonly<{
     onLoaded?: ((...args: any[]) => any) | undefined;
-}, {
+}>, {
     widthSegments: number;
     heightSegments: number;
     keepSize: boolean;
-}>;
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>;
 //# sourceMappingURL=Image.d.ts.map
 
-declare const _default$h: vue.DefineComponent<{
+declare const _default$h: vue.DefineComponent<vue.ExtractPropTypes<{
     count: {
         type: NumberConstructor;
         required: true;
     };
-}, unknown, unknown, {}, {
+}>, {}, {}, {}, {
     initMesh(): false | undefined;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
+}, vue.ComponentOptionsMixin, vue.DefineComponent<vue.ExtractPropTypes<{
     castShadow: BooleanConstructor;
     receiveShadow: BooleanConstructor;
-}, MeshSetupInterface$1, unknown, {}, {
+}>, MeshSetupInterface$1, {}, {}, {
     initMesh(): void;
     createGeometry(): void;
     addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
@@ -8439,7 +5440,7 @@ declare const _default$h: vue.DefineComponent<{
     setGeometry(geometry: three.BufferGeometry): void;
     setMaterial(material: three.Material): void;
     refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
+}, vue.ComponentOptionsMixin, vue.DefineComponent<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
     onPointerMove: FunctionConstructor;
@@ -8496,14 +5497,14 @@ declare const _default$h: vue.DefineComponent<{
         type: BooleanConstructor;
         default: boolean;
     };
-}, Object3DSetupInterface, unknown, {}, {
+}>, Object3DSetupInterface, {}, {}, {
     initObject3D(o3d: three.Object3D<three.Event>): void;
-    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string>, {}> | undefined;
+    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
     addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
     removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
     add(o: three.Object3D<three.Event>): void;
     remove(o: three.Object3D<three.Event>): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
     onPointerMove: FunctionConstructor;
@@ -8560,31 +5561,359 @@ declare const _default$h: vue.DefineComponent<{
         type: BooleanConstructor;
         default: boolean;
     };
-}>> & {
+}>> & Readonly<{
     onReady?: ((...args: any[]) => any) | undefined;
     onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    position: Vector3PropInterface;
-    scale: Vector3PropInterface;
-    visible: boolean;
-    rotation: EulerPropInterface;
+}>, {
     props: Record<string, any>;
+    position: Vector3PropInterface;
+    rotation: EulerPropInterface;
+    scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
     userData: Record<string, any>;
+    visible: boolean;
     disableAdd: boolean;
     disableRemove: boolean;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>, {}, string, vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     castShadow: BooleanConstructor;
     receiveShadow: BooleanConstructor;
-}>>, {
+}>> & Readonly<{}>, {
     castShadow: boolean;
     receiveShadow: boolean;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, {}, {}, {}, string, () => {
+    [x: symbol]: vue.CreateComponentPublicInstanceWithMixins<Readonly<vue.ExtractPropTypes<{
+        castShadow: BooleanConstructor;
+        receiveShadow: BooleanConstructor;
+    }>> & Readonly<{}>, MeshSetupInterface$1, {}, {}, {
+        initMesh(): void;
+        createGeometry(): void;
+        addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
+            [x: string]: unknown;
+        }>>): void;
+        setGeometry(geometry: three.BufferGeometry): void;
+        setMaterial(material: three.Material): void;
+        refreshGeometry(): void;
+    }, vue.ComponentOptionsMixin, vue.DefineComponent<vue.ExtractPropTypes<{
+        onPointerEnter: FunctionConstructor;
+        onPointerOver: FunctionConstructor;
+        onPointerMove: FunctionConstructor;
+        onPointerLeave: FunctionConstructor;
+        onPointerDown: FunctionConstructor;
+        onPointerUp: FunctionConstructor;
+        onClick: FunctionConstructor;
+        position: {
+            type: vue.PropType<Vector3PropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+            };
+        };
+        rotation: {
+            type: vue.PropType<EulerPropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+            };
+        };
+        scale: {
+            type: vue.PropType<Vector3PropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+                order: string;
+            };
+        };
+        lookAt: {
+            type: vue.PropType<Vector3PropInterface>;
+            default: null;
+        };
+        userData: {
+            type: ObjectConstructor;
+            default: () => {};
+        };
+        visible: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+        props: {
+            type: ObjectConstructor;
+            default: () => {};
+        };
+        disableAdd: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+        disableRemove: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+    }>, Object3DSetupInterface, {}, {}, {
+        initObject3D(o3d: three.Object3D<three.Event>): void;
+        getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
+        addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
+        removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
+        add(o: three.Object3D<three.Event>): void;
+        remove(o: three.Object3D<three.Event>): void;
+    }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
+        onPointerEnter: FunctionConstructor;
+        onPointerOver: FunctionConstructor;
+        onPointerMove: FunctionConstructor;
+        onPointerLeave: FunctionConstructor;
+        onPointerDown: FunctionConstructor;
+        onPointerUp: FunctionConstructor;
+        onClick: FunctionConstructor;
+        position: {
+            type: vue.PropType<Vector3PropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+            };
+        };
+        rotation: {
+            type: vue.PropType<EulerPropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+            };
+        };
+        scale: {
+            type: vue.PropType<Vector3PropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+                order: string;
+            };
+        };
+        lookAt: {
+            type: vue.PropType<Vector3PropInterface>;
+            default: null;
+        };
+        userData: {
+            type: ObjectConstructor;
+            default: () => {};
+        };
+        visible: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+        props: {
+            type: ObjectConstructor;
+            default: () => {};
+        };
+        disableAdd: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+        disableRemove: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+    }>> & Readonly<{
+        onReady?: ((...args: any[]) => any) | undefined;
+        onCreated?: ((...args: any[]) => any) | undefined;
+    }>, {
+        props: Record<string, any>;
+        position: Vector3PropInterface;
+        rotation: EulerPropInterface;
+        scale: Vector3PropInterface;
+        lookAt: Vector3PropInterface;
+        userData: Record<string, any>;
+        visible: boolean;
+        disableAdd: boolean;
+        disableRemove: boolean;
+    }, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>, {}, {}, {}, false, {}, {}, {}, {}, string, {}, any, vue.ComponentProvideOptions, {
+        P: {};
+        B: {};
+        D: {};
+        C: {};
+        M: {};
+        Defaults: {};
+    } & {
+        P: Readonly<vue.ExtractPropTypes<{
+            onPointerEnter: FunctionConstructor;
+            onPointerOver: FunctionConstructor;
+            onPointerMove: FunctionConstructor;
+            onPointerLeave: FunctionConstructor;
+            onPointerDown: FunctionConstructor;
+            onPointerUp: FunctionConstructor;
+            onClick: FunctionConstructor;
+            position: {
+                type: vue.PropType<Vector3PropInterface>;
+                default: () => {
+                    x: number;
+                    y: number;
+                    z: number;
+                };
+            };
+            rotation: {
+                type: vue.PropType<EulerPropInterface>;
+                default: () => {
+                    x: number;
+                    y: number;
+                    z: number;
+                };
+            };
+            scale: {
+                type: vue.PropType<Vector3PropInterface>;
+                default: () => {
+                    x: number;
+                    y: number;
+                    z: number;
+                    order: string;
+                };
+            };
+            lookAt: {
+                type: vue.PropType<Vector3PropInterface>;
+                default: null;
+            };
+            userData: {
+                type: ObjectConstructor;
+                default: () => {};
+            };
+            visible: {
+                type: BooleanConstructor;
+                default: boolean;
+            };
+            props: {
+                type: ObjectConstructor;
+                default: () => {};
+            };
+            disableAdd: {
+                type: BooleanConstructor;
+                default: boolean;
+            };
+            disableRemove: {
+                type: BooleanConstructor;
+                default: boolean;
+            };
+        }>> & Readonly<{
+            onReady?: ((...args: any[]) => any) | undefined;
+            onCreated?: ((...args: any[]) => any) | undefined;
+        }>;
+        B: Object3DSetupInterface;
+        D: {};
+        C: {};
+        M: {
+            initObject3D(o3d: three.Object3D<three.Event>): void;
+            getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
+            addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
+            removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
+            add(o: three.Object3D<three.Event>): void;
+            remove(o: three.Object3D<three.Event>): void;
+        };
+        Defaults: {
+            props: Record<string, any>;
+            position: Vector3PropInterface;
+            rotation: EulerPropInterface;
+            scale: Vector3PropInterface;
+            lookAt: Vector3PropInterface;
+            userData: Record<string, any>;
+            visible: boolean;
+            disableAdd: boolean;
+            disableRemove: boolean;
+        };
+    }, Readonly<vue.ExtractPropTypes<{
+        onPointerEnter: FunctionConstructor;
+        onPointerOver: FunctionConstructor;
+        onPointerMove: FunctionConstructor;
+        onPointerLeave: FunctionConstructor;
+        onPointerDown: FunctionConstructor;
+        onPointerUp: FunctionConstructor;
+        onClick: FunctionConstructor;
+        position: {
+            type: vue.PropType<Vector3PropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+            };
+        };
+        rotation: {
+            type: vue.PropType<EulerPropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+            };
+        };
+        scale: {
+            type: vue.PropType<Vector3PropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+                order: string;
+            };
+        };
+        lookAt: {
+            type: vue.PropType<Vector3PropInterface>;
+            default: null;
+        };
+        userData: {
+            type: ObjectConstructor;
+            default: () => {};
+        };
+        visible: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+        props: {
+            type: ObjectConstructor;
+            default: () => {};
+        };
+        disableAdd: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+        disableRemove: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+    }>> & Readonly<{
+        onReady?: ((...args: any[]) => any) | undefined;
+        onCreated?: ((...args: any[]) => any) | undefined;
+    }> & Readonly<vue.ExtractPropTypes<{
+        castShadow: BooleanConstructor;
+        receiveShadow: BooleanConstructor;
+    }>> & Readonly<{}>, Object3DSetupInterface & MeshSetupInterface$1, {}, {}, {
+        initObject3D(o3d: three.Object3D<three.Event>): void;
+        getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
+        addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
+        removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
+        add(o: three.Object3D<three.Event>): void;
+        remove(o: three.Object3D<three.Event>): void;
+    } & {
+        initMesh(): void;
+        createGeometry(): void;
+        addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
+            [x: string]: unknown;
+        }>>): void;
+        setGeometry(geometry: three.BufferGeometry): void;
+        setMaterial(material: three.Material): void;
+        refreshGeometry(): void;
+    }, {
+        props: Record<string, any>;
+        position: Vector3PropInterface;
+        rotation: EulerPropInterface;
+        scale: Vector3PropInterface;
+        lookAt: Vector3PropInterface;
+        userData: Record<string, any>;
+        visible: boolean;
+        disableAdd: boolean;
+        disableRemove: boolean;
+    }>;
+}, true, {}, any>, {}, string, vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     count: {
         type: NumberConstructor;
         required: true;
     };
-}>>, {}>;
+}>> & Readonly<{}>, {}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>;
 //# sourceMappingURL=InstancedMesh.d.ts.map
 
 interface SpriteSetupInterface extends Object3DSetupInterface {
@@ -8592,15 +5921,15 @@ interface SpriteSetupInterface extends Object3DSetupInterface {
     material?: SpriteMaterial;
     sprite?: Sprite;
 }
-declare const _default$g: vue.DefineComponent<{
+declare const _default$g: vue.DefineComponent<vue.ExtractPropTypes<{
     src: {
         type: StringConstructor;
         required: true;
     };
-}, SpriteSetupInterface, unknown, {}, {
+}>, SpriteSetupInterface, {}, {}, {
     onLoaded(): void;
     updateUV(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
+}, vue.ComponentOptionsMixin, vue.DefineComponent<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
     onPointerMove: FunctionConstructor;
@@ -8657,14 +5986,14 @@ declare const _default$g: vue.DefineComponent<{
         type: BooleanConstructor;
         default: boolean;
     };
-}, Object3DSetupInterface, unknown, {}, {
+}>, Object3DSetupInterface, {}, {}, {
     initObject3D(o3d: three.Object3D<three.Event>): void;
-    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string>, {}> | undefined;
+    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
     addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
     removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
     add(o: three.Object3D<three.Event>): void;
     remove(o: three.Object3D<three.Event>): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
     onPointerMove: FunctionConstructor;
@@ -8721,27 +6050,27 @@ declare const _default$g: vue.DefineComponent<{
         type: BooleanConstructor;
         default: boolean;
     };
-}>> & {
+}>> & Readonly<{
     onReady?: ((...args: any[]) => any) | undefined;
     onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    position: Vector3PropInterface;
-    scale: Vector3PropInterface;
-    visible: boolean;
-    rotation: EulerPropInterface;
+}>, {
     props: Record<string, any>;
+    position: Vector3PropInterface;
+    rotation: EulerPropInterface;
+    scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
     userData: Record<string, any>;
+    visible: boolean;
     disableAdd: boolean;
     disableRemove: boolean;
-}>, "loaded"[], "loaded", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>, "loaded"[], "loaded", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     src: {
         type: StringConstructor;
         required: true;
     };
-}>> & {
+}>> & Readonly<{
     onLoaded?: ((...args: any[]) => any) | undefined;
-}, {}>;
+}>, {}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>;
 //# sourceMappingURL=Sprite.d.ts.map
 
 interface PointsSetupInterface extends Object3DSetupInterface {
@@ -8753,7 +6082,7 @@ interface PointsSetupInterface extends Object3DSetupInterface {
 declare const _default$f: vue.DefineComponent<{}, PointsSetupInterface, {}, {}, {
     setGeometry(geometry: BufferGeometry): void;
     setMaterial(material: Material): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
+}, vue.ComponentOptionsMixin, vue.DefineComponent<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
     onPointerMove: FunctionConstructor;
@@ -8810,14 +6139,14 @@ declare const _default$f: vue.DefineComponent<{}, PointsSetupInterface, {}, {}, 
         type: BooleanConstructor;
         default: boolean;
     };
-}, Object3DSetupInterface, unknown, {}, {
+}>, Object3DSetupInterface, {}, {}, {
     initObject3D(o3d: three.Object3D<three.Event>): void;
-    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string>, {}> | undefined;
+    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
     addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
     removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
     add(o: three.Object3D<three.Event>): void;
     remove(o: three.Object3D<three.Event>): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
     onPointerMove: FunctionConstructor;
@@ -8874,33 +6203,343 @@ declare const _default$f: vue.DefineComponent<{}, PointsSetupInterface, {}, {}, 
         type: BooleanConstructor;
         default: boolean;
     };
-}>> & {
+}>> & Readonly<{
     onReady?: ((...args: any[]) => any) | undefined;
     onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    position: Vector3PropInterface;
-    scale: Vector3PropInterface;
-    visible: boolean;
-    rotation: EulerPropInterface;
+}>, {
     props: Record<string, any>;
+    position: Vector3PropInterface;
+    rotation: EulerPropInterface;
+    scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
     userData: Record<string, any>;
+    visible: boolean;
     disableAdd: boolean;
     disableRemove: boolean;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{}>>, {}>;
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>, {}, string, vue.PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, () => {
+    [x: symbol]: vue.CreateComponentPublicInstanceWithMixins<Readonly<{}> & Readonly<{}>, PointsSetupInterface, {}, {}, {
+        setGeometry(geometry: BufferGeometry): void;
+        setMaterial(material: Material): void;
+    }, vue.ComponentOptionsMixin, vue.DefineComponent<vue.ExtractPropTypes<{
+        onPointerEnter: FunctionConstructor;
+        onPointerOver: FunctionConstructor;
+        onPointerMove: FunctionConstructor;
+        onPointerLeave: FunctionConstructor;
+        onPointerDown: FunctionConstructor;
+        onPointerUp: FunctionConstructor;
+        onClick: FunctionConstructor;
+        position: {
+            type: vue.PropType<Vector3PropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+            };
+        };
+        rotation: {
+            type: vue.PropType<EulerPropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+            };
+        };
+        scale: {
+            type: vue.PropType<Vector3PropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+                order: string;
+            };
+        };
+        lookAt: {
+            type: vue.PropType<Vector3PropInterface>;
+            default: null;
+        };
+        userData: {
+            type: ObjectConstructor;
+            default: () => {};
+        };
+        visible: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+        props: {
+            type: ObjectConstructor;
+            default: () => {};
+        };
+        disableAdd: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+        disableRemove: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+    }>, Object3DSetupInterface, {}, {}, {
+        initObject3D(o3d: three.Object3D<three.Event>): void;
+        getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
+        addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
+        removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
+        add(o: three.Object3D<three.Event>): void;
+        remove(o: three.Object3D<three.Event>): void;
+    }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
+        onPointerEnter: FunctionConstructor;
+        onPointerOver: FunctionConstructor;
+        onPointerMove: FunctionConstructor;
+        onPointerLeave: FunctionConstructor;
+        onPointerDown: FunctionConstructor;
+        onPointerUp: FunctionConstructor;
+        onClick: FunctionConstructor;
+        position: {
+            type: vue.PropType<Vector3PropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+            };
+        };
+        rotation: {
+            type: vue.PropType<EulerPropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+            };
+        };
+        scale: {
+            type: vue.PropType<Vector3PropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+                order: string;
+            };
+        };
+        lookAt: {
+            type: vue.PropType<Vector3PropInterface>;
+            default: null;
+        };
+        userData: {
+            type: ObjectConstructor;
+            default: () => {};
+        };
+        visible: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+        props: {
+            type: ObjectConstructor;
+            default: () => {};
+        };
+        disableAdd: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+        disableRemove: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+    }>> & Readonly<{
+        onReady?: ((...args: any[]) => any) | undefined;
+        onCreated?: ((...args: any[]) => any) | undefined;
+    }>, {
+        props: Record<string, any>;
+        position: Vector3PropInterface;
+        rotation: EulerPropInterface;
+        scale: Vector3PropInterface;
+        lookAt: Vector3PropInterface;
+        userData: Record<string, any>;
+        visible: boolean;
+        disableAdd: boolean;
+        disableRemove: boolean;
+    }, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>, {}, {}, {}, false, {}, {}, {}, {}, string, {}, any, vue.ComponentProvideOptions, {
+        P: {};
+        B: {};
+        D: {};
+        C: {};
+        M: {};
+        Defaults: {};
+    } & {
+        P: Readonly<vue.ExtractPropTypes<{
+            onPointerEnter: FunctionConstructor;
+            onPointerOver: FunctionConstructor;
+            onPointerMove: FunctionConstructor;
+            onPointerLeave: FunctionConstructor;
+            onPointerDown: FunctionConstructor;
+            onPointerUp: FunctionConstructor;
+            onClick: FunctionConstructor;
+            position: {
+                type: vue.PropType<Vector3PropInterface>;
+                default: () => {
+                    x: number;
+                    y: number;
+                    z: number;
+                };
+            };
+            rotation: {
+                type: vue.PropType<EulerPropInterface>;
+                default: () => {
+                    x: number;
+                    y: number;
+                    z: number;
+                };
+            };
+            scale: {
+                type: vue.PropType<Vector3PropInterface>;
+                default: () => {
+                    x: number;
+                    y: number;
+                    z: number;
+                    order: string;
+                };
+            };
+            lookAt: {
+                type: vue.PropType<Vector3PropInterface>;
+                default: null;
+            };
+            userData: {
+                type: ObjectConstructor;
+                default: () => {};
+            };
+            visible: {
+                type: BooleanConstructor;
+                default: boolean;
+            };
+            props: {
+                type: ObjectConstructor;
+                default: () => {};
+            };
+            disableAdd: {
+                type: BooleanConstructor;
+                default: boolean;
+            };
+            disableRemove: {
+                type: BooleanConstructor;
+                default: boolean;
+            };
+        }>> & Readonly<{
+            onReady?: ((...args: any[]) => any) | undefined;
+            onCreated?: ((...args: any[]) => any) | undefined;
+        }>;
+        B: Object3DSetupInterface;
+        D: {};
+        C: {};
+        M: {
+            initObject3D(o3d: three.Object3D<three.Event>): void;
+            getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
+            addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
+            removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
+            add(o: three.Object3D<three.Event>): void;
+            remove(o: three.Object3D<three.Event>): void;
+        };
+        Defaults: {
+            props: Record<string, any>;
+            position: Vector3PropInterface;
+            rotation: EulerPropInterface;
+            scale: Vector3PropInterface;
+            lookAt: Vector3PropInterface;
+            userData: Record<string, any>;
+            visible: boolean;
+            disableAdd: boolean;
+            disableRemove: boolean;
+        };
+    }, Readonly<vue.ExtractPropTypes<{
+        onPointerEnter: FunctionConstructor;
+        onPointerOver: FunctionConstructor;
+        onPointerMove: FunctionConstructor;
+        onPointerLeave: FunctionConstructor;
+        onPointerDown: FunctionConstructor;
+        onPointerUp: FunctionConstructor;
+        onClick: FunctionConstructor;
+        position: {
+            type: vue.PropType<Vector3PropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+            };
+        };
+        rotation: {
+            type: vue.PropType<EulerPropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+            };
+        };
+        scale: {
+            type: vue.PropType<Vector3PropInterface>;
+            default: () => {
+                x: number;
+                y: number;
+                z: number;
+                order: string;
+            };
+        };
+        lookAt: {
+            type: vue.PropType<Vector3PropInterface>;
+            default: null;
+        };
+        userData: {
+            type: ObjectConstructor;
+            default: () => {};
+        };
+        visible: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+        props: {
+            type: ObjectConstructor;
+            default: () => {};
+        };
+        disableAdd: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+        disableRemove: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+    }>> & Readonly<{
+        onReady?: ((...args: any[]) => any) | undefined;
+        onCreated?: ((...args: any[]) => any) | undefined;
+    }> & Readonly<{}> & Readonly<{}>, Object3DSetupInterface & PointsSetupInterface, {}, {}, {
+        initObject3D(o3d: three.Object3D<three.Event>): void;
+        getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
+        addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
+        removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
+        add(o: three.Object3D<three.Event>): void;
+        remove(o: three.Object3D<three.Event>): void;
+    } & {
+        setGeometry(geometry: BufferGeometry): void;
+        setMaterial(material: Material): void;
+    }, {
+        props: Record<string, any>;
+        position: Vector3PropInterface;
+        rotation: EulerPropInterface;
+        scale: Vector3PropInterface;
+        lookAt: Vector3PropInterface;
+        userData: Record<string, any>;
+        visible: boolean;
+        disableAdd: boolean;
+        disableRemove: boolean;
+    }>;
+}, true, {}, any>;
 
-declare const _default$e: vue.DefineComponent<{}, {}, {}, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<{
+declare const _default$e: vue.DefineComponent<{}, {}, {}, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<vue.ExtractPropTypes<{
     src: {
         type: StringConstructor;
         required: true;
     };
-}, unknown, {
+}>, {}, {
     progress: number;
 }, {}, {
     onLoad(model: three.Object3D<three.Event>): void;
     onProgress(progress: ProgressEvent<EventTarget>): void;
     onError(error: ErrorEvent): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
+}, vue.ComponentOptionsMixin, vue.DefineComponent<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
     onPointerMove: FunctionConstructor;
@@ -8957,14 +6596,14 @@ declare const _default$e: vue.DefineComponent<{}, {}, {}, {}, {}, vue.ComponentO
         type: BooleanConstructor;
         default: boolean;
     };
-}, Object3DSetupInterface, unknown, {}, {
+}>, Object3DSetupInterface, {}, {}, {
     initObject3D(o3d: three.Object3D<three.Event>): void;
-    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string>, {}> | undefined;
+    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
     addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
     removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
     add(o: three.Object3D<three.Event>): void;
     remove(o: three.Object3D<three.Event>): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
     onPointerMove: FunctionConstructor;
@@ -9021,44 +6660,44 @@ declare const _default$e: vue.DefineComponent<{}, {}, {}, {}, {}, vue.ComponentO
         type: BooleanConstructor;
         default: boolean;
     };
-}>> & {
+}>> & Readonly<{
     onReady?: ((...args: any[]) => any) | undefined;
     onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    position: Vector3PropInterface;
-    scale: Vector3PropInterface;
-    visible: boolean;
-    rotation: EulerPropInterface;
+}>, {
     props: Record<string, any>;
+    position: Vector3PropInterface;
+    rotation: EulerPropInterface;
+    scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
     userData: Record<string, any>;
+    visible: boolean;
     disableAdd: boolean;
     disableRemove: boolean;
-}>, ("progress" | "error" | "load" | "before-load")[], "progress" | "error" | "load" | "before-load", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>, ("error" | "load" | "progress" | "before-load")[], "error" | "load" | "progress" | "before-load", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     src: {
         type: StringConstructor;
         required: true;
     };
-}>> & {
-    onError?: ((...args: any[]) => any) | undefined;
+}>> & Readonly<{
     onLoad?: ((...args: any[]) => any) | undefined;
     onProgress?: ((...args: any[]) => any) | undefined;
+    onError?: ((...args: any[]) => any) | undefined;
     "onBefore-load"?: ((...args: any[]) => any) | undefined;
-}, {}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{}>>, {}>;
+}>, {}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>, {}, string, vue.PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>;
 //# sourceMappingURL=GLTF.d.ts.map
 
-declare const _default$d: vue.DefineComponent<{}, {}, {}, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<{
+declare const _default$d: vue.DefineComponent<{}, {}, {}, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<vue.ExtractPropTypes<{
     src: {
         type: StringConstructor;
         required: true;
     };
-}, unknown, {
+}>, {}, {
     progress: number;
 }, {}, {
     onLoad(model: three.Object3D<three.Event>): void;
     onProgress(progress: ProgressEvent<EventTarget>): void;
     onError(error: ErrorEvent): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
+}, vue.ComponentOptionsMixin, vue.DefineComponent<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
     onPointerMove: FunctionConstructor;
@@ -9115,14 +6754,14 @@ declare const _default$d: vue.DefineComponent<{}, {}, {}, {}, {}, vue.ComponentO
         type: BooleanConstructor;
         default: boolean;
     };
-}, Object3DSetupInterface, unknown, {}, {
+}>, Object3DSetupInterface, {}, {}, {
     initObject3D(o3d: three.Object3D<three.Event>): void;
-    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string>, {}> | undefined;
+    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
     addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
     removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
     add(o: three.Object3D<three.Event>): void;
     remove(o: three.Object3D<three.Event>): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
     onPointerMove: FunctionConstructor;
@@ -9179,30 +6818,30 @@ declare const _default$d: vue.DefineComponent<{}, {}, {}, {}, {}, vue.ComponentO
         type: BooleanConstructor;
         default: boolean;
     };
-}>> & {
+}>> & Readonly<{
     onReady?: ((...args: any[]) => any) | undefined;
     onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    position: Vector3PropInterface;
-    scale: Vector3PropInterface;
-    visible: boolean;
-    rotation: EulerPropInterface;
+}>, {
     props: Record<string, any>;
+    position: Vector3PropInterface;
+    rotation: EulerPropInterface;
+    scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
     userData: Record<string, any>;
+    visible: boolean;
     disableAdd: boolean;
     disableRemove: boolean;
-}>, ("progress" | "error" | "load" | "before-load")[], "progress" | "error" | "load" | "before-load", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>, ("error" | "load" | "progress" | "before-load")[], "error" | "load" | "progress" | "before-load", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     src: {
         type: StringConstructor;
         required: true;
     };
-}>> & {
-    onError?: ((...args: any[]) => any) | undefined;
+}>> & Readonly<{
     onLoad?: ((...args: any[]) => any) | undefined;
     onProgress?: ((...args: any[]) => any) | undefined;
+    onError?: ((...args: any[]) => any) | undefined;
     "onBefore-load"?: ((...args: any[]) => any) | undefined;
-}, {}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{}>>, {}>;
+}>, {}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>, {}, string, vue.PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>;
 //# sourceMappingURL=FBX.d.ts.map
 
 interface EffectComposerSetupInterface {
@@ -9218,7 +6857,24 @@ declare const _default$c: vue.DefineComponent<{}, EffectComposerSetupInterface, 
     addPass(pass: Pass): void;
     removePass(pass: Pass): void;
     resize(): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{}>>, {}>;
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, {}, string, vue.PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, () => {
+    [x: symbol]: vue.CreateComponentPublicInstanceWithMixins<Readonly<{}> & Readonly<{}>, EffectComposerSetupInterface, {}, {}, {
+        addPass(pass: Pass): void;
+        removePass(pass: Pass): void;
+        resize(): void;
+    }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, {}, {}, {}, false, {}, {}, {}, {}, string, {}, any, vue.ComponentProvideOptions, {
+        P: {};
+        B: {};
+        D: {};
+        C: {};
+        M: {};
+        Defaults: {};
+    }, Readonly<{}> & Readonly<{}>, EffectComposerSetupInterface, {}, {}, {
+        addPass(pass: Pass): void;
+        removePass(pass: Pass): void;
+        resize(): void;
+    }, {}>;
+}, true, {}, any>;
 
 interface EffectSetupInterface {
     renderer?: RendererInterface;
@@ -9227,18 +6883,18 @@ interface EffectSetupInterface {
 }
 declare const _default$b: vue.DefineComponent<{}, EffectSetupInterface, {}, {}, {
     initEffectPass(pass: Pass): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "ready"[], "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{}>> & {
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "ready"[], "ready", vue.PublicProps, Readonly<{}> & Readonly<{
     onReady?: ((...args: any[]) => any) | undefined;
-}, {}>;
+}>, {}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>;
 
 declare const _default$a: vue.DefineComponent<{}, {}, {}, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<{}, EffectSetupInterface, {}, {}, {
     initEffectPass(pass: three_examples_jsm_postprocessing_Pass.Pass): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "ready"[], "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{}>> & {
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "ready"[], "ready", vue.PublicProps, Readonly<{}> & Readonly<{
     onReady?: ((...args: any[]) => any) | undefined;
-}, {}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{}>>, {}>;
+}>, {}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>, {}, string, vue.PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>;
 //# sourceMappingURL=RenderPass.d.ts.map
 
-declare const _default$9: vue.DefineComponent<{
+declare const _default$9: vue.DefineComponent<vue.ExtractPropTypes<{
     readonly focus: {
         readonly type: NumberConstructor;
         readonly default: 1;
@@ -9251,11 +6907,11 @@ declare const _default$9: vue.DefineComponent<{
         readonly type: NumberConstructor;
         readonly default: 0.01;
     };
-}, unknown, unknown, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<{}, EffectSetupInterface, {}, {}, {
+}>, {}, {}, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<{}, EffectSetupInterface, {}, {}, {
     initEffectPass(pass: three_examples_jsm_postprocessing_Pass.Pass): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "ready"[], "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{}>> & {
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "ready"[], "ready", vue.PublicProps, Readonly<{}> & Readonly<{
     onReady?: ((...args: any[]) => any) | undefined;
-}, {}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}>, {}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>, {}, string, vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     readonly focus: {
         readonly type: NumberConstructor;
         readonly default: 1;
@@ -9268,14 +6924,14 @@ declare const _default$9: vue.DefineComponent<{
         readonly type: NumberConstructor;
         readonly default: 0.01;
     };
-}>>, {
+}>> & Readonly<{}>, {
     readonly focus: number;
     readonly aperture: number;
     readonly maxblur: number;
-}>;
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>;
 //# sourceMappingURL=BokehPass.d.ts.map
 
-declare const _default$8: vue.DefineComponent<{
+declare const _default$8: vue.DefineComponent<vue.ExtractPropTypes<{
     readonly noiseIntensity: {
         readonly type: NumberConstructor;
         readonly default: 0.5;
@@ -9292,11 +6948,11 @@ declare const _default$8: vue.DefineComponent<{
         readonly type: NumberConstructor;
         readonly default: 0;
     };
-}, unknown, unknown, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<{}, EffectSetupInterface, {}, {}, {
+}>, {}, {}, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<{}, EffectSetupInterface, {}, {}, {
     initEffectPass(pass: three_examples_jsm_postprocessing_Pass.Pass): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "ready"[], "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{}>> & {
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "ready"[], "ready", vue.PublicProps, Readonly<{}> & Readonly<{
     onReady?: ((...args: any[]) => any) | undefined;
-}, {}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}>, {}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>, {}, string, vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     readonly noiseIntensity: {
         readonly type: NumberConstructor;
         readonly default: 0.5;
@@ -9313,12 +6969,12 @@ declare const _default$8: vue.DefineComponent<{
         readonly type: NumberConstructor;
         readonly default: 0;
     };
-}>>, {
+}>> & Readonly<{}>, {
     readonly noiseIntensity: number;
     readonly scanlinesIntensity: number;
     readonly scanlinesCount: number;
     readonly grayscale: number;
-}>;
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>;
 //# sourceMappingURL=FilmPass.d.ts.map
 
 declare const _default$7: vue.DefineComponent<{}, {}, {}, {}, {
@@ -9327,12 +6983,12 @@ declare const _default$7: vue.DefineComponent<{}, {}, {}, {}, {
     }): void;
 }, vue.ComponentOptionsMixin, vue.DefineComponent<{}, EffectSetupInterface, {}, {}, {
     initEffectPass(pass: three_examples_jsm_postprocessing_Pass.Pass): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "ready"[], "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{}>> & {
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "ready"[], "ready", vue.PublicProps, Readonly<{}> & Readonly<{
     onReady?: ((...args: any[]) => any) | undefined;
-}, {}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{}>>, {}>;
+}>, {}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>, {}, string, vue.PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>;
 //# sourceMappingURL=FXAAPass.d.ts.map
 
-declare const _default$6: vue.DefineComponent<{
+declare const _default$6: vue.DefineComponent<vue.ExtractPropTypes<{
     readonly shape: {
         readonly type: NumberConstructor;
         readonly default: 1;
@@ -9357,11 +7013,11 @@ declare const _default$6: vue.DefineComponent<{
         readonly type: NumberConstructor;
         readonly default: 0;
     };
-}, unknown, unknown, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<{}, EffectSetupInterface, {}, {}, {
+}>, {}, {}, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<{}, EffectSetupInterface, {}, {}, {
     initEffectPass(pass: three_examples_jsm_postprocessing_Pass.Pass): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "ready"[], "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{}>> & {
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "ready"[], "ready", vue.PublicProps, Readonly<{}> & Readonly<{
     onReady?: ((...args: any[]) => any) | undefined;
-}, {}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}>, {}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>, {}, string, vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     readonly shape: {
         readonly type: NumberConstructor;
         readonly default: 1;
@@ -9386,40 +7042,40 @@ declare const _default$6: vue.DefineComponent<{
         readonly type: NumberConstructor;
         readonly default: 0;
     };
-}>>, {
-    readonly shape: number;
+}>> & Readonly<{}>, {
     readonly radius: number;
+    readonly shape: number;
     readonly rotateR: number;
     readonly rotateG: number;
     readonly rotateB: number;
     readonly scatter: number;
-}>;
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>;
 //# sourceMappingURL=HalftonePass.d.ts.map
 
 declare const _default$5: vue.DefineComponent<{}, {}, {}, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<{}, EffectSetupInterface, {}, {}, {
     initEffectPass(pass: three_examples_jsm_postprocessing_Pass.Pass): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "ready"[], "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{}>> & {
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "ready"[], "ready", vue.PublicProps, Readonly<{}> & Readonly<{
     onReady?: ((...args: any[]) => any) | undefined;
-}, {}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{}>>, {}>;
+}>, {}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>, {}, string, vue.PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>;
 //# sourceMappingURL=SMAAPass.d.ts.map
 
-declare const _default$4: vue.DefineComponent<{
+declare const _default$4: vue.DefineComponent<vue.ExtractPropTypes<{
     options: {
         type: ObjectConstructor;
         default: () => {};
     };
-}, unknown, unknown, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<{}, EffectSetupInterface, {}, {}, {
+}>, {}, {}, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<{}, EffectSetupInterface, {}, {}, {
     initEffectPass(pass: three_examples_jsm_postprocessing_Pass.Pass): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "ready"[], "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{}>> & {
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "ready"[], "ready", vue.PublicProps, Readonly<{}> & Readonly<{
     onReady?: ((...args: any[]) => any) | undefined;
-}, {}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}>, {}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>, {}, string, vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     options: {
         type: ObjectConstructor;
         default: () => {};
     };
-}>>, {
+}>> & Readonly<{}>, {
     options: Record<string, any>;
-}>;
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>;
 //# sourceMappingURL=SSAOPass.d.ts.map
 
 interface TiltShiftPassSetupInterface {
@@ -9436,7 +7092,7 @@ interface TiltShiftPassSetupInterface {
     pass1?: ShaderPass;
     pass2?: ShaderPass;
 }
-declare const _default$3: vue.DefineComponent<{
+declare const _default$3: vue.DefineComponent<vue.ExtractPropTypes<{
     readonly blurRadius: {
         readonly type: NumberConstructor;
         readonly default: 10;
@@ -9459,13 +7115,13 @@ declare const _default$3: vue.DefineComponent<{
             y: number;
         };
     };
-}, TiltShiftPassSetupInterface, unknown, {}, {
+}>, TiltShiftPassSetupInterface, {}, {}, {
     updateFocusLine(): void;
 }, vue.ComponentOptionsMixin, vue.DefineComponent<{}, EffectSetupInterface, {}, {}, {
     initEffectPass(pass: three_examples_jsm_postprocessing_Pass.Pass): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "ready"[], "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{}>> & {
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "ready"[], "ready", vue.PublicProps, Readonly<{}> & Readonly<{
     onReady?: ((...args: any[]) => any) | undefined;
-}, {}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}>, {}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>, {}, string, vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     readonly blurRadius: {
         readonly type: NumberConstructor;
         readonly default: 10;
@@ -9488,15 +7144,15 @@ declare const _default$3: vue.DefineComponent<{
             y: number;
         };
     };
-}>>, {
-    readonly end: Vector2PropInterface;
-    readonly start: Vector2PropInterface;
+}>> & Readonly<{}>, {
     readonly blurRadius: number;
     readonly gradientRadius: number;
-}>;
+    readonly start: Vector2PropInterface;
+    readonly end: Vector2PropInterface;
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>;
 //# sourceMappingURL=TiltShiftPass.d.ts.map
 
-declare const _default$2: vue.DefineComponent<{
+declare const _default$2: vue.DefineComponent<vue.ExtractPropTypes<{
     readonly strength: {
         readonly type: NumberConstructor;
         readonly default: 1.5;
@@ -9509,11 +7165,11 @@ declare const _default$2: vue.DefineComponent<{
         readonly type: NumberConstructor;
         readonly default: 0;
     };
-}, unknown, unknown, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<{}, EffectSetupInterface, {}, {}, {
+}>, {}, {}, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<{}, EffectSetupInterface, {}, {}, {
     initEffectPass(pass: three_examples_jsm_postprocessing_Pass.Pass): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "ready"[], "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{}>> & {
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "ready"[], "ready", vue.PublicProps, Readonly<{}> & Readonly<{
     onReady?: ((...args: any[]) => any) | undefined;
-}, {}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}>, {}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>, {}, string, vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     readonly strength: {
         readonly type: NumberConstructor;
         readonly default: 1.5;
@@ -9526,14 +7182,14 @@ declare const _default$2: vue.DefineComponent<{
         readonly type: NumberConstructor;
         readonly default: 0;
     };
-}>>, {
-    readonly threshold: number;
+}>> & Readonly<{}>, {
     readonly radius: number;
     readonly strength: number;
-}>;
+    readonly threshold: number;
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>;
 //# sourceMappingURL=UnrealBloomPass.d.ts.map
 
-declare const _default$1: vue.DefineComponent<{
+declare const _default$1: vue.DefineComponent<vue.ExtractPropTypes<{
     center: {
         type: PropType<Vector2PropInterface>;
         default: () => {
@@ -9545,11 +7201,11 @@ declare const _default$1: vue.DefineComponent<{
         type: NumberConstructor;
         default: number;
     };
-}, unknown, unknown, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<{}, EffectSetupInterface, {}, {}, {
+}>, {}, {}, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<{}, EffectSetupInterface, {}, {}, {
     initEffectPass(pass: three_examples_jsm_postprocessing_Pass.Pass): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "ready"[], "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{}>> & {
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, "ready"[], "ready", vue.PublicProps, Readonly<{}> & Readonly<{
     onReady?: ((...args: any[]) => any) | undefined;
-}, {}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}>, {}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>, {}, string, vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     center: {
         type: PropType<Vector2PropInterface>;
         default: () => {
@@ -9561,16 +7217,16 @@ declare const _default$1: vue.DefineComponent<{
         type: NumberConstructor;
         default: number;
     };
-}>>, {
+}>> & Readonly<{}>, {
     center: Vector2PropInterface;
     strength: number;
-}>;
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>;
 //# sourceMappingURL=ZoomBlurPass.d.ts.map
 
 interface MeshSetupInterface extends Object3DSetupInterface {
     helper?: GridHelper;
 }
-declare const _default: vue.DefineComponent<{
+declare const _default: vue.DefineComponent<vue.ExtractPropTypes<{
     size: {
         type: NumberConstructor;
         required: boolean;
@@ -9587,11 +7243,11 @@ declare const _default: vue.DefineComponent<{
     color2: {
         type: NumberConstructor;
     };
-}, MeshSetupInterface, unknown, {}, {
+}>, MeshSetupInterface, {}, {}, {
     initHelper(): void;
     destroyHelper(): void;
     refreshHelper(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
+}, vue.ComponentOptionsMixin, vue.DefineComponent<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
     onPointerMove: FunctionConstructor;
@@ -9648,14 +7304,14 @@ declare const _default: vue.DefineComponent<{
         type: BooleanConstructor;
         default: boolean;
     };
-}, Object3DSetupInterface, unknown, {}, {
+}>, Object3DSetupInterface, {}, {}, {
     initObject3D(o3d: three.Object3D<three.Event>): void;
-    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string>, {}> | undefined;
+    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
     addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
     removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
     add(o: three.Object3D<three.Event>): void;
     remove(o: three.Object3D<three.Event>): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
     onPointerMove: FunctionConstructor;
@@ -9712,20 +7368,20 @@ declare const _default: vue.DefineComponent<{
         type: BooleanConstructor;
         default: boolean;
     };
-}>> & {
+}>> & Readonly<{
     onReady?: ((...args: any[]) => any) | undefined;
     onCreated?: ((...args: any[]) => any) | undefined;
-}, {
-    position: Vector3PropInterface;
-    scale: Vector3PropInterface;
-    visible: boolean;
-    rotation: EulerPropInterface;
+}>, {
     props: Record<string, any>;
+    position: Vector3PropInterface;
+    rotation: EulerPropInterface;
+    scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
     userData: Record<string, any>;
+    visible: boolean;
     disableAdd: boolean;
     disableRemove: boolean;
-}>, {}, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<vue.ExtractPropTypes<{
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>, {}, string, vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     size: {
         type: NumberConstructor;
         required: boolean;
@@ -9742,10 +7398,10 @@ declare const _default: vue.DefineComponent<{
     color2: {
         type: NumberConstructor;
     };
-}>>, {
+}>> & Readonly<{}>, {
     size: number;
     divisions: number;
-}>;
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>;
 
 type OptionSetter = (dst: any, key: string, value: any) => void;
 declare function applyObjectProps(dst: any, options: Record<string, unknown>, setter?: OptionSetter): void;

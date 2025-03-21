@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 // import { EventDispatcher } from '../core/EventDispatcher.js';
 import { EventDispatcher } from 'three';
 
