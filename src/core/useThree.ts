@@ -1,5 +1,6 @@
 import { Camera, Object3D, OrthographicCamera, PerspectiveCamera, Scene, WebGLRenderer, WebGLRendererParameters } from 'three'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+// import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import { OrbitControls } from './../controls/OrbitControls.js'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
 import usePointer, { PointerConfigInterface, PointerPublicConfigInterface, PointerInterface } from './usePointer'
 
@@ -134,7 +135,9 @@ export default function useThree(params: ThreeConfigInterface): ThreeInterface {
           cameraCtrl[key] = value
         })
       }
-      onBeforeRender(() => { cameraCtrl.update() })
+      onBeforeRender(() => { 
+        cameraCtrl.update() 
+      })
       obj.cameraCtrl = cameraCtrl
     }
 

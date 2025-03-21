@@ -118,3 +118,4 @@ Extensions by garma83 :
 - Added support for mouseUp and mouseDown
 - Added examples directory
 - Added intersections in pointer event to help determine order
+- added orbital control with autorotate that can be triggered by users.
