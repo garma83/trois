@@ -1,11 +1,11 @@
 <template>
     <Renderer ref="renderer"
               antialias
-              :orbit-ctrl="{ enableDamping: true, autoRotateThreshold: 0.1 }"
+              :orbit-ctrl="{ enableDamping: true, autoRotateThreshold: 0.1, zoomSpeed: 2.0 }"
               resize="window">
         <Camera :position="{ z: 10 }" />
         <Scene>
-            <AmbientLight :intensity="0.2"/>
+            <AmbientLight :intensity="0.5"/>
             <PointLight :position="{ y: 20, z: 20 }" />
             <Box :position="{ x: -0.0, y: -0.2, z: 0 }" :width="10" :height="0.1" :depth="10">
                 <LambertMaterial :color="'#44eeff'" />
