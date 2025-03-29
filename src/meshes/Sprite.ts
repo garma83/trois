@@ -1,5 +1,5 @@
 import { defineComponent } from 'vue'
-import { Sprite, SpriteMaterial, Texture, TextureLoader } from 'three'
+import { Sprite, SpriteMaterial, Texture, TextureLoader, TypedArray } from 'three'
 import Object3D, { Object3DSetupInterface } from '../core/Object3D'
 
 interface SpriteSetupInterface extends Object3DSetupInterface {
@@ -46,7 +46,7 @@ export default defineComponent({
         y = 0.5 / iRatio
       }
 
-      const positions = this.sprite.geometry.attributes.position.array as Array<number>
+      const positions = this.sprite.geometry.attributes.position.array
       positions[0] = -x; positions[1] = -y
       positions[5] = x; positions[6] = -y
       positions[10] = x; positions[11] = y

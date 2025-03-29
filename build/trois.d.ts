@@ -1,7 +1,7 @@
 import * as vue from 'vue';
-import { ComponentPublicInstance, InjectionKey, PropType, ComponentPropsOptions, WatchStopHandle, App } from 'vue';
+import { PropType, InjectionKey, ComponentPublicInstance, ComponentPropsOptions, WatchStopHandle, App } from 'vue';
 import * as three from 'three';
-import { Intersection, Vector2, Vector3, Object3D, EventDispatcher, WebGLRenderer, Camera, Scene, WebGLRendererParameters, OrthographicCamera, PerspectiveCamera, Group, Mesh as Mesh$1, WebGLCubeRenderTarget, CubeCamera, BufferGeometry, Material, Curve, Light, Texture, ShaderMaterial, VideoTexture, MeshBasicMaterial, SpriteMaterial, Sprite, Points, GridHelper, TextureLoader } from 'three';
+import { Vector2, Vector3, Intersection, Object3D, EventDispatcher, WebGLRendererParameters, WebGLRenderer, Camera, Scene, OrthographicCamera, PerspectiveCamera, Group, Mesh as Mesh$1, WebGLCubeRenderTarget, CubeCamera, BufferGeometry, Material, Light, Texture, ShaderMaterial, VideoTexture, MeshBasicMaterial, SpriteMaterial, Sprite, Points, GridHelper, TextureLoader } from 'three';
 import { EffectComposer as EffectComposer$1 } from 'three/examples/jsm/postprocessing/EffectComposer';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
@@ -335,7 +335,7 @@ declare const _default$19: vue.DefineComponent<vue.ExtractPropTypes<{
         default: boolean;
     };
     resize: {
-        type: PropType<string | boolean>;
+        type: PropType<boolean | string>;
         default: boolean;
     };
     shadow: BooleanConstructor;
@@ -370,8 +370,12 @@ declare const _default$19: vue.DefineComponent<vue.ExtractPropTypes<{
     offAfterRender(cb: RenderCallbackType): void;
     onResize(cb: ResizeCallbackType): void;
     offResize(cb: ResizeCallbackType): void;
-    addListener(type: string, cb: (e?: any) => void): void;
-    removeListener(type: string, cb: (e?: any) => void): void;
+    addListener(type: string, cb: {
+        (e?: any): void;
+    }): void;
+    removeListener(type: string, cb: {
+        (e?: any): void;
+    }): void;
     getCallbacks(type: string): InitCallbackType[] | RenderCallbackType[] | ResizeCallbackType[];
     render(time: number): void;
     renderLoop(time: number): void;
@@ -395,7 +399,7 @@ declare const _default$19: vue.DefineComponent<vue.ExtractPropTypes<{
         default: boolean;
     };
     resize: {
-        type: PropType<string | boolean>;
+        type: PropType<boolean | string>;
         default: boolean;
     };
     shadow: BooleanConstructor;
@@ -440,7 +444,7 @@ declare const _default$19: vue.DefineComponent<vue.ExtractPropTypes<{
             default: boolean;
         };
         resize: {
-            type: PropType<string | boolean>;
+            type: PropType<boolean | string>;
             default: boolean;
         };
         shadow: BooleanConstructor;
@@ -475,8 +479,12 @@ declare const _default$19: vue.DefineComponent<vue.ExtractPropTypes<{
         offAfterRender(cb: RenderCallbackType): void;
         onResize(cb: ResizeCallbackType): void;
         offResize(cb: ResizeCallbackType): void;
-        addListener(type: string, cb: (e?: any) => void): void;
-        removeListener(type: string, cb: (e?: any) => void): void;
+        addListener(type: string, cb: {
+            (e?: any): void;
+        }): void;
+        removeListener(type: string, cb: {
+            (e?: any): void;
+        }): void;
         getCallbacks(type: string): InitCallbackType[] | RenderCallbackType[] | ResizeCallbackType[];
         render(time: number): void;
         renderLoop(time: number): void;
@@ -507,7 +515,7 @@ declare const _default$19: vue.DefineComponent<vue.ExtractPropTypes<{
             default: boolean;
         };
         resize: {
-            type: PropType<string | boolean>;
+            type: PropType<boolean | string>;
             default: boolean;
         };
         shadow: BooleanConstructor;
@@ -542,8 +550,12 @@ declare const _default$19: vue.DefineComponent<vue.ExtractPropTypes<{
         offAfterRender(cb: RenderCallbackType): void;
         onResize(cb: ResizeCallbackType): void;
         offResize(cb: ResizeCallbackType): void;
-        addListener(type: string, cb: (e?: any) => void): void;
-        removeListener(type: string, cb: (e?: any) => void): void;
+        addListener(type: string, cb: {
+            (e?: any): void;
+        }): void;
+        removeListener(type: string, cb: {
+            (e?: any): void;
+        }): void;
         getCallbacks(type: string): InitCallbackType[] | RenderCallbackType[] | ResizeCallbackType[];
         render(time: number): void;
         renderLoop(time: number): void;
@@ -897,7 +909,7 @@ declare const _default$16: vue.DefineComponent<vue.ExtractPropTypes<{
 //# sourceMappingURL=PerspectiveCamera.d.ts.map
 
 declare const _default$15: vue.DefineComponent<{}, {
-    group: Group;
+    group: Group<three.Object3DEventMap>;
 }, {}, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
@@ -956,12 +968,12 @@ declare const _default$15: vue.DefineComponent<{}, {
         default: boolean;
     };
 }>, Object3DSetupInterface, {}, {}, {
-    initObject3D(o3d: three.Object3D<three.Event>): void;
-    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
-    addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    add(o: three.Object3D<three.Event>): void;
-    remove(o: three.Object3D<three.Event>): void;
+    initObject3D(o3d: three.Object3D): void;
+    getParent(): undefined | vue.ComponentPublicInstance;
+    addToParent(o?: three.Object3D): boolean;
+    removeFromParent(o?: three.Object3D): boolean;
+    add(o: three.Object3D): void;
+    remove(o: three.Object3D): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
@@ -1159,7 +1171,7 @@ declare const _default$12: vue.DefineComponent<vue.ExtractPropTypes<{
     };
     autoUpdate: BooleanConstructor;
     hideMeshes: {
-        type: PropType<Mesh$1<three.BufferGeometry, three.Material | three.Material[]>[]>;
+        type: PropType<Mesh$1[]>;
         default: () => never[];
     };
 }>, CubeCameraSetupInterface, {}, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<vue.ExtractPropTypes<{
@@ -1220,12 +1232,12 @@ declare const _default$12: vue.DefineComponent<vue.ExtractPropTypes<{
         default: boolean;
     };
 }>, Object3DSetupInterface, {}, {}, {
-    initObject3D(o3d: three.Object3D<three.Event>): void;
-    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
-    addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    add(o: three.Object3D<three.Event>): void;
-    remove(o: three.Object3D<three.Event>): void;
+    initObject3D(o3d: three.Object3D): void;
+    getParent(): undefined | vue.ComponentPublicInstance;
+    addToParent(o?: three.Object3D): boolean;
+    removeFromParent(o?: three.Object3D): boolean;
+    add(o: three.Object3D): void;
+    remove(o: three.Object3D): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
@@ -1311,7 +1323,7 @@ declare const _default$12: vue.DefineComponent<vue.ExtractPropTypes<{
     };
     autoUpdate: BooleanConstructor;
     hideMeshes: {
-        type: PropType<Mesh$1<three.BufferGeometry, three.Material | three.Material[]>[]>;
+        type: PropType<Mesh$1[]>;
         default: () => never[];
     };
 }>> & Readonly<{}>, {
@@ -1319,7 +1331,7 @@ declare const _default$12: vue.DefineComponent<vue.ExtractPropTypes<{
     cubeRTSize: number;
     cubeCameraNear: number;
     cubeCameraFar: number;
-    hideMeshes: Mesh$1<three.BufferGeometry, three.Material | three.Material[]>[];
+    hideMeshes: Mesh$1<three.BufferGeometry<three.NormalBufferAttributes>, three.Material | three.Material[], three.Object3DEventMap>[];
 }, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>;
 //# sourceMappingURL=CubeCamera.d.ts.map
 
@@ -1404,12 +1416,12 @@ declare const Mesh: vue.DefineComponent<vue.ExtractPropTypes<{
         default: boolean;
     };
 }>, Object3DSetupInterface, {}, {}, {
-    initObject3D(o3d: three.Object3D<three.Event>): void;
-    getParent(): ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
-    addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    add(o: three.Object3D<three.Event>): void;
-    remove(o: three.Object3D<three.Event>): void;
+    initObject3D(o3d: three.Object3D): void;
+    getParent(): undefined | ComponentPublicInstance;
+    addToParent(o?: three.Object3D): boolean;
+    removeFromParent(o?: three.Object3D): boolean;
+    add(o: three.Object3D): void;
+    remove(o: three.Object3D): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
@@ -1555,12 +1567,12 @@ declare const Mesh: vue.DefineComponent<vue.ExtractPropTypes<{
             default: boolean;
         };
     }>, Object3DSetupInterface, {}, {}, {
-        initObject3D(o3d: three.Object3D<three.Event>): void;
-        getParent(): ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
-        addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
-        removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
-        add(o: three.Object3D<three.Event>): void;
-        remove(o: three.Object3D<three.Event>): void;
+        initObject3D(o3d: three.Object3D): void;
+        getParent(): undefined | ComponentPublicInstance;
+        addToParent(o?: three.Object3D): boolean;
+        removeFromParent(o?: three.Object3D): boolean;
+        add(o: three.Object3D): void;
+        remove(o: three.Object3D): void;
     }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
         onPointerEnter: FunctionConstructor;
         onPointerOver: FunctionConstructor;
@@ -1704,12 +1716,12 @@ declare const Mesh: vue.DefineComponent<vue.ExtractPropTypes<{
         D: {};
         C: {};
         M: {
-            initObject3D(o3d: three.Object3D<three.Event>): void;
-            getParent(): ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
-            addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
-            removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
-            add(o: three.Object3D<three.Event>): void;
-            remove(o: three.Object3D<three.Event>): void;
+            initObject3D(o3d: three.Object3D): void;
+            getParent(): undefined | ComponentPublicInstance;
+            addToParent(o?: three.Object3D): boolean;
+            removeFromParent(o?: three.Object3D): boolean;
+            add(o: three.Object3D): void;
+            remove(o: three.Object3D): void;
         };
         Defaults: {
             props: Record<string, any>;
@@ -1786,12 +1798,12 @@ declare const Mesh: vue.DefineComponent<vue.ExtractPropTypes<{
         castShadow: BooleanConstructor;
         receiveShadow: BooleanConstructor;
     }>> & Readonly<{}>, Object3DSetupInterface & MeshSetupInterface$1, {}, {}, {
-        initObject3D(o3d: three.Object3D<three.Event>): void;
-        getParent(): ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
-        addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
-        removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
-        add(o: three.Object3D<three.Event>): void;
-        remove(o: three.Object3D<three.Event>): void;
+        initObject3D(o3d: three.Object3D): void;
+        getParent(): undefined | ComponentPublicInstance;
+        addToParent(o?: three.Object3D): boolean;
+        removeFromParent(o?: three.Object3D): boolean;
+        add(o: three.Object3D): void;
+        remove(o: three.Object3D): void;
     } & {
         initMesh(): void;
         createGeometry(): void;
@@ -1828,7 +1840,7 @@ declare const Geometry: vue.DefineComponent<vue.ExtractPropTypes<{
     rotateY: NumberConstructor;
     rotateZ: NumberConstructor;
     attributes: {
-        type: PropType<GeometryAttributeInterface[]>;
+        type: PropType<Array<GeometryAttributeInterface>>;
         default: () => never[];
     };
 }>, GeometrySetupInterface, {}, {}, {
@@ -1840,7 +1852,7 @@ declare const Geometry: vue.DefineComponent<vue.ExtractPropTypes<{
     rotateY: NumberConstructor;
     rotateZ: NumberConstructor;
     attributes: {
-        type: PropType<GeometryAttributeInterface[]>;
+        type: PropType<Array<GeometryAttributeInterface>>;
         default: () => never[];
     };
 }>> & Readonly<{
@@ -1883,26 +1895,7 @@ declare const _default$O: vue.DefineSetupFnComponent<Record<string, any>, {}, {}
 
 declare const _default$N: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
 
-declare const _default$M: vue.DefineComponent<vue.ExtractPropTypes<{
-    readonly points: ArrayConstructor;
-    readonly path: typeof Curve;
-    readonly tubularSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 64;
-    };
-    readonly radius: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly radialSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 8;
-    };
-    readonly closed: {
-        readonly type: BooleanConstructor;
-        readonly default: false;
-    };
-}>, {}, {}, {}, {
+declare const _default$M: vue.DefineComponent<{}, {}, {}, {}, {
     createGeometry(): void;
     updatePoints(points: Vector3[]): void;
 }, vue.ComponentOptionsMixin, vue.DefineComponent<vue.ExtractPropTypes<{
@@ -1910,7 +1903,7 @@ declare const _default$M: vue.DefineComponent<vue.ExtractPropTypes<{
     rotateY: NumberConstructor;
     rotateZ: NumberConstructor;
     attributes: {
-        type: vue.PropType<GeometryAttributeInterface[]>;
+        type: vue.PropType<Array<GeometryAttributeInterface>>;
         default: () => never[];
     };
 }>, GeometrySetupInterface, {}, {}, {
@@ -1922,38 +1915,14 @@ declare const _default$M: vue.DefineComponent<vue.ExtractPropTypes<{
     rotateY: NumberConstructor;
     rotateZ: NumberConstructor;
     attributes: {
-        type: vue.PropType<GeometryAttributeInterface[]>;
+        type: vue.PropType<Array<GeometryAttributeInterface>>;
         default: () => never[];
     };
 }>> & Readonly<{
     onCreated?: ((...args: any[]) => any) | undefined;
 }>, {
     attributes: GeometryAttributeInterface[];
-}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>, {}, string, vue.PublicProps, Readonly<vue.ExtractPropTypes<{
-    readonly points: ArrayConstructor;
-    readonly path: typeof Curve;
-    readonly tubularSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 64;
-    };
-    readonly radius: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly radialSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 8;
-    };
-    readonly closed: {
-        readonly type: BooleanConstructor;
-        readonly default: false;
-    };
-}>> & Readonly<{}>, {
-    readonly radius: number;
-    readonly radialSegments: number;
-    readonly tubularSegments: number;
-    readonly closed: boolean;
-}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>;
+}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>, {}, string, vue.PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>;
 
 interface LightSetupInterface {
     light?: Light;
@@ -2043,12 +2012,12 @@ declare const _default$L: vue.DefineComponent<{}, {}, {}, {}, {}, vue.ComponentO
         default: boolean;
     };
 }>, Object3DSetupInterface, {}, {}, {
-    initObject3D(o3d: three.Object3D<three.Event>): void;
-    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
-    addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    add(o: three.Object3D<three.Event>): void;
-    remove(o: three.Object3D<three.Event>): void;
+    initObject3D(o3d: three.Object3D): void;
+    getParent(): undefined | vue.ComponentPublicInstance;
+    addToParent(o?: three.Object3D): boolean;
+    removeFromParent(o?: three.Object3D): boolean;
+    add(o: three.Object3D): void;
+    remove(o: three.Object3D): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
@@ -2245,12 +2214,12 @@ declare const _default$K: vue.DefineComponent<vue.ExtractPropTypes<{
         default: boolean;
     };
 }>, Object3DSetupInterface, {}, {}, {
-    initObject3D(o3d: three.Object3D<three.Event>): void;
-    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
-    addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    add(o: three.Object3D<three.Event>): void;
-    remove(o: three.Object3D<three.Event>): void;
+    initObject3D(o3d: three.Object3D): void;
+    getParent(): undefined | vue.ComponentPublicInstance;
+    addToParent(o?: three.Object3D): boolean;
+    removeFromParent(o?: three.Object3D): boolean;
+    add(o: three.Object3D): void;
+    remove(o: three.Object3D): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
@@ -2454,12 +2423,12 @@ declare const _default$J: vue.DefineComponent<vue.ExtractPropTypes<{
         default: boolean;
     };
 }>, Object3DSetupInterface, {}, {}, {
-    initObject3D(o3d: three.Object3D<three.Event>): void;
-    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
-    addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    add(o: three.Object3D<three.Event>): void;
-    remove(o: three.Object3D<three.Event>): void;
+    initObject3D(o3d: three.Object3D): void;
+    getParent(): undefined | vue.ComponentPublicInstance;
+    addToParent(o?: three.Object3D): boolean;
+    removeFromParent(o?: three.Object3D): boolean;
+    add(o: three.Object3D): void;
+    remove(o: three.Object3D): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
@@ -2663,12 +2632,12 @@ declare const _default$I: vue.DefineComponent<vue.ExtractPropTypes<{
         default: boolean;
     };
 }>, Object3DSetupInterface, {}, {}, {
-    initObject3D(o3d: three.Object3D<three.Event>): void;
-    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
-    addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    add(o: three.Object3D<three.Event>): void;
-    remove(o: three.Object3D<three.Event>): void;
+    initObject3D(o3d: three.Object3D): void;
+    getParent(): undefined | vue.ComponentPublicInstance;
+    addToParent(o?: three.Object3D): boolean;
+    removeFromParent(o?: three.Object3D): boolean;
+    add(o: three.Object3D): void;
+    remove(o: three.Object3D): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
@@ -2878,12 +2847,12 @@ declare const _default$H: vue.DefineComponent<vue.ExtractPropTypes<{
         default: boolean;
     };
 }>, Object3DSetupInterface, {}, {}, {
-    initObject3D(o3d: three.Object3D<three.Event>): void;
-    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
-    addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    add(o: three.Object3D<three.Event>): void;
-    remove(o: three.Object3D<three.Event>): void;
+    initObject3D(o3d: three.Object3D): void;
+    getParent(): undefined | vue.ComponentPublicInstance;
+    addToParent(o?: three.Object3D): boolean;
+    removeFromParent(o?: three.Object3D): boolean;
+    add(o: three.Object3D): void;
+    remove(o: three.Object3D): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
@@ -3103,12 +3072,12 @@ declare const _default$G: vue.DefineComponent<vue.ExtractPropTypes<{
         default: boolean;
     };
 }>, Object3DSetupInterface, {}, {}, {
-    initObject3D(o3d: three.Object3D<three.Event>): void;
-    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
-    addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    add(o: three.Object3D<three.Event>): void;
-    remove(o: three.Object3D<three.Event>): void;
+    initObject3D(o3d: three.Object3D): void;
+    getParent(): undefined | vue.ComponentPublicInstance;
+    addToParent(o?: three.Object3D): boolean;
+    removeFromParent(o?: three.Object3D): boolean;
+    add(o: three.Object3D): void;
+    remove(o: three.Object3D): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
@@ -3274,18 +3243,18 @@ declare const BaseMaterial: vue.DefineComponent<vue.ExtractPropTypes<{
 }>, MaterialSetupInterface, {}, {}, {
     getMaterialParams(): {
         [x: string]: any;
-        alphaTest?: number | undefined;
-        blending?: number | undefined;
-        color?: string | number | undefined;
-        depthTest?: boolean | undefined;
-        depthWrite?: boolean | undefined;
-        fog?: boolean | undefined;
-        opacity?: number | undefined;
-        side?: number | undefined;
-        toneMapped?: boolean | undefined;
-        transparent?: boolean | undefined;
-        vertexColors?: boolean | undefined;
-        visible?: boolean | undefined;
+        alphaTest?: number;
+        blending?: number;
+        color?: number | string;
+        depthTest?: boolean;
+        depthWrite?: boolean;
+        fog?: boolean;
+        opacity?: number;
+        side?: number;
+        toneMapped?: boolean;
+        transparent?: boolean;
+        vertexColors?: boolean;
+        visible?: boolean;
     };
     setProp(material: any, key: string, value: any, needsUpdate?: boolean): void;
     setTexture(texture: Texture | null, key?: string): void;
@@ -3318,18 +3287,18 @@ declare const BaseMaterial: vue.DefineComponent<vue.ExtractPropTypes<{
     }>, MaterialSetupInterface, {}, {}, {
         getMaterialParams(): {
             [x: string]: any;
-            alphaTest?: number | undefined;
-            blending?: number | undefined;
-            color?: string | number | undefined;
-            depthTest?: boolean | undefined;
-            depthWrite?: boolean | undefined;
-            fog?: boolean | undefined;
-            opacity?: number | undefined;
-            side?: number | undefined;
-            toneMapped?: boolean | undefined;
-            transparent?: boolean | undefined;
-            vertexColors?: boolean | undefined;
-            visible?: boolean | undefined;
+            alphaTest?: number;
+            blending?: number;
+            color?: number | string;
+            depthTest?: boolean;
+            depthWrite?: boolean;
+            fog?: boolean;
+            opacity?: number;
+            side?: number;
+            toneMapped?: boolean;
+            transparent?: boolean;
+            vertexColors?: boolean;
+            visible?: boolean;
         };
         setProp(material: any, key: string, value: any, needsUpdate?: boolean): void;
         setTexture(texture: Texture | null, key?: string): void;
@@ -3356,18 +3325,18 @@ declare const BaseMaterial: vue.DefineComponent<vue.ExtractPropTypes<{
     }>, MaterialSetupInterface, {}, {}, {
         getMaterialParams(): {
             [x: string]: any;
-            alphaTest?: number | undefined;
-            blending?: number | undefined;
-            color?: string | number | undefined;
-            depthTest?: boolean | undefined;
-            depthWrite?: boolean | undefined;
-            fog?: boolean | undefined;
-            opacity?: number | undefined;
-            side?: number | undefined;
-            toneMapped?: boolean | undefined;
-            transparent?: boolean | undefined;
-            vertexColors?: boolean | undefined;
-            visible?: boolean | undefined;
+            alphaTest?: number;
+            blending?: number;
+            color?: number | string;
+            depthTest?: boolean;
+            depthWrite?: boolean;
+            fog?: boolean;
+            opacity?: number;
+            side?: number;
+            toneMapped?: boolean;
+            transparent?: boolean;
+            vertexColors?: boolean;
+            visible?: boolean;
         };
         setProp(material: any, key: string, value: any, needsUpdate?: boolean): void;
         setTexture(texture: Texture | null, key?: string): void;
@@ -3425,18 +3394,18 @@ declare const _default$D: vue.DefineComponent<vue.ExtractPropTypes<{
 }>, MaterialSetupInterface, {}, {}, {
     getMaterialParams(): {
         [x: string]: any;
-        alphaTest?: number | undefined;
-        blending?: number | undefined;
-        color?: string | number | undefined;
-        depthTest?: boolean | undefined;
-        depthWrite?: boolean | undefined;
-        fog?: boolean | undefined;
-        opacity?: number | undefined;
-        side?: number | undefined;
-        toneMapped?: boolean | undefined;
-        transparent?: boolean | undefined;
-        vertexColors?: boolean | undefined;
-        visible?: boolean | undefined;
+        alphaTest?: number;
+        blending?: number;
+        color?: number | string;
+        depthTest?: boolean;
+        depthWrite?: boolean;
+        fog?: boolean;
+        opacity?: number;
+        side?: number;
+        toneMapped?: boolean;
+        transparent?: boolean;
+        vertexColors?: boolean;
+        visible?: boolean;
     };
     setProp(material: any, key: string, value: any, needsUpdate?: boolean): void;
     setTexture(texture: three.Texture | null, key?: string): void;
@@ -3469,18 +3438,18 @@ declare const _default$D: vue.DefineComponent<vue.ExtractPropTypes<{
     }>, MaterialSetupInterface, {}, {}, {
         getMaterialParams(): {
             [x: string]: any;
-            alphaTest?: number | undefined;
-            blending?: number | undefined;
-            color?: string | number | undefined;
-            depthTest?: boolean | undefined;
-            depthWrite?: boolean | undefined;
-            fog?: boolean | undefined;
-            opacity?: number | undefined;
-            side?: number | undefined;
-            toneMapped?: boolean | undefined;
-            transparent?: boolean | undefined;
-            vertexColors?: boolean | undefined;
-            visible?: boolean | undefined;
+            alphaTest?: number;
+            blending?: number;
+            color?: number | string;
+            depthTest?: boolean;
+            depthWrite?: boolean;
+            fog?: boolean;
+            opacity?: number;
+            side?: number;
+            toneMapped?: boolean;
+            transparent?: boolean;
+            vertexColors?: boolean;
+            visible?: boolean;
         };
         setProp(material: any, key: string, value: any, needsUpdate?: boolean): void;
         setTexture(texture: three.Texture | null, key?: string): void;
@@ -3507,18 +3476,18 @@ declare const _default$D: vue.DefineComponent<vue.ExtractPropTypes<{
     }>, MaterialSetupInterface, {}, {}, {
         getMaterialParams(): {
             [x: string]: any;
-            alphaTest?: number | undefined;
-            blending?: number | undefined;
-            color?: string | number | undefined;
-            depthTest?: boolean | undefined;
-            depthWrite?: boolean | undefined;
-            fog?: boolean | undefined;
-            opacity?: number | undefined;
-            side?: number | undefined;
-            toneMapped?: boolean | undefined;
-            transparent?: boolean | undefined;
-            vertexColors?: boolean | undefined;
-            visible?: boolean | undefined;
+            alphaTest?: number;
+            blending?: number;
+            color?: number | string;
+            depthTest?: boolean;
+            depthWrite?: boolean;
+            fog?: boolean;
+            opacity?: number;
+            side?: number;
+            toneMapped?: boolean;
+            transparent?: boolean;
+            vertexColors?: boolean;
+            visible?: boolean;
         };
         setProp(material: any, key: string, value: any, needsUpdate?: boolean): void;
         setTexture(texture: three.Texture | null, key?: string): void;
@@ -3553,7 +3522,7 @@ declare const _default$C: vue.DefineComponent<vue.ExtractPropTypes<{
     src: StringConstructor;
     onLoad: PropType<(t: Texture) => void>;
     onProgress: PropType<(e: ProgressEvent) => void>;
-    onError: PropType<(e: ErrorEvent) => void>;
+    onError: PropType<(e: unknown) => void>;
     props: {
         type: ObjectConstructor;
         default: () => {};
@@ -3572,7 +3541,7 @@ declare const _default$C: vue.DefineComponent<vue.ExtractPropTypes<{
     src: StringConstructor;
     onLoad: PropType<(t: Texture) => void>;
     onProgress: PropType<(e: ProgressEvent) => void>;
-    onError: PropType<(e: ErrorEvent) => void>;
+    onError: PropType<(e: unknown) => void>;
     props: {
         type: ObjectConstructor;
         default: () => {};
@@ -3598,7 +3567,7 @@ declare const _default$B: vue.DefineComponent<vue.ExtractPropTypes<{
     props: {
         type: ObjectConstructor;
         default: () => {
-            mapping: three.Mapping;
+            mapping: 301;
         };
     };
 }>, {}, {}, {}, {
@@ -3611,8 +3580,8 @@ declare const _default$B: vue.DefineComponent<vue.ExtractPropTypes<{
     uniform: StringConstructor;
     src: StringConstructor;
     onLoad: PropType<(t: three.Texture) => void>;
-    onProgress: PropType<(e: ProgressEvent<EventTarget>) => void>;
-    onError: PropType<(e: ErrorEvent) => void>;
+    onProgress: PropType<(e: ProgressEvent) => void>;
+    onError: PropType<(e: unknown) => void>;
     props: {
         type: ObjectConstructor;
         default: () => {};
@@ -3630,8 +3599,8 @@ declare const _default$B: vue.DefineComponent<vue.ExtractPropTypes<{
     uniform: StringConstructor;
     src: StringConstructor;
     onLoad: PropType<(t: three.Texture) => void>;
-    onProgress: PropType<(e: ProgressEvent<EventTarget>) => void>;
-    onError: PropType<(e: ErrorEvent) => void>;
+    onProgress: PropType<(e: ProgressEvent) => void>;
+    onError: PropType<(e: unknown) => void>;
     props: {
         type: ObjectConstructor;
         default: () => {};
@@ -3655,7 +3624,7 @@ declare const _default$B: vue.DefineComponent<vue.ExtractPropTypes<{
     props: {
         type: ObjectConstructor;
         default: () => {
-            mapping: three.Mapping;
+            mapping: 301;
         };
     };
 }>> & Readonly<{}>, {
@@ -3680,8 +3649,8 @@ declare const _default$A: vue.DefineComponent<vue.ExtractPropTypes<{
     uniform: StringConstructor;
     src: StringConstructor;
     onLoad: vue.PropType<(t: three.Texture) => void>;
-    onProgress: vue.PropType<(e: ProgressEvent<EventTarget>) => void>;
-    onError: vue.PropType<(e: ErrorEvent) => void>;
+    onProgress: vue.PropType<(e: ProgressEvent) => void>;
+    onError: vue.PropType<(e: unknown) => void>;
     props: {
         type: ObjectConstructor;
         default: () => {};
@@ -3699,8 +3668,8 @@ declare const _default$A: vue.DefineComponent<vue.ExtractPropTypes<{
     uniform: StringConstructor;
     src: StringConstructor;
     onLoad: vue.PropType<(t: three.Texture) => void>;
-    onProgress: vue.PropType<(e: ProgressEvent<EventTarget>) => void>;
-    onError: vue.PropType<(e: ErrorEvent) => void>;
+    onProgress: vue.PropType<(e: ProgressEvent) => void>;
+    onError: vue.PropType<(e: unknown) => void>;
     props: {
         type: ObjectConstructor;
         default: () => {};
@@ -3806,7 +3775,7 @@ declare const _default$m: vue.DefineComponent<vue.ExtractPropTypes<{
         readonly default: 5;
     };
     readonly align: {
-        readonly type: PropType<string | boolean>;
+        readonly type: PropType<boolean | string>;
         readonly default: false;
     };
 }>, TextSetupInterface, {}, {}, {
@@ -3817,9 +3786,7 @@ declare const _default$m: vue.DefineComponent<vue.ExtractPropTypes<{
 }>, MeshSetupInterface$1, {}, {}, {
     initMesh(): void;
     createGeometry(): void;
-    addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
-        [x: string]: unknown;
-    }>>): void;
+    addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions>): void;
     setGeometry(geometry: three.BufferGeometry): void;
     setMaterial(material: three.Material): void;
     refreshGeometry(): void;
@@ -3881,12 +3848,12 @@ declare const _default$m: vue.DefineComponent<vue.ExtractPropTypes<{
         default: boolean;
     };
 }>, Object3DSetupInterface, {}, {}, {
-    initObject3D(o3d: three.Object3D<three.Event>): void;
-    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
-    addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    add(o: three.Object3D<three.Event>): void;
-    remove(o: three.Object3D<three.Event>): void;
+    initObject3D(o3d: three.Object3D): void;
+    getParent(): undefined | vue.ComponentPublicInstance;
+    addToParent(o?: three.Object3D): boolean;
+    removeFromParent(o?: three.Object3D): boolean;
+    add(o: three.Object3D): void;
+    remove(o: three.Object3D): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
@@ -3970,9 +3937,7 @@ declare const _default$m: vue.DefineComponent<vue.ExtractPropTypes<{
     }>> & Readonly<{}>, MeshSetupInterface$1, {}, {}, {
         initMesh(): void;
         createGeometry(): void;
-        addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
-            [x: string]: unknown;
-        }>>): void;
+        addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions>): void;
         setGeometry(geometry: three.BufferGeometry): void;
         setMaterial(material: three.Material): void;
         refreshGeometry(): void;
@@ -4034,12 +3999,12 @@ declare const _default$m: vue.DefineComponent<vue.ExtractPropTypes<{
             default: boolean;
         };
     }>, Object3DSetupInterface, {}, {}, {
-        initObject3D(o3d: three.Object3D<three.Event>): void;
-        getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
-        addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
-        removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
-        add(o: three.Object3D<three.Event>): void;
-        remove(o: three.Object3D<three.Event>): void;
+        initObject3D(o3d: three.Object3D): void;
+        getParent(): undefined | vue.ComponentPublicInstance;
+        addToParent(o?: three.Object3D): boolean;
+        removeFromParent(o?: three.Object3D): boolean;
+        add(o: three.Object3D): void;
+        remove(o: three.Object3D): void;
     }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
         onPointerEnter: FunctionConstructor;
         onPointerOver: FunctionConstructor;
@@ -4183,12 +4148,12 @@ declare const _default$m: vue.DefineComponent<vue.ExtractPropTypes<{
         D: {};
         C: {};
         M: {
-            initObject3D(o3d: three.Object3D<three.Event>): void;
-            getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
-            addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
-            removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
-            add(o: three.Object3D<three.Event>): void;
-            remove(o: three.Object3D<three.Event>): void;
+            initObject3D(o3d: three.Object3D): void;
+            getParent(): undefined | vue.ComponentPublicInstance;
+            addToParent(o?: three.Object3D): boolean;
+            removeFromParent(o?: three.Object3D): boolean;
+            add(o: three.Object3D): void;
+            remove(o: three.Object3D): void;
         };
         Defaults: {
             props: Record<string, any>;
@@ -4265,18 +4230,16 @@ declare const _default$m: vue.DefineComponent<vue.ExtractPropTypes<{
         castShadow: BooleanConstructor;
         receiveShadow: BooleanConstructor;
     }>> & Readonly<{}>, Object3DSetupInterface & MeshSetupInterface$1, {}, {}, {
-        initObject3D(o3d: three.Object3D<three.Event>): void;
-        getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
-        addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
-        removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
-        add(o: three.Object3D<three.Event>): void;
-        remove(o: three.Object3D<three.Event>): void;
+        initObject3D(o3d: three.Object3D): void;
+        getParent(): undefined | vue.ComponentPublicInstance;
+        addToParent(o?: three.Object3D): boolean;
+        removeFromParent(o?: three.Object3D): boolean;
+        add(o: three.Object3D): void;
+        remove(o: three.Object3D): void;
     } & {
         initMesh(): void;
         createGeometry(): void;
-        addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
-            [x: string]: unknown;
-        }>>): void;
+        addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions>): void;
         setGeometry(geometry: three.BufferGeometry): void;
         setMaterial(material: three.Material): void;
         refreshGeometry(): void;
@@ -4338,7 +4301,7 @@ declare const _default$m: vue.DefineComponent<vue.ExtractPropTypes<{
         readonly default: 5;
     };
     readonly align: {
-        readonly type: PropType<string | boolean>;
+        readonly type: PropType<boolean | string>;
         readonly default: false;
     };
 }>> & Readonly<{}>, {
@@ -4362,26 +4325,7 @@ declare const _default$l: vue.DefineSetupFnComponent<Record<string, any>, {}, {}
 declare const _default$k: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
 //# sourceMappingURL=TorusKnot.d.ts.map
 
-declare const _default$j: vue.DefineComponent<vue.ExtractPropTypes<{
-    readonly points: ArrayConstructor;
-    readonly path: typeof three.Curve;
-    readonly tubularSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 64;
-    };
-    readonly radius: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly radialSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 8;
-    };
-    readonly closed: {
-        readonly type: BooleanConstructor;
-        readonly default: false;
-    };
-}>, {}, {}, {}, {
+declare const _default$j: vue.DefineComponent<{}, {}, {}, {}, {
     createGeometry(): void;
     updatePoints(points: Vector3[]): void;
 }, vue.ComponentOptionsMixin, vue.DefineComponent<vue.ExtractPropTypes<{
@@ -4390,9 +4334,7 @@ declare const _default$j: vue.DefineComponent<vue.ExtractPropTypes<{
 }>, MeshSetupInterface$1, {}, {}, {
     initMesh(): void;
     createGeometry(): void;
-    addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
-        [x: string]: unknown;
-    }>>): void;
+    addGeometryWatchers(props: Readonly<ComponentPropsOptions>): void;
     setGeometry(geometry: three.BufferGeometry): void;
     setMaterial(material: three.Material): void;
     refreshGeometry(): void;
@@ -4454,12 +4396,12 @@ declare const _default$j: vue.DefineComponent<vue.ExtractPropTypes<{
         default: boolean;
     };
 }>, Object3DSetupInterface, {}, {}, {
-    initObject3D(o3d: three.Object3D<three.Event>): void;
-    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
-    addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    add(o: three.Object3D<three.Event>): void;
-    remove(o: three.Object3D<three.Event>): void;
+    initObject3D(o3d: three.Object3D): void;
+    getParent(): undefined | vue.ComponentPublicInstance;
+    addToParent(o?: three.Object3D): boolean;
+    removeFromParent(o?: three.Object3D): boolean;
+    add(o: three.Object3D): void;
+    remove(o: three.Object3D): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
@@ -4543,9 +4485,7 @@ declare const _default$j: vue.DefineComponent<vue.ExtractPropTypes<{
     }>> & Readonly<{}>, MeshSetupInterface$1, {}, {}, {
         initMesh(): void;
         createGeometry(): void;
-        addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
-            [x: string]: unknown;
-        }>>): void;
+        addGeometryWatchers(props: Readonly<ComponentPropsOptions>): void;
         setGeometry(geometry: three.BufferGeometry): void;
         setMaterial(material: three.Material): void;
         refreshGeometry(): void;
@@ -4607,12 +4547,12 @@ declare const _default$j: vue.DefineComponent<vue.ExtractPropTypes<{
             default: boolean;
         };
     }>, Object3DSetupInterface, {}, {}, {
-        initObject3D(o3d: three.Object3D<three.Event>): void;
-        getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
-        addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
-        removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
-        add(o: three.Object3D<three.Event>): void;
-        remove(o: three.Object3D<three.Event>): void;
+        initObject3D(o3d: three.Object3D): void;
+        getParent(): undefined | vue.ComponentPublicInstance;
+        addToParent(o?: three.Object3D): boolean;
+        removeFromParent(o?: three.Object3D): boolean;
+        add(o: three.Object3D): void;
+        remove(o: three.Object3D): void;
     }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
         onPointerEnter: FunctionConstructor;
         onPointerOver: FunctionConstructor;
@@ -4756,12 +4696,12 @@ declare const _default$j: vue.DefineComponent<vue.ExtractPropTypes<{
         D: {};
         C: {};
         M: {
-            initObject3D(o3d: three.Object3D<three.Event>): void;
-            getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
-            addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
-            removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
-            add(o: three.Object3D<three.Event>): void;
-            remove(o: three.Object3D<three.Event>): void;
+            initObject3D(o3d: three.Object3D): void;
+            getParent(): undefined | vue.ComponentPublicInstance;
+            addToParent(o?: three.Object3D): boolean;
+            removeFromParent(o?: three.Object3D): boolean;
+            add(o: three.Object3D): void;
+            remove(o: three.Object3D): void;
         };
         Defaults: {
             props: Record<string, any>;
@@ -4838,18 +4778,16 @@ declare const _default$j: vue.DefineComponent<vue.ExtractPropTypes<{
         castShadow: BooleanConstructor;
         receiveShadow: BooleanConstructor;
     }>> & Readonly<{}>, Object3DSetupInterface & MeshSetupInterface$1, {}, {}, {
-        initObject3D(o3d: three.Object3D<three.Event>): void;
-        getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
-        addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
-        removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
-        add(o: three.Object3D<three.Event>): void;
-        remove(o: three.Object3D<three.Event>): void;
+        initObject3D(o3d: three.Object3D): void;
+        getParent(): undefined | vue.ComponentPublicInstance;
+        addToParent(o?: three.Object3D): boolean;
+        removeFromParent(o?: three.Object3D): boolean;
+        add(o: three.Object3D): void;
+        remove(o: three.Object3D): void;
     } & {
         initMesh(): void;
         createGeometry(): void;
-        addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
-            [x: string]: unknown;
-        }>>): void;
+        addGeometryWatchers(props: Readonly<ComponentPropsOptions>): void;
         setGeometry(geometry: three.BufferGeometry): void;
         setMaterial(material: three.Material): void;
         refreshGeometry(): void;
@@ -4864,31 +4802,7 @@ declare const _default$j: vue.DefineComponent<vue.ExtractPropTypes<{
         disableAdd: boolean;
         disableRemove: boolean;
     }>;
-}, true, {}, any>, {}, string, vue.PublicProps, Readonly<vue.ExtractPropTypes<{
-    readonly points: ArrayConstructor;
-    readonly path: typeof three.Curve;
-    readonly tubularSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 64;
-    };
-    readonly radius: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly radialSegments: {
-        readonly type: NumberConstructor;
-        readonly default: 8;
-    };
-    readonly closed: {
-        readonly type: BooleanConstructor;
-        readonly default: false;
-    };
-}>> & Readonly<{}>, {
-    readonly radius: number;
-    readonly radialSegments: number;
-    readonly tubularSegments: number;
-    readonly closed: boolean;
-}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>;
+}, true, {}, any>, {}, string, vue.PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>;
 //# sourceMappingURL=Tube.d.ts.map
 
 interface ImageSetupInterface extends MeshSetupInterface$1 {
@@ -4922,9 +4836,7 @@ declare const _default$i: vue.DefineComponent<vue.ExtractPropTypes<{
 }>, MeshSetupInterface$1, {}, {}, {
     initMesh(): void;
     createGeometry(): void;
-    addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
-        [x: string]: unknown;
-    }>>): void;
+    addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions>): void;
     setGeometry(geometry: three.BufferGeometry): void;
     setMaterial(material: three.Material): void;
     refreshGeometry(): void;
@@ -4986,12 +4898,12 @@ declare const _default$i: vue.DefineComponent<vue.ExtractPropTypes<{
         default: boolean;
     };
 }>, Object3DSetupInterface, {}, {}, {
-    initObject3D(o3d: three.Object3D<three.Event>): void;
-    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
-    addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    add(o: three.Object3D<three.Event>): void;
-    remove(o: three.Object3D<three.Event>): void;
+    initObject3D(o3d: three.Object3D): void;
+    getParent(): undefined | vue.ComponentPublicInstance;
+    addToParent(o?: three.Object3D): boolean;
+    removeFromParent(o?: three.Object3D): boolean;
+    add(o: three.Object3D): void;
+    remove(o: three.Object3D): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
@@ -5075,9 +4987,7 @@ declare const _default$i: vue.DefineComponent<vue.ExtractPropTypes<{
     }>> & Readonly<{}>, MeshSetupInterface$1, {}, {}, {
         initMesh(): void;
         createGeometry(): void;
-        addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
-            [x: string]: unknown;
-        }>>): void;
+        addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions>): void;
         setGeometry(geometry: three.BufferGeometry): void;
         setMaterial(material: three.Material): void;
         refreshGeometry(): void;
@@ -5139,12 +5049,12 @@ declare const _default$i: vue.DefineComponent<vue.ExtractPropTypes<{
             default: boolean;
         };
     }>, Object3DSetupInterface, {}, {}, {
-        initObject3D(o3d: three.Object3D<three.Event>): void;
-        getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
-        addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
-        removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
-        add(o: three.Object3D<three.Event>): void;
-        remove(o: three.Object3D<three.Event>): void;
+        initObject3D(o3d: three.Object3D): void;
+        getParent(): undefined | vue.ComponentPublicInstance;
+        addToParent(o?: three.Object3D): boolean;
+        removeFromParent(o?: three.Object3D): boolean;
+        add(o: three.Object3D): void;
+        remove(o: three.Object3D): void;
     }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
         onPointerEnter: FunctionConstructor;
         onPointerOver: FunctionConstructor;
@@ -5288,12 +5198,12 @@ declare const _default$i: vue.DefineComponent<vue.ExtractPropTypes<{
         D: {};
         C: {};
         M: {
-            initObject3D(o3d: three.Object3D<three.Event>): void;
-            getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
-            addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
-            removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
-            add(o: three.Object3D<three.Event>): void;
-            remove(o: three.Object3D<three.Event>): void;
+            initObject3D(o3d: three.Object3D): void;
+            getParent(): undefined | vue.ComponentPublicInstance;
+            addToParent(o?: three.Object3D): boolean;
+            removeFromParent(o?: three.Object3D): boolean;
+            add(o: three.Object3D): void;
+            remove(o: three.Object3D): void;
         };
         Defaults: {
             props: Record<string, any>;
@@ -5370,18 +5280,16 @@ declare const _default$i: vue.DefineComponent<vue.ExtractPropTypes<{
         castShadow: BooleanConstructor;
         receiveShadow: BooleanConstructor;
     }>> & Readonly<{}>, Object3DSetupInterface & MeshSetupInterface$1, {}, {}, {
-        initObject3D(o3d: three.Object3D<three.Event>): void;
-        getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
-        addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
-        removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
-        add(o: three.Object3D<three.Event>): void;
-        remove(o: three.Object3D<three.Event>): void;
+        initObject3D(o3d: three.Object3D): void;
+        getParent(): undefined | vue.ComponentPublicInstance;
+        addToParent(o?: three.Object3D): boolean;
+        removeFromParent(o?: three.Object3D): boolean;
+        add(o: three.Object3D): void;
+        remove(o: three.Object3D): void;
     } & {
         initMesh(): void;
         createGeometry(): void;
-        addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
-            [x: string]: unknown;
-        }>>): void;
+        addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions>): void;
         setGeometry(geometry: three.BufferGeometry): void;
         setMaterial(material: three.Material): void;
         refreshGeometry(): void;
@@ -5434,9 +5342,7 @@ declare const _default$h: vue.DefineComponent<vue.ExtractPropTypes<{
 }>, MeshSetupInterface$1, {}, {}, {
     initMesh(): void;
     createGeometry(): void;
-    addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
-        [x: string]: unknown;
-    }>>): void;
+    addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions>): void;
     setGeometry(geometry: three.BufferGeometry): void;
     setMaterial(material: three.Material): void;
     refreshGeometry(): void;
@@ -5498,12 +5404,12 @@ declare const _default$h: vue.DefineComponent<vue.ExtractPropTypes<{
         default: boolean;
     };
 }>, Object3DSetupInterface, {}, {}, {
-    initObject3D(o3d: three.Object3D<three.Event>): void;
-    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
-    addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    add(o: three.Object3D<three.Event>): void;
-    remove(o: three.Object3D<three.Event>): void;
+    initObject3D(o3d: three.Object3D): void;
+    getParent(): undefined | vue.ComponentPublicInstance;
+    addToParent(o?: three.Object3D): boolean;
+    removeFromParent(o?: three.Object3D): boolean;
+    add(o: three.Object3D): void;
+    remove(o: three.Object3D): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
@@ -5587,9 +5493,7 @@ declare const _default$h: vue.DefineComponent<vue.ExtractPropTypes<{
     }>> & Readonly<{}>, MeshSetupInterface$1, {}, {}, {
         initMesh(): void;
         createGeometry(): void;
-        addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
-            [x: string]: unknown;
-        }>>): void;
+        addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions>): void;
         setGeometry(geometry: three.BufferGeometry): void;
         setMaterial(material: three.Material): void;
         refreshGeometry(): void;
@@ -5651,12 +5555,12 @@ declare const _default$h: vue.DefineComponent<vue.ExtractPropTypes<{
             default: boolean;
         };
     }>, Object3DSetupInterface, {}, {}, {
-        initObject3D(o3d: three.Object3D<three.Event>): void;
-        getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
-        addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
-        removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
-        add(o: three.Object3D<three.Event>): void;
-        remove(o: three.Object3D<three.Event>): void;
+        initObject3D(o3d: three.Object3D): void;
+        getParent(): undefined | vue.ComponentPublicInstance;
+        addToParent(o?: three.Object3D): boolean;
+        removeFromParent(o?: three.Object3D): boolean;
+        add(o: three.Object3D): void;
+        remove(o: three.Object3D): void;
     }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
         onPointerEnter: FunctionConstructor;
         onPointerOver: FunctionConstructor;
@@ -5800,12 +5704,12 @@ declare const _default$h: vue.DefineComponent<vue.ExtractPropTypes<{
         D: {};
         C: {};
         M: {
-            initObject3D(o3d: three.Object3D<three.Event>): void;
-            getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
-            addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
-            removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
-            add(o: three.Object3D<three.Event>): void;
-            remove(o: three.Object3D<three.Event>): void;
+            initObject3D(o3d: three.Object3D): void;
+            getParent(): undefined | vue.ComponentPublicInstance;
+            addToParent(o?: three.Object3D): boolean;
+            removeFromParent(o?: three.Object3D): boolean;
+            add(o: three.Object3D): void;
+            remove(o: three.Object3D): void;
         };
         Defaults: {
             props: Record<string, any>;
@@ -5882,18 +5786,16 @@ declare const _default$h: vue.DefineComponent<vue.ExtractPropTypes<{
         castShadow: BooleanConstructor;
         receiveShadow: BooleanConstructor;
     }>> & Readonly<{}>, Object3DSetupInterface & MeshSetupInterface$1, {}, {}, {
-        initObject3D(o3d: three.Object3D<three.Event>): void;
-        getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
-        addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
-        removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
-        add(o: three.Object3D<three.Event>): void;
-        remove(o: three.Object3D<three.Event>): void;
+        initObject3D(o3d: three.Object3D): void;
+        getParent(): undefined | vue.ComponentPublicInstance;
+        addToParent(o?: three.Object3D): boolean;
+        removeFromParent(o?: three.Object3D): boolean;
+        add(o: three.Object3D): void;
+        remove(o: three.Object3D): void;
     } & {
         initMesh(): void;
         createGeometry(): void;
-        addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
-            [x: string]: unknown;
-        }>>): void;
+        addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions>): void;
         setGeometry(geometry: three.BufferGeometry): void;
         setMaterial(material: three.Material): void;
         refreshGeometry(): void;
@@ -5987,12 +5889,12 @@ declare const _default$g: vue.DefineComponent<vue.ExtractPropTypes<{
         default: boolean;
     };
 }>, Object3DSetupInterface, {}, {}, {
-    initObject3D(o3d: three.Object3D<three.Event>): void;
-    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
-    addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    add(o: three.Object3D<three.Event>): void;
-    remove(o: three.Object3D<three.Event>): void;
+    initObject3D(o3d: three.Object3D): void;
+    getParent(): undefined | vue.ComponentPublicInstance;
+    addToParent(o?: three.Object3D): boolean;
+    removeFromParent(o?: three.Object3D): boolean;
+    add(o: three.Object3D): void;
+    remove(o: three.Object3D): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
@@ -6140,12 +6042,12 @@ declare const _default$f: vue.DefineComponent<{}, PointsSetupInterface, {}, {}, 
         default: boolean;
     };
 }>, Object3DSetupInterface, {}, {}, {
-    initObject3D(o3d: three.Object3D<three.Event>): void;
-    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
-    addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    add(o: three.Object3D<three.Event>): void;
-    remove(o: three.Object3D<three.Event>): void;
+    initObject3D(o3d: three.Object3D): void;
+    getParent(): undefined | vue.ComponentPublicInstance;
+    addToParent(o?: three.Object3D): boolean;
+    removeFromParent(o?: three.Object3D): boolean;
+    add(o: three.Object3D): void;
+    remove(o: three.Object3D): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
@@ -6278,12 +6180,12 @@ declare const _default$f: vue.DefineComponent<{}, PointsSetupInterface, {}, {}, 
             default: boolean;
         };
     }>, Object3DSetupInterface, {}, {}, {
-        initObject3D(o3d: three.Object3D<three.Event>): void;
-        getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
-        addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
-        removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
-        add(o: three.Object3D<three.Event>): void;
-        remove(o: three.Object3D<three.Event>): void;
+        initObject3D(o3d: three.Object3D): void;
+        getParent(): undefined | vue.ComponentPublicInstance;
+        addToParent(o?: three.Object3D): boolean;
+        removeFromParent(o?: three.Object3D): boolean;
+        add(o: three.Object3D): void;
+        remove(o: three.Object3D): void;
     }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
         onPointerEnter: FunctionConstructor;
         onPointerOver: FunctionConstructor;
@@ -6427,12 +6329,12 @@ declare const _default$f: vue.DefineComponent<{}, PointsSetupInterface, {}, {}, 
         D: {};
         C: {};
         M: {
-            initObject3D(o3d: three.Object3D<three.Event>): void;
-            getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
-            addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
-            removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
-            add(o: three.Object3D<three.Event>): void;
-            remove(o: three.Object3D<three.Event>): void;
+            initObject3D(o3d: three.Object3D): void;
+            getParent(): undefined | vue.ComponentPublicInstance;
+            addToParent(o?: three.Object3D): boolean;
+            removeFromParent(o?: three.Object3D): boolean;
+            add(o: three.Object3D): void;
+            remove(o: three.Object3D): void;
         };
         Defaults: {
             props: Record<string, any>;
@@ -6506,12 +6408,12 @@ declare const _default$f: vue.DefineComponent<{}, PointsSetupInterface, {}, {}, 
         onReady?: ((...args: any[]) => any) | undefined;
         onCreated?: ((...args: any[]) => any) | undefined;
     }> & Readonly<{}> & Readonly<{}>, Object3DSetupInterface & PointsSetupInterface, {}, {}, {
-        initObject3D(o3d: three.Object3D<three.Event>): void;
-        getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
-        addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
-        removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
-        add(o: three.Object3D<three.Event>): void;
-        remove(o: three.Object3D<three.Event>): void;
+        initObject3D(o3d: three.Object3D): void;
+        getParent(): undefined | vue.ComponentPublicInstance;
+        addToParent(o?: three.Object3D): boolean;
+        removeFromParent(o?: three.Object3D): boolean;
+        add(o: three.Object3D): void;
+        remove(o: three.Object3D): void;
     } & {
         setGeometry(geometry: BufferGeometry): void;
         setMaterial(material: Material): void;
@@ -6536,8 +6438,8 @@ declare const _default$e: vue.DefineComponent<{}, {}, {}, {}, {}, vue.ComponentO
 }>, {}, {
     progress: number;
 }, {}, {
-    onLoad(model: three.Object3D<three.Event>): void;
-    onProgress(progress: ProgressEvent<EventTarget>): void;
+    onLoad(model: three.Object3D): void;
+    onProgress(progress: ProgressEvent): void;
     onError(error: ErrorEvent): void;
 }, vue.ComponentOptionsMixin, vue.DefineComponent<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
@@ -6597,12 +6499,12 @@ declare const _default$e: vue.DefineComponent<{}, {}, {}, {}, {}, vue.ComponentO
         default: boolean;
     };
 }>, Object3DSetupInterface, {}, {}, {
-    initObject3D(o3d: three.Object3D<three.Event>): void;
-    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
-    addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    add(o: three.Object3D<three.Event>): void;
-    remove(o: three.Object3D<three.Event>): void;
+    initObject3D(o3d: three.Object3D): void;
+    getParent(): undefined | vue.ComponentPublicInstance;
+    addToParent(o?: three.Object3D): boolean;
+    removeFromParent(o?: three.Object3D): boolean;
+    add(o: three.Object3D): void;
+    remove(o: three.Object3D): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
@@ -6694,8 +6596,8 @@ declare const _default$d: vue.DefineComponent<{}, {}, {}, {}, {}, vue.ComponentO
 }>, {}, {
     progress: number;
 }, {}, {
-    onLoad(model: three.Object3D<three.Event>): void;
-    onProgress(progress: ProgressEvent<EventTarget>): void;
+    onLoad(model: three.Object3D): void;
+    onProgress(progress: ProgressEvent): void;
     onError(error: ErrorEvent): void;
 }, vue.ComponentOptionsMixin, vue.DefineComponent<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
@@ -6755,12 +6657,12 @@ declare const _default$d: vue.DefineComponent<{}, {}, {}, {}, {}, vue.ComponentO
         default: boolean;
     };
 }>, Object3DSetupInterface, {}, {}, {
-    initObject3D(o3d: three.Object3D<three.Event>): void;
-    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
-    addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    add(o: three.Object3D<three.Event>): void;
-    remove(o: three.Object3D<three.Event>): void;
+    initObject3D(o3d: three.Object3D): void;
+    getParent(): undefined | vue.ComponentPublicInstance;
+    addToParent(o?: three.Object3D): boolean;
+    removeFromParent(o?: three.Object3D): boolean;
+    add(o: three.Object3D): void;
+    remove(o: three.Object3D): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
@@ -7305,12 +7207,12 @@ declare const _default: vue.DefineComponent<vue.ExtractPropTypes<{
         default: boolean;
     };
 }>, Object3DSetupInterface, {}, {}, {
-    initObject3D(o3d: three.Object3D<three.Event>): void;
-    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}, {}, string, {}, {}, {}, string, vue.ComponentProvideOptions>, {}, {}, "", {}, any> | undefined;
-    addToParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    removeFromParent(o?: three.Object3D<three.Event> | undefined): boolean;
-    add(o: three.Object3D<three.Event>): void;
-    remove(o: three.Object3D<three.Event>): void;
+    initObject3D(o3d: three.Object3D): void;
+    getParent(): undefined | vue.ComponentPublicInstance;
+    addToParent(o?: three.Object3D): boolean;
+    removeFromParent(o?: three.Object3D): boolean;
+    add(o: three.Object3D): void;
+    remove(o: three.Object3D): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.PublicProps, Readonly<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
@@ -7435,4 +7337,5 @@ interface TexturesInterface {
 }
 declare function useTextures(): TexturesInterface;
 
-export { _default$L as AmbientLight, BasicMaterial, _default$9 as BokehPass, _default$z as Box, _default$11 as BoxGeometry, Geometry as BufferGeometry, _default$16 as Camera, _default$y as Circle, _default$10 as CircleGeometry, ComposerInjectionKey, _default$x as Cone, _default$$ as ConeGeometry, _default$12 as CubeCamera, _default$B as CubeTexture, _default$w as Cylinder, _default$_ as CylinderGeometry, _default$K as DirectionalLight, _default$v as Dodecahedron, _default$Z as DodecahedronGeometry, _default$c as EffectComposer, _default$b as EffectPass, _default$Y as ExtrudeGeometry, _default$7 as FXAAPass, _default$d as FbxModel, _default$8 as FilmPass, _default$e as GltfModel, _default as GridHelper, _default$15 as Group, _default$6 as HalftonePass, _default$J as HemisphereLight, _default$u as Icosahedron, _default$X as IcosahedronGeometry, _default$i as Image, _default$h as InstancedMesh, LambertMaterial, _default$t as Lathe, _default$W as LatheGeometry, _default$F as MatcapMaterial, BaseMaterial as Material, MaterialInjectionKey, MaterialPublicInterface, Mesh, MeshInjectionKey, MeshPublicInterface, _default$18 as Object3D, Object3DPublicInterface, _default$s as Octahedron, _default$V as OctahedronGeometry, _default$17 as OrthographicCamera, _default$16 as PerspectiveCamera, PhongMaterial, PhysicalMaterial, _default$r as Plane, _default$U as PlaneGeometry, _default$I as PointLight, _default$f as Points, PointsMaterial, _default$q as Polyhedron, _default$T as PolyhedronGeometry, _default$13 as Raycaster, _default$H as RectAreaLight, _default$a as RenderPass, _default$19 as Renderer, RendererInjectionKey, RendererPublicInterface, _default$p as Ring, _default$S as RingGeometry, _default$5 as SMAAPass, _default$4 as SSAOPass, _default$14 as Scene, SceneInjectionKey, _default$E as ShaderMaterial, ShadowMaterial, _default$Q as ShapeGeometry, _default$o as Sphere, _default$R as SphereGeometry, _default$G as SpotLight, _default$g as Sprite, StandardMaterial, _default$D as SubSurfaceMaterial, _default$n as Tetrahedron, _default$P as TetrahedronGeometry, _default$m as Text, _default$C as Texture, _default$3 as TiltShiftPass, ToonMaterial, _default$l as Torus, _default$O as TorusGeometry, _default$k as TorusKnot, _default$N as TorusKnotGeometry, TroisJSVuePlugin, _default$j as Tube, _default$M as TubeGeometry, _default$2 as UnrealBloomPass, _default$A as VideoTexture, _default$1 as ZoomBlurPass, applyObjectProps, bindObjectProp, bindObjectProps, bindProp, bindProps, createApp, getMatcapUrl, lerp, limit, propsValues, setFromProp, useTextures };
+export { _default$L as AmbientLight, BasicMaterial, _default$9 as BokehPass, _default$z as Box, _default$11 as BoxGeometry, Geometry as BufferGeometry, _default$16 as Camera, _default$y as Circle, _default$10 as CircleGeometry, ComposerInjectionKey, _default$x as Cone, _default$$ as ConeGeometry, _default$12 as CubeCamera, _default$B as CubeTexture, _default$w as Cylinder, _default$_ as CylinderGeometry, _default$K as DirectionalLight, _default$v as Dodecahedron, _default$Z as DodecahedronGeometry, _default$c as EffectComposer, _default$b as EffectPass, _default$Y as ExtrudeGeometry, _default$7 as FXAAPass, _default$d as FbxModel, _default$8 as FilmPass, _default$e as GltfModel, _default as GridHelper, _default$15 as Group, _default$6 as HalftonePass, _default$J as HemisphereLight, _default$u as Icosahedron, _default$X as IcosahedronGeometry, _default$i as Image, _default$h as InstancedMesh, LambertMaterial, _default$t as Lathe, _default$W as LatheGeometry, _default$F as MatcapMaterial, BaseMaterial as Material, MaterialInjectionKey, Mesh, MeshInjectionKey, _default$18 as Object3D, _default$s as Octahedron, _default$V as OctahedronGeometry, _default$17 as OrthographicCamera, _default$16 as PerspectiveCamera, PhongMaterial, PhysicalMaterial, _default$r as Plane, _default$U as PlaneGeometry, _default$I as PointLight, _default$f as Points, PointsMaterial, _default$q as Polyhedron, _default$T as PolyhedronGeometry, _default$13 as Raycaster, _default$H as RectAreaLight, _default$a as RenderPass, _default$19 as Renderer, RendererInjectionKey, _default$p as Ring, _default$S as RingGeometry, _default$5 as SMAAPass, _default$4 as SSAOPass, _default$14 as Scene, SceneInjectionKey, _default$E as ShaderMaterial, ShadowMaterial, _default$Q as ShapeGeometry, _default$o as Sphere, _default$R as SphereGeometry, _default$G as SpotLight, _default$g as Sprite, StandardMaterial, _default$D as SubSurfaceMaterial, _default$n as Tetrahedron, _default$P as TetrahedronGeometry, _default$m as Text, _default$C as Texture, _default$3 as TiltShiftPass, ToonMaterial, _default$l as Torus, _default$O as TorusGeometry, _default$k as TorusKnot, _default$N as TorusKnotGeometry, TroisJSVuePlugin, _default$j as Tube, _default$M as TubeGeometry, _default$2 as UnrealBloomPass, _default$A as VideoTexture, _default$1 as ZoomBlurPass, applyObjectProps, bindObjectProp, bindObjectProps, bindProp, bindProps, createApp, getMatcapUrl, lerp, limit, propsValues, setFromProp, useTextures };
+export type { MaterialPublicInterface, MeshPublicInterface, Object3DPublicInterface, RendererPublicInterface };

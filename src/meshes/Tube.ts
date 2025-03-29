@@ -1,4 +1,4 @@
-import { defineComponent } from 'vue'
+import { ComponentPropsOptions, defineComponent } from 'vue'
 import { TubeGeometry, Vector3 } from 'three'
 import Mesh from './Mesh'
 import { props, createGeometry, updateTubeGeometryPoints } from '../geometries/TubeGeometry'
@@ -8,7 +8,7 @@ export default defineComponent({
   props,
   created() {
     this.createGeometry()
-    this.addGeometryWatchers(props)
+    this.addGeometryWatchers(props as Readonly<ComponentPropsOptions>)
   },
   methods: {
     createGeometry() {

@@ -1,7 +1,7 @@
 import { PropType } from 'vue'
 import { geometryComponent } from './Geometry'
 import { ExtrudeGeometry, ExtrudeGeometryOptions, Shape, BufferGeometry, Vector3, BoxGeometry } from 'three'
-import { mergeBufferGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils'
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
 
 export const props = {
     shapes: { type: [Object, Array] as PropType<Shape | Shape[]> },
@@ -27,7 +27,7 @@ export function createGeometry(comp: any): ExtrudeGeometry | BufferGeometry {
                 return geometry;
             });
 
-            return mergeBufferGeometries(geometries);
+            return mergeGeometries(geometries);
         } else {
             // this ensures mergeBufferGeometries wont fail, and the algorithm can still continue
             console.warn("Empty shape array found in ExtrudeGeometry")

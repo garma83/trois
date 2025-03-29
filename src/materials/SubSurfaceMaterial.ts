@@ -1,5 +1,5 @@
 import { defineComponent, PropType } from 'vue'
-import { Color, ShaderMaterial, UniformsUtils } from 'three'
+import { Color, ShaderMaterial, ShaderMaterialParameters, UniformsUtils } from 'three'
 import SubsurfaceScatteringShader from './SubsurfaceScatteringShader'
 import Material from './Material'
 import { bindObjectProp } from '../tools'
@@ -43,7 +43,7 @@ export default defineComponent({
         lights: true,
         ...this.props,
         uniforms,
-      })
+      } as ShaderMaterialParameters)
 
       return material
     },

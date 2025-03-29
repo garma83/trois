@@ -17,7 +17,8 @@ export default defineComponent({
   created() {
     if (!this.renderer) return
 
-    const pass = new HalftonePass(this.renderer.size.width, this.renderer.size.height, {})
+    const pass = new HalftonePass({})
+    pass.setSize(this.renderer.size.width, this.renderer.size.height)
 
     Object.keys(props).forEach(p => {
       // @ts-ignore

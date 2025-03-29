@@ -114,8 +114,8 @@ export default defineComponent({
 
       this.$emit('created', o3d)
 
-      if (this.lookAt) o3d.lookAt(this.lookAt.x ?? 0, this.lookAt.y, this.lookAt.z)
-      watch(() => this.lookAt, (v) => { o3d.lookAt(v.x ?? 0, v.y, v.z) }, { deep: true })
+      if (this.lookAt) o3d.lookAt(this.lookAt.x ?? 0, this.lookAt.y!, this.lookAt.z!)
+      watch(() => this.lookAt, (v) => { o3d.lookAt(v.x ?? 0, v.y!, v.z!) }, { deep: true })
 
       this.parent = this.getParent()
       if (!this.disableAdd) {

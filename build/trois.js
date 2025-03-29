@@ -1,10 +1,8 @@
 'use strict';
 
-Object.defineProperty(exports, '__esModule', { value: true });
-
 var vue = require('vue');
 var three = require('three');
-var BufferGeometryUtils = require('three/examples/jsm/utils/BufferGeometryUtils');
+var BufferGeometryUtils_js = require('three/examples/jsm/utils/BufferGeometryUtils.js');
 var RectAreaLightUniformsLib_js = require('three/examples/jsm/lights/RectAreaLightUniformsLib.js');
 var RectAreaLightHelper_js = require('three/examples/jsm/helpers/RectAreaLightHelper.js');
 var TextGeometry_js = require('three/examples/jsm/geometries/TextGeometry.js');
@@ -2222,7 +2220,7 @@ function createGeometry$c(comp) {
         }
         return geometry;
       });
-      return BufferGeometryUtils.mergeBufferGeometries(geometries);
+      return BufferGeometryUtils_js.mergeGeometries(geometries);
     } else {
       console.warn("Empty shape array found in ExtrudeGeometry");
       const geometry = new three.BoxGeometry(1e-3, 1e-3, 1e-3);
@@ -2395,7 +2393,6 @@ function updateTubeGeometryPoints(tube, points) {
   tube.tangents = frames.tangents;
   tube.normals = frames.normals;
   tube.binormals = frames.binormals;
-  tube.parameters.path = curve;
   const pAttribute = tube.getAttribute("position");
   const nAttribute = tube.getAttribute("normal");
   const normal = new three.Vector3();
@@ -3371,7 +3368,7 @@ var FilmPass = vue.defineComponent({
   extends: EffectPass,
   props: props$4,
   created() {
-    const pass = new FilmPass_js.FilmPass(this.noiseIntensity, this.scanlinesIntensity, this.scanlinesCount, this.grayscale);
+    const pass = new FilmPass_js.FilmPass();
     Object.keys(props$4).forEach((p) => {
       vue.watch(() => this[p], (value) => {
         pass.uniforms[p].value = value;
@@ -3419,7 +3416,8 @@ var HalftonePass = vue.defineComponent({
   props: props$3,
   created() {
     if (!this.renderer) return;
-    const pass = new HalftonePass_js.HalftonePass(this.renderer.size.width, this.renderer.size.height, {});
+    const pass = new HalftonePass_js.HalftonePass({});
+    pass.setSize(this.renderer.size.width, this.renderer.size.height);
     Object.keys(props$3).forEach((p) => {
       pass.uniforms[p].value = this[p];
       vue.watch(() => this[p], (value) => {
@@ -3435,7 +3433,8 @@ var SMAAPass = vue.defineComponent({
   extends: EffectPass,
   created() {
     if (!this.renderer) return;
-    const pass = new SMAAPass_js.SMAAPass(this.renderer.size.width, this.renderer.size.height);
+    const pass = new SMAAPass_js.SMAAPass();
+    pass.setSize(this.renderer.size.width, this.renderer.size.height);
     this.initEffectPass(pass);
   },
   __hmrId: "SMAAPass"
@@ -3474,21 +3473,13 @@ var SSAOPass = vue.defineComponent({
 });
 
 var DefaultShader = {
-  uniforms: {},
   vertexShader: `
     varying vec2 vUv;
     void main() {
       vUv = uv;
       gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
     }
-  `,
-  fragmentShader: `
-    varying vec2 vUv;
-    void main() {
-      gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
-    }
-  `
-};
+  `};
 
 var TiltShift = {
   uniforms: {
@@ -3727,107 +3718,107 @@ var GridHelper = vue.defineComponent({
 
 var TROIS = /*#__PURE__*/Object.freeze({
   __proto__: null,
-  Renderer: Renderer,
-  RendererInjectionKey: RendererInjectionKey,
-  OrthographicCamera: OrthographicCamera,
-  PerspectiveCamera: PerspectiveCamera,
-  Camera: PerspectiveCamera,
-  Group: Group,
-  Scene: Scene,
-  SceneInjectionKey: SceneInjectionKey,
-  Object3D: Object3D,
-  Raycaster: Raycaster,
-  CubeCamera: CubeCamera,
-  BufferGeometry: Geometry,
-  BoxGeometry: BoxGeometry,
-  CircleGeometry: CircleGeometry,
-  ConeGeometry: ConeGeometry,
-  CylinderGeometry: CylinderGeometry,
-  DodecahedronGeometry: DodecahedronGeometry,
-  ExtrudeGeometry: ExtrudeGeometry,
-  IcosahedronGeometry: IcosahedronGeometry,
-  LatheGeometry: LatheGeometry,
-  OctahedronGeometry: OctahedronGeometry,
-  PlaneGeometry: PlaneGeometry,
-  PolyhedronGeometry: PolyhedronGeometry,
-  RingGeometry: RingGeometry,
-  SphereGeometry: SphereGeometry,
-  ShapeGeometry: ShapeGeometry,
-  TetrahedronGeometry: TetrahedronGeometry,
-  TorusGeometry: TorusGeometry,
-  TorusKnotGeometry: TorusKnotGeometry,
-  TubeGeometry: TubeGeometry,
   AmbientLight: AmbientLight,
-  DirectionalLight: DirectionalLight,
-  HemisphereLight: HemisphereLight,
-  PointLight: PointLight,
-  RectAreaLight: RectAreaLight,
-  SpotLight: SpotLight,
-  Material: BaseMaterial,
   BasicMaterial: BasicMaterial,
-  LambertMaterial: LambertMaterial,
-  PhongMaterial: PhongMaterial,
-  PhysicalMaterial: PhysicalMaterial,
-  PointsMaterial: PointsMaterial,
-  ShadowMaterial: ShadowMaterial,
-  StandardMaterial: StandardMaterial,
-  ToonMaterial: ToonMaterial,
-  MaterialInjectionKey: MaterialInjectionKey,
-  MatcapMaterial: MatcapMaterial,
-  ShaderMaterial: ShaderMaterial,
-  SubSurfaceMaterial: SubSurfaceMaterial,
-  Texture: Texture,
-  CubeTexture: CubeTexture,
-  VideoTexture: VideoTexture,
-  Mesh: Mesh,
-  MeshInjectionKey: MeshInjectionKey,
+  BokehPass: BokehPass,
   Box: Box,
+  BoxGeometry: BoxGeometry,
+  BufferGeometry: Geometry,
+  Camera: PerspectiveCamera,
   Circle: Circle,
+  CircleGeometry: CircleGeometry,
+  ComposerInjectionKey: ComposerInjectionKey,
   Cone: Cone,
+  ConeGeometry: ConeGeometry,
+  CubeCamera: CubeCamera,
+  CubeTexture: CubeTexture,
   Cylinder: Cylinder,
+  CylinderGeometry: CylinderGeometry,
+  DirectionalLight: DirectionalLight,
   Dodecahedron: Dodecahedron,
+  DodecahedronGeometry: DodecahedronGeometry,
+  EffectComposer: EffectComposer,
+  EffectPass: EffectPass,
+  ExtrudeGeometry: ExtrudeGeometry,
+  FXAAPass: FXAAPass,
+  FbxModel: FBX,
+  FilmPass: FilmPass,
+  GltfModel: GLTF,
+  GridHelper: GridHelper,
+  Group: Group,
+  HalftonePass: HalftonePass,
+  HemisphereLight: HemisphereLight,
   Icosahedron: Icosahedron,
-  Lathe: Lathe,
-  Octahedron: Octahedron,
-  Plane: Plane,
-  Polyhedron: Polyhedron,
-  Ring: Ring,
-  Sphere: Sphere,
-  Tetrahedron: Tetrahedron,
-  Text: Text,
-  Torus: Torus,
-  TorusKnot: TorusKnot,
-  Tube: Tube,
+  IcosahedronGeometry: IcosahedronGeometry,
   Image: Image,
   InstancedMesh: InstancedMesh,
-  Sprite: Sprite,
+  LambertMaterial: LambertMaterial,
+  Lathe: Lathe,
+  LatheGeometry: LatheGeometry,
+  MatcapMaterial: MatcapMaterial,
+  Material: BaseMaterial,
+  MaterialInjectionKey: MaterialInjectionKey,
+  Mesh: Mesh,
+  MeshInjectionKey: MeshInjectionKey,
+  Object3D: Object3D,
+  Octahedron: Octahedron,
+  OctahedronGeometry: OctahedronGeometry,
+  OrthographicCamera: OrthographicCamera,
+  PerspectiveCamera: PerspectiveCamera,
+  PhongMaterial: PhongMaterial,
+  PhysicalMaterial: PhysicalMaterial,
+  Plane: Plane,
+  PlaneGeometry: PlaneGeometry,
+  PointLight: PointLight,
   Points: Points,
-  GltfModel: GLTF,
-  FbxModel: FBX,
-  EffectComposer: EffectComposer,
-  ComposerInjectionKey: ComposerInjectionKey,
+  PointsMaterial: PointsMaterial,
+  Polyhedron: Polyhedron,
+  PolyhedronGeometry: PolyhedronGeometry,
+  Raycaster: Raycaster,
+  RectAreaLight: RectAreaLight,
   RenderPass: RenderPass,
-  EffectPass: EffectPass,
-  BokehPass: BokehPass,
-  FilmPass: FilmPass,
-  FXAAPass: FXAAPass,
-  HalftonePass: HalftonePass,
+  Renderer: Renderer,
+  RendererInjectionKey: RendererInjectionKey,
+  Ring: Ring,
+  RingGeometry: RingGeometry,
   SMAAPass: SMAAPass,
   SSAOPass: SSAOPass,
+  Scene: Scene,
+  SceneInjectionKey: SceneInjectionKey,
+  ShaderMaterial: ShaderMaterial,
+  ShadowMaterial: ShadowMaterial,
+  ShapeGeometry: ShapeGeometry,
+  Sphere: Sphere,
+  SphereGeometry: SphereGeometry,
+  SpotLight: SpotLight,
+  Sprite: Sprite,
+  StandardMaterial: StandardMaterial,
+  SubSurfaceMaterial: SubSurfaceMaterial,
+  Tetrahedron: Tetrahedron,
+  TetrahedronGeometry: TetrahedronGeometry,
+  Text: Text,
+  Texture: Texture,
   TiltShiftPass: TiltShiftPass,
+  ToonMaterial: ToonMaterial,
+  Torus: Torus,
+  TorusGeometry: TorusGeometry,
+  TorusKnot: TorusKnot,
+  TorusKnotGeometry: TorusKnotGeometry,
+  Tube: Tube,
+  TubeGeometry: TubeGeometry,
   UnrealBloomPass: UnrealBloomPass,
+  VideoTexture: VideoTexture,
   ZoomBlurPass: ZoomBlurPass,
-  GridHelper: GridHelper,
   applyObjectProps: applyObjectProps,
   bindObjectProp: bindObjectProp,
   bindObjectProps: bindObjectProps,
-  setFromProp: setFromProp,
-  bindProps: bindProps,
   bindProp: bindProp,
-  propsValues: propsValues,
+  bindProps: bindProps,
+  getMatcapUrl: getMatcapUrl,
   lerp: lerp,
   limit: limit,
-  getMatcapUrl: getMatcapUrl
+  propsValues: propsValues,
+  setFromProp: setFromProp
 });
 
 const TroisJSVuePlugin = {

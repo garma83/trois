@@ -18,7 +18,7 @@ export default defineComponent({
     src: String,
     onLoad: Function as PropType<(t: Texture) => void>,
     onProgress: Function as PropType<(e: ProgressEvent) => void>,
-    onError: Function as PropType<(e: ErrorEvent) => void>,
+    onError: Function as PropType<(e: unknown) => void>,
     props: { type: Object, default: () => ({}) },
   },
   setup(): TexureInterface {

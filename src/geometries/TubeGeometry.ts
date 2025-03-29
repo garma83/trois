@@ -44,7 +44,9 @@ export function updateTubeGeometryPoints(tube: TubeGeometry, points: Vector3[]):
   tube.tangents = frames.tangents
   tube.normals = frames.normals
   tube.binormals = frames.binormals
-  tube.parameters.path = curve
+
+  // disabled this, readonly 
+  // tube.parameters.path = curve
 
   const pAttribute = tube.getAttribute('position')
   const nAttribute = tube.getAttribute('normal')

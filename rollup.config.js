@@ -1,9 +1,7 @@
-// import vue from 'rollup-plugin-vue'
-import esbuild from 'rollup-plugin-esbuild'
-import replace from '@rollup/plugin-replace'
-import dts from 'rollup-plugin-dts'
+import esbuild from 'rollup-plugin-esbuild';
+import dts from 'rollup-plugin-dts';
 
-const input = 'src/export.ts'
+const input = 'src/export.ts';
 
 const external = [
   'three',
@@ -28,22 +26,16 @@ const external = [
   'three/examples/jsm/postprocessing/UnrealBloomPass.js',
   'three/examples/jsm/shaders/FXAAShader.js',
   'three/examples/jsm/webxr/VRButton.js',
+  'three/examples/jsm/utils/BufferGeometryUtils.js',
   'vue',
-]
-
-const cdnReplaces = {
-  'from \'vue\'': 'from \'https://unpkg.com/vue@3.2.20/dist/vue.esm-browser.prod.js\'',
-  'from \'three\'': 'from \'https://cdn.skypack.dev/three@0.136.0/build/three.module.js\'',
-  'from \'three/examples': 'from \'https://cdn.skypack.dev/three@0.136.0/examples',
-  delimiters: ['', ''],
-}
+];
 
 function createConfig(format, output, plugins = [], minify = false) {
   const tsPlugin = esbuild({
     sourceMap: true,
     minify,
     target: 'es2019',
-  })
+  });
 
   return {
     input,
@@ -51,20 +43,19 @@ function createConfig(format, output, plugins = [], minify = false) {
     output: {
       format,
       ...output,
-      // exports: 'named',
       sourcemap: true,
+      globals: {
+        vue: 'Vue',
+        three: 'THREE'
+      }
     },
-    plugins: [
-      ...plugins,
-      // vue(),
-      tsPlugin,
-    ],
-  }
+    plugins: [tsPlugin, ...plugins],
+  };
 }
 
 export default [
-  createConfig('es', { file: 'build/trois.module.cdn.js' }, [replace(cdnReplaces)]),
-  createConfig('es', { file: 'build/trois.module.cdn.min.js' }, [replace(cdnReplaces)], true),
+  createConfig('es', { file: 'build/trois.module.cdn.js' }),
+  createConfig('es', { file: 'build/trois.module.cdn.min.js' }, [], true),
   createConfig('es', { file: 'build/trois.module.js' }),
   createConfig('es', { file: 'build/trois.module.min.js' }, [], true),
   createConfig('cjs', { file: 'build/trois.js' }),
@@ -72,9 +63,6 @@ export default [
     input: 'types/export.d.ts',
     external,
     plugins: [dts()],
-    output: {
-      format: 'es',
-      file: 'build/trois.d.ts',
-    },
+    output: { format: 'es', file: 'build/trois.d.ts' },
   },
-]
+];

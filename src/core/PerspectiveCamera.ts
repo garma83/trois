@@ -28,8 +28,8 @@ export default defineComponent({
 
     bindProp(props, 'position', camera)
 
-    if (props.lookAt) camera.lookAt(props.lookAt.x ?? 0, props.lookAt.y, props.lookAt.z)
-    watch(() => props.lookAt, (v) => { camera.lookAt(v.x ?? 0, v.y, v.z) }, { deep: true })
+    if (props.lookAt) camera.lookAt(props.lookAt.x ?? 0, props.lookAt.y!, props.lookAt.z!)
+    watch(() => props.lookAt, (v) => { camera.lookAt(v.x ?? 0, v.y!, v.z!) }, { deep: true })
 
     bindObjectProp(props, 'props', camera, true, cameraSetProp);
 

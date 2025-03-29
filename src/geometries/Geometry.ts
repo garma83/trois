@@ -1,5 +1,5 @@
 import { ComponentPropsOptions, defineComponent, PropType, watch } from 'vue'
-import { BufferAttribute, BufferGeometry } from 'three'
+import { BufferAttribute, BufferGeometry, TypedArray } from 'three'
 import { MeshInjectionKey, MeshInterface } from '../meshes/Mesh'
 
 export interface GeometrySetupInterface {
@@ -60,7 +60,7 @@ const Geometry = defineComponent({
       const geometry = new BufferGeometry()
       this.attributes.forEach(attribute => {
         if (attribute.name && attribute.itemSize && attribute.array) {
-          const bufferAttribute = bufferAttributes[attribute.name] = new BufferAttribute(attribute.array, attribute.itemSize, attribute.normalized)
+          const bufferAttribute = bufferAttributes[attribute.name] = new BufferAttribute(attribute.array as TypedArray, attribute.itemSize, attribute.normalized)
           geometry.setAttribute(attribute.name, bufferAttribute)
         }
       })

@@ -13,7 +13,7 @@ export default defineComponent({
   extends: EffectPass,
   props,
   created() {
-    const pass = new FilmPass(this.noiseIntensity, this.scanlinesIntensity, this.scanlinesCount, this.grayscale)
+    const pass = new FilmPass()
 
     Object.keys(props).forEach(p => {
       // @ts-ignore
