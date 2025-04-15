@@ -315,7 +315,7 @@ interface RendererInterface extends RendererSetupInterface {
 interface RendererPublicInterface extends ComponentPublicInstance, RendererInterface {
 }
 declare const RendererInjectionKey: InjectionKey<RendererPublicInterface>;
-declare const _default$19: vue.DefineComponent<vue.ExtractPropTypes<{
+declare const _default$1a: vue.DefineComponent<vue.ExtractPropTypes<{
     params: {
         type: PropType<WebGLRendererParameters>;
         default: () => {};
@@ -588,7 +588,7 @@ interface Vector3PropInterface extends Vector2PropInterface {
 interface EulerPropInterface extends Vector3PropInterface {
     order?: 'XYZ' | 'YZX' | 'ZXY' | 'XZY' | 'YXZ' | 'ZYX';
 }
-declare const _default$18: vue.DefineComponent<vue.ExtractPropTypes<{
+declare const _default$19: vue.DefineComponent<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
     onPointerOver: FunctionConstructor;
     onPointerMove: FunctionConstructor;
@@ -724,7 +724,7 @@ declare const _default$18: vue.DefineComponent<vue.ExtractPropTypes<{
     disableRemove: boolean;
 }, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>;
 
-declare const _default$17: vue.DefineComponent<vue.ExtractPropTypes<{
+declare const _default$18: vue.DefineComponent<vue.ExtractPropTypes<{
     left: {
         type: NumberConstructor;
         default: number;
@@ -825,7 +825,7 @@ declare const _default$17: vue.DefineComponent<vue.ExtractPropTypes<{
 }, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>;
 //# sourceMappingURL=OrthographicCamera.d.ts.map
 
-declare const _default$16: vue.DefineComponent<vue.ExtractPropTypes<{
+declare const _default$17: vue.DefineComponent<vue.ExtractPropTypes<{
     aspect: {
         type: NumberConstructor;
         default: number;
@@ -908,7 +908,7 @@ declare const _default$16: vue.DefineComponent<vue.ExtractPropTypes<{
 }, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>;
 //# sourceMappingURL=PerspectiveCamera.d.ts.map
 
-declare const _default$15: vue.DefineComponent<{}, {
+declare const _default$16: vue.DefineComponent<{}, {
     group: Group<three.Object3DEventMap>;
 }, {}, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<vue.ExtractPropTypes<{
     onPointerEnter: FunctionConstructor;
@@ -1048,7 +1048,7 @@ declare const _default$15: vue.DefineComponent<{}, {
 //# sourceMappingURL=Group.d.ts.map
 
 declare const SceneInjectionKey: InjectionKey<Scene>;
-declare const _default$14: vue.DefineComponent<vue.ExtractPropTypes<{
+declare const _default$15: vue.DefineComponent<vue.ExtractPropTypes<{
     background: (ObjectConstructor | StringConstructor | NumberConstructor)[];
 }>, {
     scene: Scene;
@@ -1062,7 +1062,7 @@ interface RaycasterSetupInterface {
     renderer?: RendererInterface;
     pointer?: PointerInterface;
 }
-declare const _default$13: vue.DefineComponent<vue.ExtractPropTypes<{
+declare const _default$14: vue.DefineComponent<vue.ExtractPropTypes<{
     onPointerEnter: {
         type: PropType<PointerIntersectCallbackType>;
         default: PointerIntersectCallbackType;
@@ -1156,7 +1156,7 @@ interface CubeCameraSetupInterface {
         (): void;
     };
 }
-declare const _default$12: vue.DefineComponent<vue.ExtractPropTypes<{
+declare const _default$13: vue.DefineComponent<vue.ExtractPropTypes<{
     cubeRTSize: {
         type: NumberConstructor;
         default: number;
@@ -1861,6 +1861,8 @@ declare const Geometry: vue.DefineComponent<vue.ExtractPropTypes<{
     attributes: GeometryAttributeInterface[];
 }, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>;
 
+declare const _default$12: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
+
 declare const _default$11: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
 
 declare const _default$10: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
@@ -1893,9 +1895,7 @@ declare const _default$P: vue.DefineSetupFnComponent<Record<string, any>, {}, {}
 
 declare const _default$O: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
 
-declare const _default$N: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
-
-declare const _default$M: vue.DefineComponent<{}, {}, {}, {}, {
+declare const _default$N: vue.DefineComponent<{}, {}, {}, {}, {
     createGeometry(): void;
     updatePoints(points: Vector3[]): void;
 }, vue.ComponentOptionsMixin, vue.DefineComponent<vue.ExtractPropTypes<{
@@ -1928,7 +1928,7 @@ interface LightSetupInterface {
     light?: Light;
 }
 
-declare const _default$L: vue.DefineComponent<{}, {}, {}, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<vue.ExtractPropTypes<{
+declare const _default$M: vue.DefineComponent<{}, {}, {}, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<vue.ExtractPropTypes<{
     color: {
         type: StringConstructor;
         default: string;
@@ -2121,7 +2121,7 @@ declare const _default$L: vue.DefineComponent<{}, {}, {}, {}, {}, vue.ComponentO
 }, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>, {}, string, vue.PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>;
 //# sourceMappingURL=AmbientLight.d.ts.map
 
-declare const _default$K: vue.DefineComponent<vue.ExtractPropTypes<{
+declare const _default$L: vue.DefineComponent<vue.ExtractPropTypes<{
     target: {
         type: PropType<Vector3PropInterface>;
         default: () => {
@@ -2334,7 +2334,7 @@ declare const _default$K: vue.DefineComponent<vue.ExtractPropTypes<{
 }, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>;
 //# sourceMappingURL=DirectionalLight.d.ts.map
 
-declare const _default$J: vue.DefineComponent<vue.ExtractPropTypes<{
+declare const _default$K: vue.DefineComponent<vue.ExtractPropTypes<{
     groundColor: {
         type: StringConstructor;
         default: string;
@@ -2539,7 +2539,7 @@ declare const _default$J: vue.DefineComponent<vue.ExtractPropTypes<{
 }, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>;
 //# sourceMappingURL=HemisphereLight.d.ts.map
 
-declare const _default$I: vue.DefineComponent<vue.ExtractPropTypes<{
+declare const _default$J: vue.DefineComponent<vue.ExtractPropTypes<{
     distance: {
         type: NumberConstructor;
         default: number;
@@ -2753,7 +2753,7 @@ declare const _default$I: vue.DefineComponent<vue.ExtractPropTypes<{
 }, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>;
 //# sourceMappingURL=PointLight.d.ts.map
 
-declare const _default$H: vue.DefineComponent<vue.ExtractPropTypes<{
+declare const _default$I: vue.DefineComponent<vue.ExtractPropTypes<{
     width: {
         type: NumberConstructor;
         default: number;
@@ -2970,7 +2970,7 @@ declare const _default$H: vue.DefineComponent<vue.ExtractPropTypes<{
 }, {}, {}, {}, string, vue.ComponentProvideOptions, true, {}, any>;
 //# sourceMappingURL=RectAreaLight.d.ts.map
 
-declare const _default$G: vue.DefineComponent<vue.ExtractPropTypes<{
+declare const _default$H: vue.DefineComponent<vue.ExtractPropTypes<{
     angle: {
         type: NumberConstructor;
         default: number;
@@ -3352,11 +3352,14 @@ declare const ShadowMaterial: vue.DefineSetupFnComponent<Record<string, any>, {}
 declare const StandardMaterial: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
 declare const ToonMaterial: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
 
-declare const _default$F: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
+declare const _default$G: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
 //# sourceMappingURL=MatcapMaterial.d.ts.map
 
-declare const _default$E: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
+declare const _default$F: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
 //# sourceMappingURL=ShaderMaterial.d.ts.map
+
+declare const _default$E: vue.DefineSetupFnComponent<Record<string, any>, {}, {}, Record<string, any> & {}, vue.PublicProps>;
+//# sourceMappingURL=RawShaderMaterial.d.ts.map
 
 interface SubSurfaceMaterialUniformsInterface {
     diffuse?: string | number;
@@ -7337,5 +7340,5 @@ interface TexturesInterface {
 }
 declare function useTextures(): TexturesInterface;
 
-export { _default$L as AmbientLight, BasicMaterial, _default$9 as BokehPass, _default$z as Box, _default$11 as BoxGeometry, Geometry as BufferGeometry, _default$16 as Camera, _default$y as Circle, _default$10 as CircleGeometry, ComposerInjectionKey, _default$x as Cone, _default$$ as ConeGeometry, _default$12 as CubeCamera, _default$B as CubeTexture, _default$w as Cylinder, _default$_ as CylinderGeometry, _default$K as DirectionalLight, _default$v as Dodecahedron, _default$Z as DodecahedronGeometry, _default$c as EffectComposer, _default$b as EffectPass, _default$Y as ExtrudeGeometry, _default$7 as FXAAPass, _default$d as FbxModel, _default$8 as FilmPass, _default$e as GltfModel, _default as GridHelper, _default$15 as Group, _default$6 as HalftonePass, _default$J as HemisphereLight, _default$u as Icosahedron, _default$X as IcosahedronGeometry, _default$i as Image, _default$h as InstancedMesh, LambertMaterial, _default$t as Lathe, _default$W as LatheGeometry, _default$F as MatcapMaterial, BaseMaterial as Material, MaterialInjectionKey, Mesh, MeshInjectionKey, _default$18 as Object3D, _default$s as Octahedron, _default$V as OctahedronGeometry, _default$17 as OrthographicCamera, _default$16 as PerspectiveCamera, PhongMaterial, PhysicalMaterial, _default$r as Plane, _default$U as PlaneGeometry, _default$I as PointLight, _default$f as Points, PointsMaterial, _default$q as Polyhedron, _default$T as PolyhedronGeometry, _default$13 as Raycaster, _default$H as RectAreaLight, _default$a as RenderPass, _default$19 as Renderer, RendererInjectionKey, _default$p as Ring, _default$S as RingGeometry, _default$5 as SMAAPass, _default$4 as SSAOPass, _default$14 as Scene, SceneInjectionKey, _default$E as ShaderMaterial, ShadowMaterial, _default$Q as ShapeGeometry, _default$o as Sphere, _default$R as SphereGeometry, _default$G as SpotLight, _default$g as Sprite, StandardMaterial, _default$D as SubSurfaceMaterial, _default$n as Tetrahedron, _default$P as TetrahedronGeometry, _default$m as Text, _default$C as Texture, _default$3 as TiltShiftPass, ToonMaterial, _default$l as Torus, _default$O as TorusGeometry, _default$k as TorusKnot, _default$N as TorusKnotGeometry, TroisJSVuePlugin, _default$j as Tube, _default$M as TubeGeometry, _default$2 as UnrealBloomPass, _default$A as VideoTexture, _default$1 as ZoomBlurPass, applyObjectProps, bindObjectProp, bindObjectProps, bindProp, bindProps, createApp, getMatcapUrl, lerp, limit, propsValues, setFromProp, useTextures };
+export { _default$M as AmbientLight, BasicMaterial, _default$9 as BokehPass, _default$z as Box, _default$12 as BoxGeometry, Geometry as BufferGeometry, _default$17 as Camera, _default$y as Circle, _default$11 as CircleGeometry, ComposerInjectionKey, _default$x as Cone, _default$10 as ConeGeometry, _default$13 as CubeCamera, _default$B as CubeTexture, _default$w as Cylinder, _default$$ as CylinderGeometry, _default$L as DirectionalLight, _default$v as Dodecahedron, _default$_ as DodecahedronGeometry, _default$c as EffectComposer, _default$b as EffectPass, _default$Z as ExtrudeGeometry, _default$7 as FXAAPass, _default$d as FbxModel, _default$8 as FilmPass, _default$e as GltfModel, _default as GridHelper, _default$16 as Group, _default$6 as HalftonePass, _default$K as HemisphereLight, _default$u as Icosahedron, _default$Y as IcosahedronGeometry, _default$i as Image, _default$h as InstancedMesh, LambertMaterial, _default$t as Lathe, _default$X as LatheGeometry, _default$G as MatcapMaterial, BaseMaterial as Material, MaterialInjectionKey, Mesh, MeshInjectionKey, _default$19 as Object3D, _default$s as Octahedron, _default$W as OctahedronGeometry, _default$18 as OrthographicCamera, _default$17 as PerspectiveCamera, PhongMaterial, PhysicalMaterial, _default$r as Plane, _default$V as PlaneGeometry, _default$J as PointLight, _default$f as Points, PointsMaterial, _default$q as Polyhedron, _default$U as PolyhedronGeometry, _default$E as RawShaderMaterial, _default$14 as Raycaster, _default$I as RectAreaLight, _default$a as RenderPass, _default$1a as Renderer, RendererInjectionKey, _default$p as Ring, _default$T as RingGeometry, _default$5 as SMAAPass, _default$4 as SSAOPass, _default$15 as Scene, SceneInjectionKey, _default$F as ShaderMaterial, ShadowMaterial, _default$R as ShapeGeometry, _default$o as Sphere, _default$S as SphereGeometry, _default$H as SpotLight, _default$g as Sprite, StandardMaterial, _default$D as SubSurfaceMaterial, _default$n as Tetrahedron, _default$Q as TetrahedronGeometry, _default$m as Text, _default$C as Texture, _default$3 as TiltShiftPass, ToonMaterial, _default$l as Torus, _default$P as TorusGeometry, _default$k as TorusKnot, _default$O as TorusKnotGeometry, TroisJSVuePlugin, _default$j as Tube, _default$N as TubeGeometry, _default$2 as UnrealBloomPass, _default$A as VideoTexture, _default$1 as ZoomBlurPass, applyObjectProps, bindObjectProp, bindObjectProps, bindProp, bindProps, createApp, getMatcapUrl, lerp, limit, propsValues, setFromProp, useTextures };
 export type { MaterialPublicInterface, MeshPublicInterface, Object3DPublicInterface, RendererPublicInterface };

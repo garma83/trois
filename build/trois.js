@@ -2652,6 +2652,31 @@ var MatcapMaterial = materialComponent(
   }
 );
 
+const defaultVertexShader$1 = `
+  varying vec2 vUv;
+  void main(){
+    vUv = uv;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
+  }
+`;
+const defaultFragmentShader$1 = `
+  varying vec2 vUv;
+  void main() {
+    gl_FragColor = vec4(vUv.x, vUv.y, 0., 1.0);
+  }
+`;
+var ShaderMaterial = materialComponent(
+  "ShaderMaterial",
+  {
+    props: { type: Object, default: () => ({
+      uniforms: {},
+      vertexShader: defaultVertexShader$1,
+      fragmentShader: defaultFragmentShader$1
+    }) }
+  },
+  (opts) => new three.ShaderMaterial(propsValues(opts, ["color"]))
+);
+
 const defaultVertexShader = `
   varying vec2 vUv;
   void main(){
@@ -2665,7 +2690,7 @@ const defaultFragmentShader = `
     gl_FragColor = vec4(vUv.x, vUv.y, 0., 1.0);
   }
 `;
-var ShaderMaterial = materialComponent(
+var RawShaderMaterial = materialComponent(
   "ShaderMaterial",
   {
     props: { type: Object, default: () => ({
@@ -2674,7 +2699,7 @@ var ShaderMaterial = materialComponent(
       fragmentShader: defaultFragmentShader
     }) }
   },
-  (opts) => new three.ShaderMaterial(propsValues(opts, ["color"]))
+  (opts) => new three.RawShaderMaterial(propsValues(opts, ["color"]))
 );
 
 function replaceAll(string, find, replace) {
@@ -3774,6 +3799,7 @@ var TROIS = /*#__PURE__*/Object.freeze({
   PointsMaterial: PointsMaterial,
   Polyhedron: Polyhedron,
   PolyhedronGeometry: PolyhedronGeometry,
+  RawShaderMaterial: RawShaderMaterial,
   Raycaster: Raycaster,
   RectAreaLight: RectAreaLight,
   RenderPass: RenderPass,
@@ -4002,6 +4028,7 @@ exports.Points = Points;
 exports.PointsMaterial = PointsMaterial;
 exports.Polyhedron = Polyhedron;
 exports.PolyhedronGeometry = PolyhedronGeometry;
+exports.RawShaderMaterial = RawShaderMaterial;
 exports.Raycaster = Raycaster;
 exports.RectAreaLight = RectAreaLight;
 exports.RenderPass = RenderPass;

@@ -1,5 +1,5 @@
 import { toRef, watch, ref, defineComponent, watchEffect, inject, provide, getCurrentInstance, onUnmounted, createApp as createApp$1 } from 'vue';
-import { EventDispatcher, Ray, Plane as Plane$1, MathUtils, Vector3, MOUSE, TOUCH, Quaternion, Spherical, Vector2, Raycaster as Raycaster$1, InstancedMesh as InstancedMesh$1, WebGLRenderer, OrthographicCamera as OrthographicCamera$1, PerspectiveCamera as PerspectiveCamera$1, Scene as Scene$1, Color, Texture as Texture$1, Group as Group$1, WebGLCubeRenderTarget, LinearMipmapLinearFilter, RGBAFormat, CubeCamera as CubeCamera$1, Mesh as Mesh$1, BufferGeometry, BufferAttribute, BoxGeometry as BoxGeometry$1, CircleGeometry as CircleGeometry$1, ConeGeometry as ConeGeometry$1, CylinderGeometry as CylinderGeometry$1, DodecahedronGeometry as DodecahedronGeometry$1, ExtrudeGeometry as ExtrudeGeometry$1, IcosahedronGeometry as IcosahedronGeometry$1, LatheGeometry as LatheGeometry$1, OctahedronGeometry as OctahedronGeometry$1, PlaneGeometry as PlaneGeometry$1, PolyhedronGeometry as PolyhedronGeometry$1, RingGeometry as RingGeometry$1, SphereGeometry as SphereGeometry$1, ShapeGeometry as ShapeGeometry$1, TetrahedronGeometry as TetrahedronGeometry$1, TorusGeometry as TorusGeometry$1, TorusKnotGeometry as TorusKnotGeometry$1, Curve, CatmullRomCurve3, TubeGeometry as TubeGeometry$1, SpotLight as SpotLight$1, DirectionalLight as DirectionalLight$1, AmbientLight as AmbientLight$1, HemisphereLight as HemisphereLight$1, PointLight as PointLight$1, RectAreaLight as RectAreaLight$1, MeshBasicMaterial, MeshLambertMaterial, MeshPhongMaterial, MeshPhysicalMaterial, PointsMaterial as PointsMaterial$1, ShadowMaterial as ShadowMaterial$1, MeshStandardMaterial, MeshToonMaterial, TextureLoader, MeshMatcapMaterial, ShaderMaterial as ShaderMaterial$1, ShaderChunk, UniformsUtils, ShaderLib, CubeReflectionMapping, CubeTextureLoader, VideoTexture as VideoTexture$1, DoubleSide, SpriteMaterial, Sprite as Sprite$1, Points as Points$1, GridHelper as GridHelper$1 } from 'three';
+import { EventDispatcher, Ray, Plane as Plane$1, MathUtils, Vector3, MOUSE, TOUCH, Quaternion, Spherical, Vector2, Raycaster as Raycaster$1, InstancedMesh as InstancedMesh$1, WebGLRenderer, OrthographicCamera as OrthographicCamera$1, PerspectiveCamera as PerspectiveCamera$1, Scene as Scene$1, Color, Texture as Texture$1, Group as Group$1, WebGLCubeRenderTarget, LinearMipmapLinearFilter, RGBAFormat, CubeCamera as CubeCamera$1, Mesh as Mesh$1, BufferGeometry, BufferAttribute, BoxGeometry as BoxGeometry$1, CircleGeometry as CircleGeometry$1, ConeGeometry as ConeGeometry$1, CylinderGeometry as CylinderGeometry$1, DodecahedronGeometry as DodecahedronGeometry$1, ExtrudeGeometry as ExtrudeGeometry$1, IcosahedronGeometry as IcosahedronGeometry$1, LatheGeometry as LatheGeometry$1, OctahedronGeometry as OctahedronGeometry$1, PlaneGeometry as PlaneGeometry$1, PolyhedronGeometry as PolyhedronGeometry$1, RingGeometry as RingGeometry$1, SphereGeometry as SphereGeometry$1, ShapeGeometry as ShapeGeometry$1, TetrahedronGeometry as TetrahedronGeometry$1, TorusGeometry as TorusGeometry$1, TorusKnotGeometry as TorusKnotGeometry$1, Curve, CatmullRomCurve3, TubeGeometry as TubeGeometry$1, SpotLight as SpotLight$1, DirectionalLight as DirectionalLight$1, AmbientLight as AmbientLight$1, HemisphereLight as HemisphereLight$1, PointLight as PointLight$1, RectAreaLight as RectAreaLight$1, MeshBasicMaterial, MeshLambertMaterial, MeshPhongMaterial, MeshPhysicalMaterial, PointsMaterial as PointsMaterial$1, ShadowMaterial as ShadowMaterial$1, MeshStandardMaterial, MeshToonMaterial, TextureLoader, MeshMatcapMaterial, ShaderMaterial as ShaderMaterial$1, RawShaderMaterial as RawShaderMaterial$1, ShaderChunk, UniformsUtils, ShaderLib, CubeReflectionMapping, CubeTextureLoader, VideoTexture as VideoTexture$1, DoubleSide, SpriteMaterial, Sprite as Sprite$1, Points as Points$1, GridHelper as GridHelper$1 } from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { RectAreaLightUniformsLib } from 'three/examples/jsm/lights/RectAreaLightUniformsLib.js';
 import { RectAreaLightHelper } from 'three/examples/jsm/helpers/RectAreaLightHelper.js';
@@ -2650,6 +2650,31 @@ var MatcapMaterial = materialComponent(
   }
 );
 
+const defaultVertexShader$1 = `
+  varying vec2 vUv;
+  void main(){
+    vUv = uv;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
+  }
+`;
+const defaultFragmentShader$1 = `
+  varying vec2 vUv;
+  void main() {
+    gl_FragColor = vec4(vUv.x, vUv.y, 0., 1.0);
+  }
+`;
+var ShaderMaterial = materialComponent(
+  "ShaderMaterial",
+  {
+    props: { type: Object, default: () => ({
+      uniforms: {},
+      vertexShader: defaultVertexShader$1,
+      fragmentShader: defaultFragmentShader$1
+    }) }
+  },
+  (opts) => new ShaderMaterial$1(propsValues(opts, ["color"]))
+);
+
 const defaultVertexShader = `
   varying vec2 vUv;
   void main(){
@@ -2663,7 +2688,7 @@ const defaultFragmentShader = `
     gl_FragColor = vec4(vUv.x, vUv.y, 0., 1.0);
   }
 `;
-var ShaderMaterial = materialComponent(
+var RawShaderMaterial = materialComponent(
   "ShaderMaterial",
   {
     props: { type: Object, default: () => ({
@@ -2672,7 +2697,7 @@ var ShaderMaterial = materialComponent(
       fragmentShader: defaultFragmentShader
     }) }
   },
-  (opts) => new ShaderMaterial$1(propsValues(opts, ["color"]))
+  (opts) => new RawShaderMaterial$1(propsValues(opts, ["color"]))
 );
 
 function replaceAll(string, find, replace) {
@@ -3772,6 +3797,7 @@ var TROIS = /*#__PURE__*/Object.freeze({
   PointsMaterial: PointsMaterial,
   Polyhedron: Polyhedron,
   PolyhedronGeometry: PolyhedronGeometry,
+  RawShaderMaterial: RawShaderMaterial,
   Raycaster: Raycaster,
   RectAreaLight: RectAreaLight,
   RenderPass: RenderPass,
@@ -3944,5 +3970,5 @@ function useTextures() {
   }
 }
 
-export { AmbientLight, BasicMaterial, BokehPass, Box, BoxGeometry, Geometry as BufferGeometry, PerspectiveCamera as Camera, Circle, CircleGeometry, ComposerInjectionKey, Cone, ConeGeometry, CubeCamera, CubeTexture, Cylinder, CylinderGeometry, DirectionalLight, Dodecahedron, DodecahedronGeometry, EffectComposer, EffectPass, ExtrudeGeometry, FXAAPass, FBX as FbxModel, FilmPass, GLTF as GltfModel, GridHelper, Group, HalftonePass, HemisphereLight, Icosahedron, IcosahedronGeometry, Image, InstancedMesh, LambertMaterial, Lathe, LatheGeometry, MatcapMaterial, BaseMaterial as Material, MaterialInjectionKey, Mesh, MeshInjectionKey, Object3D, Octahedron, OctahedronGeometry, OrthographicCamera, PerspectiveCamera, PhongMaterial, PhysicalMaterial, Plane, PlaneGeometry, PointLight, Points, PointsMaterial, Polyhedron, PolyhedronGeometry, Raycaster, RectAreaLight, RenderPass, Renderer, RendererInjectionKey, Ring, RingGeometry, SMAAPass, SSAOPass, Scene, SceneInjectionKey, ShaderMaterial, ShadowMaterial, ShapeGeometry, Sphere, SphereGeometry, SpotLight, Sprite, StandardMaterial, SubSurfaceMaterial, Tetrahedron, TetrahedronGeometry, Text, Texture, TiltShiftPass, ToonMaterial, Torus, TorusGeometry, TorusKnot, TorusKnotGeometry, TroisJSVuePlugin, Tube, TubeGeometry, UnrealBloomPass, VideoTexture, ZoomBlurPass, applyObjectProps, bindObjectProp, bindObjectProps, bindProp, bindProps, createApp, getMatcapUrl, lerp, limit, propsValues, setFromProp, useTextures };
+export { AmbientLight, BasicMaterial, BokehPass, Box, BoxGeometry, Geometry as BufferGeometry, PerspectiveCamera as Camera, Circle, CircleGeometry, ComposerInjectionKey, Cone, ConeGeometry, CubeCamera, CubeTexture, Cylinder, CylinderGeometry, DirectionalLight, Dodecahedron, DodecahedronGeometry, EffectComposer, EffectPass, ExtrudeGeometry, FXAAPass, FBX as FbxModel, FilmPass, GLTF as GltfModel, GridHelper, Group, HalftonePass, HemisphereLight, Icosahedron, IcosahedronGeometry, Image, InstancedMesh, LambertMaterial, Lathe, LatheGeometry, MatcapMaterial, BaseMaterial as Material, MaterialInjectionKey, Mesh, MeshInjectionKey, Object3D, Octahedron, OctahedronGeometry, OrthographicCamera, PerspectiveCamera, PhongMaterial, PhysicalMaterial, Plane, PlaneGeometry, PointLight, Points, PointsMaterial, Polyhedron, PolyhedronGeometry, RawShaderMaterial, Raycaster, RectAreaLight, RenderPass, Renderer, RendererInjectionKey, Ring, RingGeometry, SMAAPass, SSAOPass, Scene, SceneInjectionKey, ShaderMaterial, ShadowMaterial, ShapeGeometry, Sphere, SphereGeometry, SpotLight, Sprite, StandardMaterial, SubSurfaceMaterial, Tetrahedron, TetrahedronGeometry, Text, Texture, TiltShiftPass, ToonMaterial, Torus, TorusGeometry, TorusKnot, TorusKnotGeometry, TroisJSVuePlugin, Tube, TubeGeometry, UnrealBloomPass, VideoTexture, ZoomBlurPass, applyObjectProps, bindObjectProp, bindObjectProps, bindProp, bindProps, createApp, getMatcapUrl, lerp, limit, propsValues, setFromProp, useTextures };
 //# sourceMappingURL=trois.module.cdn.js.map
